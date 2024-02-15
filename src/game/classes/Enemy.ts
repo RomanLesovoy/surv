@@ -2,6 +2,7 @@ import { Scene, Math } from 'phaser';
 import { Actor } from './Actor';
 import Hero from './Hero';
 import { Text } from './Text';
+import { GameEvents } from '../game-events';
 
 export class Enemy extends Actor {
   private target: Hero;
@@ -32,7 +33,7 @@ export class Enemy extends Actor {
     this.texts[1].setFontSize(8);
 
     this.on('destroy', () => {
-      this.scene.game.events.emit('score', 10 + level)
+      this.scene.game.events.emit(GameEvents.AddScore, 10 + level)
     });
   }
 
@@ -46,9 +47,17 @@ export class Enemy extends Actor {
   }
 
   private attackHandler(): void {
-    !this.anims.isPlaying && this.anims.play(`${this.atlasName}-attack`, true);
+    !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-attack`, frameRate: this.speed / 3 }, true);
     this.target.getDamage();
     // this.target.disableBody() // maybe does make sense
+  }
+
+  private run(): void {
+    this.getBody().setVelocity(
+      this.target.x > this.x ? this.speed : -this.speed,
+      this.target.y > this.y ? this.speed : -this.speed,
+    );
+    !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-move`, frameRate: this.speed / 2 }, true);
   }
 
   public update(_: number, delta: number): void {
@@ -63,11 +72,7 @@ export class Enemy extends Actor {
         this.attackHandler();
       });
     } else {
-      this.getBody().setVelocity(
-        this.target.x > this.x ? this.speed : -this.speed,
-        this.target.y > this.y ? this.speed : -this.speed,
-      );
-      !this.anims.isPlaying && this.anims.play(`${this.atlasName}-move`, true);
+      this.run();
     }
     this.updateAngle(this.target, this);
   }

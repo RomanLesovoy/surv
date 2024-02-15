@@ -15,6 +15,13 @@ export default class LoadingScene extends Scene {
     // SPRITE BG
     this.load.image('bg-block', 'other/bg-block.jpg');
 
+    // Bonuses
+    this.load.image('riffle', 'ammo/riffle.png');
+    this.load.image('armor', 'ammo/armor.png');
+    this.load.image('health', 'ammo/health.png');
+    this.load.image('shotgun', 'ammo/shotgun.png');
+    this.load.image('ammo', 'ammo/ammo.png');
+
     // v1
     this.load.image('player', 'player/default.png');
 

@@ -4,6 +4,8 @@ import Hero from '../classes/Hero';
 import HeroScene from './HeroScene';
 import EnemyScene from './EnemyScene';
 import ScoreScene from './ScoreScene';
+import { GameEvents } from '../game-events';
+import Bonus from '../classes/Bonus';
 
 export const mainDataKey = 'mainSceneData';
 
@@ -26,10 +28,6 @@ export default class MainScene extends Scene {
   create() {
     this.add.tileSprite(window.innerWidth / 2, window.innerHeight / 2, window.innerWidth, window.innerHeight, "bg-block");
 
-    this.game.events.on('score', (score: number) => {
-      this.score += score;
-    })
-
     this.enemiesGroup = this.physics.add.group({
       key: 'zombiesGroup',
       collideWorldBounds: true,
@@ -43,7 +41,22 @@ export default class MainScene extends Scene {
     this.scene.add(Scenes.HeroScene, HeroScene, true, sharedThis);
     this.scene.add(Scenes.ScoreScene, ScoreScene, true, sharedThis);
 
-    this.time.addEvent({ delay: 20000, callback: () => this.level++, loop: true });
+    this.initEvents();
+  }
+
+  initEvents() {
+    this.game.events.on(GameEvents.AddScore, (score: number) => {
+      this.score += score;
+    });
+
+    this.time.addEvent({ delay: 2000, callback: () => {
+      this.level++;
+      const bonus = new Bonus(this);
+      this.physics.add.overlap(bonus, this.hero, (b: Bonus, h: Hero) => {
+        b.effect(h);
+        b.destroy();
+      });
+    }, loop: true });
   }
 }
 

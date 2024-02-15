@@ -20,7 +20,7 @@ export default class ScoreScene extends Scene {
   }
 
   create() {
-    this.score = new Text(this, 25, 25, this.scoreText)
+    this.score = new Text(this, 25, 25, this.scoreText).setFontSize(30);
   }
 
   update(): void {

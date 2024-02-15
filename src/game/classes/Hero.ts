@@ -2,6 +2,7 @@ import { Actor } from './Actor';
 import { Input, Scene } from 'phaser';
 import Bullet from './Bullet';
 import { throttle } from '../../utils/throttle';
+import { BonusTypes } from './Bonus';
 
 const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
   // Получаем вектор направления от персонажа к указателю мыши
@@ -32,6 +33,7 @@ export default class Hero extends Actor {
   private keyS: Input.Keyboard.Key;
   private keyD: Input.Keyboard.Key;
   private speed: number;
+  public activeGun: BonusTypes.Riffle | BonusTypes.Shotgun | null;
   private makeShot: () => void;
 
   constructor(scene: Scene, x: number, y: number, texture: string, onShot: (b: Bullet) => void)
@@ -42,7 +44,7 @@ export default class Hero extends Actor {
     this.keyA = this.scene.input.keyboard.addKey('A');
     this.keyS = this.scene.input.keyboard.addKey('S');
     this.keyD = this.scene.input.keyboard.addKey('D');
-
+    this.activeGun = null; // default
     this.speed = 200;
 
     scene.add.existing(this);
