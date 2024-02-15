@@ -21,17 +21,17 @@ export default class HeroScene extends Scene {
   }
 
   update(t, d): void {
-    this.mainScene.hero?.active && this.mainScene.hero.update(t, d);
+    this.mainScene.hero?.active && !this.mainScene.hero.isDead && this.mainScene.hero.update(t, d);
   }
 
   onShot = (bullet: Bullet) => {
     this.mainScene.enemiesGroup.children.iterate((e) => {
       this.physics.add.overlap(bullet, e, (bullet: Bullet, enemy: Enemy) => {
         bullet.destroy();
-        enemy?.getDamage && enemy?.getDamage(15);
+        enemy?.getDamage && enemy?.getDamage(30);
       });
       return true;
-    })
+    });
   }
 
   private initHero(): void {

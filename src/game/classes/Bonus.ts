@@ -9,8 +9,8 @@ export enum BonusTypes {
   Ammo = 'ammo',
 }
 
-const guns = [BonusTypes.Riffle, BonusTypes.Shotgun];
-const types = [...guns, BonusTypes.Health]; // @TODO add other
+const guns = [BonusTypes.Riffle]; // @TODO add other
+const types = [...guns, BonusTypes.Health, BonusTypes.Ammo]; // @TODO add other
 
 const textures = {
   [BonusTypes.Riffle]: 'riffle',
@@ -44,7 +44,9 @@ export default class Bonus extends Physics.Arcade.Sprite {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    this.body.setSize(40, 40);
+    this.body.setSize(60, 60);
+
+    const graphics = this.addGraphics();
 
     const timerEvent = this.scene.time.addEvent({ delay: 100, loop: true, callback: () => {
       this.setAngle(this.angle + 20);
@@ -52,11 +54,33 @@ export default class Bonus extends Physics.Arcade.Sprite {
 
     this.on('destroy', () => {
       timerEvent.destroy();
+      graphics.destroy();
     });
   }
 
-  effect(target: Hero) {
-    this.bonusType === BonusTypes.Health && (target.hp += 50);
-    guns.includes(this.bonusType) && (target.activeGun = this.bonusType as BonusTypes.Riffle | BonusTypes.Shotgun);
+  addGraphics() {
+    const glowGraphics = this.scene.add.graphics();
+
+    const glowRadius = 40;
+    const glowColor = 0x614198;
+    const glowAlpha = 0.2;
+
+    return glowGraphics
+      .fillStyle(glowColor, glowAlpha)
+      .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, glowRadius);
+  }
+
+  effect(target: Hero): boolean {
+    return [
+
+      this.bonusType === BonusTypes.Health && target.hp < 100 && (target.hp <= 50 ? target.hp += 50 : target.hp = 100),
+
+      this.bonusType === BonusTypes.Ammo && target.activeGun && (target.bullets += 150),
+
+      this.bonusType === BonusTypes.Riffle && target.activeGun === BonusTypes.Riffle && (target.bullets += 50),
+
+      [BonusTypes.Riffle, BonusTypes.Shotgun].includes(this.bonusType) && !target.activeGun && target.switchGun(this.bonusType as BonusTypes.Riffle | BonusTypes.Shotgun),
+
+    ].some((b) => !!b)
   }
 }

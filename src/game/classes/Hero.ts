@@ -27,13 +27,18 @@ const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
   }
 }
 
+type Gun = BonusTypes.Riffle | BonusTypes.Shotgun | null;
+
 export default class Hero extends Actor {
   private keyW: Input.Keyboard.Key;
   private keyA: Input.Keyboard.Key;
   private keyS: Input.Keyboard.Key;
   private keyD: Input.Keyboard.Key;
   private speed: number;
-  public activeGun: BonusTypes.Riffle | BonusTypes.Shotgun | null;
+  public bullets: number;
+  public activeGun: Gun;
+  private fireDelay: number;
+  private onShot: (b: Bullet) => void;
   private makeShot: () => void;
 
   constructor(scene: Scene, x: number, y: number, texture: string, onShot: (b: Bullet) => void)
@@ -44,20 +49,44 @@ export default class Hero extends Actor {
     this.keyA = this.scene.input.keyboard.addKey('A');
     this.keyS = this.scene.input.keyboard.addKey('S');
     this.keyD = this.scene.input.keyboard.addKey('D');
-    this.activeGun = null; // default
+    this.bullets = Infinity;
     this.speed = 200;
+    this.onShot = onShot;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
+    this.switchGun(null);
+    this.initMakeShot();
+
+    this.on('destroy', () => {
+      // this.scene.game.scene.pause(Scenes.MainScene);
+      this.scene.game.pause();
+    });
+  }
+
+  initMakeShot = () => {
     this.makeShot = throttle(() => {
-      const bullet = this.makeBullet();
-      onShot(bullet);
-    }, 80).bind(this);
+      const bullet = this.active && this.makeBullet();
+      this.onShot(bullet);
+    }, this.fireDelay).bind(this);
+  }
+
+  switchGun = (gun: Gun) => {
+    if (this.activeGun === gun) {
+      this.bullets += 50;
+      return;
+    }
+    this.activeGun = gun;
+    !this.activeGun && (this.bullets = Infinity) && (this.fireDelay = 250);
+    this.activeGun && (this.bullets = 50) && (this.fireDelay = 70);
+    this.initMakeShot();
   }
 
   makeBullet = () => {
     const pointer = this.scene.input.activePointer;
+    this.bullets--;
+    if (!this.bullets) this.switchGun(null);
     return new Bullet(this.scene, pointer.worldX, pointer.worldY, 'bullet', getOffsetGunPlayer(pointer, this));
   }
 

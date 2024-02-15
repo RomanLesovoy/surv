@@ -49,12 +49,11 @@ export default class MainScene extends Scene {
       this.score += score;
     });
 
-    this.time.addEvent({ delay: 2000, callback: () => {
+    this.time.addEvent({ delay: 20000, callback: () => {
       this.level++;
       const bonus = new Bonus(this);
       this.physics.add.overlap(bonus, this.hero, (b: Bonus, h: Hero) => {
-        b.effect(h);
-        b.destroy();
+        b.effect(h) && b.destroy();
       });
     }, loop: true });
   }
