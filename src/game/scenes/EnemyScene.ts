@@ -18,7 +18,6 @@ export default class EnemyScene extends Scene {
   }
 
   create() {
-    console.log(2)
     this.physics.add.collider(this.mainScene.enemiesGroup, this.mainScene.enemiesGroup, this.handleEnemyCollision, null, this);
     this.time.addEvent({ delay: this.timerSpawn, callback: () => this.pushEnemy(), loop: true });
   }

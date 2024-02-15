@@ -18,8 +18,6 @@ export default class HeroScene extends Scene {
 
   create() {
     this.initHero();
-
-    
   }
 
   update(t, d): void {
@@ -27,16 +25,13 @@ export default class HeroScene extends Scene {
   }
 
   onShot = (bullet: Bullet) => {
-    this.mainScene.bulletsGroup.push(bullet);
     this.mainScene.enemiesGroup.children.iterate((e) => {
-      this.physics.add.collider(bullet, e, (bullet: Bullet, enemy: Enemy) => {
-        console.log('collision')
+      this.physics.add.overlap(bullet, e, (bullet: Bullet, enemy: Enemy) => {
         bullet.destroy();
         enemy.getDamage(15);
       });
-      return true
+      return true;
     })
-    
   }
 
   private initHero(): void {
