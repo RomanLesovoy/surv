@@ -13,7 +13,7 @@ export default class EnemyScene extends Scene {
     this.timerSpawn = 2000;
   }
 
-  init(data) {
+  init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
   }
 
@@ -27,11 +27,9 @@ export default class EnemyScene extends Scene {
       !e.isDead && e.update(t, d)
       return true;
     });
-    super.update(t, d);
   }
 
   private handleEnemyCollision(enemy1: Enemy, enemy2: Enemy) {
-    console.log('enemy collision')
     const angleBetweenZombies = Phaser.Math.Angle.Between(enemy1.x, enemy1.y, enemy2.x, enemy2.y);
     const avoidanceSpeed = 50;
     this.physics.velocityFromAngle(angleBetweenZombies + Math.PI, avoidanceSpeed, enemy1.body.velocity);

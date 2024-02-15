@@ -1,6 +1,7 @@
 import { Scene, Math } from 'phaser';
 import { Actor } from './Actor';
 import Hero from './Hero';
+import { Text } from './Text';
 
 export class Enemy extends Actor {
   private target: Hero;
@@ -25,9 +26,14 @@ export class Enemy extends Actor {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    scene.physics.world.enable(this);
 
     this.getBody().setOffset(0, 15);
+    this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
+    this.texts[1].setFontSize(8);
+
+    this.on('destroy', () => {
+      this.scene.game.events.emit('score', 10 + level)
+    });
   }
 
   // 1 sec delay for attack

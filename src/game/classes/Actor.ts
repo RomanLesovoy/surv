@@ -1,9 +1,21 @@
 import { Physics } from 'phaser';
 import { Text } from './Text';
 
+const createTexts = (actor: Actor): Array<Text> => {
+  return [
+    new Text(actor.scene, actor.x, actor.y - actor.height, actor.hp.toString())
+      .setFontSize(14)
+      .setOrigin(0.8, 0.5),
+    new Text(actor.scene, actor.x, actor.y - actor.height, actor.name)
+      .setFontSize(14)
+      .setColor('white')
+      .setOrigin(0.6, 1.5)
+  ];
+}
+
 export class Actor extends Physics.Arcade.Sprite {
-  protected hp = 100;
-  private hpText: Text;
+  public hp = 100;
+  protected texts: Text[];
   public isDead: boolean = false;
   public collider: Phaser.Physics.Arcade.Collider;
 
@@ -17,25 +29,27 @@ export class Actor extends Physics.Arcade.Sprite {
     this.getBody().setSize(80, 80);
     this.getBody().setOffset(10, -15);
 
-    this.hpText = new Text(this.scene, this.x, this.y - this.height, this.hp.toString())
-      .setFontSize(12)
-      .setOrigin(0.8, 0.5);
+    this.texts = createTexts(this);
+  }
+
+  public handleTexts(): void {
+    this.texts[0].setText(this.hp.toString()).setColor(this.hp > 50 ? '#38d738' : 'red');
+    this.texts[1].setText(this.name);
+    this.texts.forEach((t) => t.setPosition(this.x, this.y - this.height * 0.4));
   }
 
   public preUpdate(time, delta): void {
     if (this.hp > 0) {
-      this.hpText.setText(this.hp.toString());
-      this.hpText.setPosition(this.x, this.y - this.height * 0.4);
+      this.handleTexts();
       super.preUpdate(time, delta);
     } else {
-      this.hpText?.destroy();
+      this.texts.forEach((t) => t?.destroy());
       this.collider && this.scene.physics.world.removeCollider(this.collider)
       this.destroy();
     }
   }
 
   public getDamage(value: number = 20): void {
-    console.log('damage')
     this.active && this.scene.tweens.add({
       targets: this,
       duration: 100,

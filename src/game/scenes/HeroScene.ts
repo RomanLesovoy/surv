@@ -12,7 +12,7 @@ export default class HeroScene extends Scene {
     super(Scenes.HeroScene);
   }
   
-  init(data) {
+  init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
   }
 
@@ -28,13 +28,13 @@ export default class HeroScene extends Scene {
     this.mainScene.enemiesGroup.children.iterate((e) => {
       this.physics.add.overlap(bullet, e, (bullet: Bullet, enemy: Enemy) => {
         bullet.destroy();
-        enemy.getDamage(15);
+        enemy?.getDamage && enemy?.getDamage(15);
       });
       return true;
     })
   }
 
   private initHero(): void {
-    this.mainScene.hero = new Hero(this, window.innerWidth / 2, window.innerHeight / 2, 'player', this.onShot);
+    this.mainScene.hero = new Hero(this, window.innerWidth / 2, window.innerHeight / 2, 'player', this.onShot).setName('Player');
   }
 }

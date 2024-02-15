@@ -16,7 +16,6 @@ export default class LoadingScene extends Scene {
     this.load.image('bg-block', 'other/bg-block.jpg');
 
     // v1
-
     this.load.image('player', 'player/default.png');
 
     this.load.image('zombie1', 'enemies/zombie1/idle.png');
@@ -27,9 +26,9 @@ export default class LoadingScene extends Scene {
   }
 
   create(): void {
-    this.scene.start(Scenes.InitScene);
+    this.scene.start(Scenes.MainScene);
 
-    this.input.setDefaultCursor('url(/assets/other/aim.cur), crosshair');
+    this.input.setDefaultCursor('url(./assets/v1/other/aim.cur), crosshair');
 
     this.initAnims();
   }
