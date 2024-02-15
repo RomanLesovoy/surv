@@ -1,0 +1,342 @@
+{
+  "frames": [
+    {
+      "filename": "zombie1-move-0",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 8,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-1",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 118,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-2",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 228,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-3",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 338,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-4",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 442,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-5",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 549,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-6",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 659,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-7",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 765,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-8",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 874,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-9",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 980,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-10",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 1089,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-11",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 1198,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-12",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 1302,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-13",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 1412,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-14",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 1519,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-15",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 1626,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+      "filename": "zombie1-move-16",
+        "frame": {
+            "w": 90,
+            "h": 102,
+            "x": 1730,
+            "y": 1
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+    },
+    {
+        "filename": "zombie1-attack-0",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 13,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "zombie1-attack-1",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 129,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "zombie1-attack-2",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 247,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "zombie1-attack-3",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 360,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "zombie1-attack-4",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 486,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "zombie1-attack-5",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 615,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "zombie1-attack-6",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 734,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "zombie1-attack-7",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 849,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "zombie1-attack-8",
+          "frame": {
+              "w": 90,
+              "h": 102,
+              "x": 966,
+              "y": 1
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      }
+  ]
+}

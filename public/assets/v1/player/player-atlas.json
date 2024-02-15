@@ -1,0 +1,43 @@
+{
+  "frames": [
+      {
+          "filename": "player-idle-riffle",
+          "frame": {
+              "w": 290,
+              "h": 168,
+              "x": 19,
+              "y": 27
+          },
+          "anchor": {
+              "x": 0.5,
+              "y": 0.5
+          }
+      },
+      {
+        "filename": "player-idle-handgun",
+        "frame": {
+            "w": 290,
+            "h": 168,
+            "x": 311,
+            "y": 37
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+      },
+      {
+        "filename": "player-idle-shotgun",
+        "frame": {
+            "w": 290,
+            "h": 168,
+            "x": 962,
+            "y": 12
+        },
+        "anchor": {
+            "x": 0.5,
+            "y": 0.5
+        }
+      }
+    ]
+  }
