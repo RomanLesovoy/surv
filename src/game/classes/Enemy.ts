@@ -3,6 +3,7 @@ import { Actor } from './Actor';
 import Hero from './Hero';
 import { Text } from './Text';
 import { GameEvents } from '../game-events';
+import Bullet from './Bullet';
 
 export class Enemy extends Actor {
   private target: Hero;
@@ -25,16 +26,34 @@ export class Enemy extends Actor {
     this.timer = 1000;
     this.hp = 90 + (level * 10);
 
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
+    // scene.add.existing(this);
+    // scene.physics.add.existing(this);
 
     this.getBody().setOffset(0, 15);
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
     this.texts[1].setFontSize(8);
 
     this.on('destroy', () => {
-      this.scene.game.events.emit(GameEvents.AddScore, 10 + level)
+      this.leaveSpotAfterDestroy();
+      this.scene.game.events.emit(GameEvents.AddScore, 10 + level);
     });
+  }
+
+  public leaveSpotAfterDestroy(): void {
+    const graphics = this.scene.add.graphics();
+    graphics
+      .fillStyle(0xe81b1b, 0.5)
+      .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 20);
+
+    setTimeout(() => graphics.destroy(), 3000);
+  }
+
+  public animateDamage(bullet: Bullet): void {
+    const bulletVelocity = bullet.body.velocity.clone().normalize();
+    const bulletVelocityX = bulletVelocity.x;
+    const bulletVelocityY = bulletVelocity.y;
+    
+    this.setVelocity(bulletVelocityX * 1000, bulletVelocityY * 1000);
   }
 
   // 1 sec delay for attack

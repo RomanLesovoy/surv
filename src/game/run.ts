@@ -1,28 +1,30 @@
-import { Game, Scale, WEBGL } from 'phaser';
+import { Game, Scale } from 'phaser';
 import { scenes } from './scenes';
 
+const size = 100 * 20; // 1 - tile size, 2 - tiles for row
+
 const config = {
-  type: WEBGL,
+  type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
   backgroundColor: '#999999',
   scene: scenes,
-  canvasStyle: `display: block; width: 100%; height: 100%;`,
+  // canvasStyle: `display: block; width: 100%; height: 100%;`,
   scale: {
-    mode: Scale.ScaleModes.NONE,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    mode: Scale.ScaleModes.FIT,
+    width: size,
+    height: size,
   },
   physics: {
     default: 'arcade',
     arcade: {
-      skipQuadTree: false,
-      debug: true,
+      // skipQuadTree: false,
+      debug: false,
     },
   },
   render: {
     antialiasGL: false,
-    pixelArt: true,
+    pixelArt: false,
   },
   autoFocus: true,
 };

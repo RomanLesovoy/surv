@@ -1,8 +1,9 @@
 import { Enemy } from '../classes/Enemy';
 import { Scenes } from './scenes-enum';
-import { getRandomCoordinates } from '../../utils/randomCoordinates';
+import { getRandomDoorMap } from '../../utils/randomCoordinates';
 import { Scene } from 'phaser';
 import { IMainScene, mainDataKey } from './MainScene';
+import { EImage } from './LoadScene';
 
 export default class EnemyScene extends Scene {
   protected timerSpawn!: number;
@@ -37,8 +38,8 @@ export default class EnemyScene extends Scene {
   }
 
   private createEnemy(): Enemy {
-    const coordinates = getRandomCoordinates();
-    const enemy = new Enemy(this, coordinates.x, coordinates.y, 'zombie1', this.mainScene.hero, this.mainScene.level)
+    const coordinates = getRandomDoorMap({ width: this.game.scale.width, height: this.game.scale.height });
+    const enemy = new Enemy(this, coordinates.x, coordinates.y, EImage.Zombie1, this.mainScene.hero, this.mainScene.unitsLevel)
       .setName(`Enemy-${coordinates.x}-${coordinates.y}`)
       .setScale(1);
     return enemy;

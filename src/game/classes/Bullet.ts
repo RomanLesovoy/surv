@@ -9,11 +9,12 @@ export default class Bullet extends Physics.Arcade.Sprite {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    scene.physics.world.enable(this);
 
     this.setCollideWorldBounds(false);
-    this.body.setSize(5, 5);
+    this.body.setSize(4, 4);
     this.direction = { x, y };
 
-    scene.physics.moveTo(this, this.direction.x, this.direction.y, 2000);
+    scene.physics.moveTo(this, this.direction.x, this.direction.y, 6000);
   }
 }

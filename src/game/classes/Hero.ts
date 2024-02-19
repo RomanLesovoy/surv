@@ -3,6 +3,8 @@ import { Input, Scene } from 'phaser';
 import Bullet from './Bullet';
 import { throttle } from '../../utils/throttle';
 import { BonusTypes } from './Bonus';
+import { EImage } from '../scenes/LoadScene';
+import { Scenes } from '../scenes/scenes-enum';
 
 const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
   // Получаем вектор направления от персонажа к указателю мыши
@@ -41,9 +43,9 @@ export default class Hero extends Actor {
   private onShot: (b: Bullet) => void;
   private makeShot: () => void;
 
-  constructor(scene: Scene, x: number, y: number, texture: string, onShot: (b: Bullet) => void)
+  constructor(scene: Scene, x: number, y: number, onShot: (b: Bullet) => void)
   {
-    super(scene, x, y, texture);
+    super(scene, x, y, EImage.PlayerHandgun);
 
     this.keyW = this.scene.input.keyboard.addKey('W');
     this.keyA = this.scene.input.keyboard.addKey('A');
@@ -53,16 +55,24 @@ export default class Hero extends Actor {
     this.speed = 200;
     this.onShot = onShot;
 
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
-
     this.switchGun(null);
     this.initMakeShot();
+    this.setInteractive();
 
     this.on('destroy', () => {
-      // this.scene.game.scene.pause(Scenes.MainScene);
-      this.scene.game.pause();
+      // this.scene.mainScene // todo call mainScene to stop
+      this.scene.game.scene.pause(Scenes.MainScene);
+      this.scene.game.scene.pause(Scenes.EnemyScene);
+      this.scene.game.scene.pause(Scenes.HeroScene);
+      // this.scene.game.pause();
     });
+  }
+
+  getTexture = () => {
+    if (this.activeGun) {
+      return EImage.PlayerRiffle;
+    }
+    return EImage.PlayerHandgun;
   }
 
   initMakeShot = () => {
@@ -81,24 +91,26 @@ export default class Hero extends Actor {
     !this.activeGun && (this.bullets = Infinity) && (this.fireDelay = 250);
     this.activeGun && (this.bullets = 50) && (this.fireDelay = 70);
     this.initMakeShot();
+    this.setTexture(this.getTexture());
   }
 
   makeBullet = () => {
     const pointer = this.scene.input.activePointer;
     this.bullets--;
     if (!this.bullets) this.switchGun(null);
-    return new Bullet(this.scene, pointer.worldX, pointer.worldY, 'bullet', getOffsetGunPlayer(pointer, this));
+    return new Bullet(this.scene, pointer.worldX, pointer.worldY, EImage.Bullet, getOffsetGunPlayer(pointer, this));
   }
 
   update(_: number, __: number): void {
     const pointer = this.scene.input.activePointer;
     const pointerIsDown = pointer.isDown;
     this.getBody().setVelocity(0); // stop infinity run
+    // console.log(this.body.x, this.body.y)
 
-    this.keyW?.isDown && !pointerIsDown && (this.body.velocity.y = -this.speed);
-    this.keyA?.isDown && !pointerIsDown && (this.body.velocity.x = -this.speed);
-    this.keyS?.isDown && !pointerIsDown && (this.body.velocity.y = this.speed);
-    this.keyD?.isDown && !pointerIsDown && (this.body.velocity.x = this.speed);
+    this.keyW?.isDown && !pointerIsDown && this.getBody().setVelocityY(-this.speed);
+    this.keyA?.isDown && !pointerIsDown && this.getBody().setVelocityX(-this.speed);
+    this.keyS?.isDown && !pointerIsDown && this.getBody().setVelocityY(this.speed);
+    this.keyD?.isDown && !pointerIsDown && this.getBody().setVelocityX(this.speed);
 
     if (pointerIsDown) {
       // this.anims.play(`${this.atlasName}-shot`, true); // TODO

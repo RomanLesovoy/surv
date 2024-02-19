@@ -1,6 +1,6 @@
 import Hero from '../classes/Hero';
 import { Scenes } from './scenes-enum';
-import { Scene } from 'phaser';
+import { Scene, Tilemaps } from 'phaser';
 import { IMainScene, mainDataKey } from './MainScene';
 import { Enemy } from '../classes/Enemy';
 import Bullet from '../classes/Bullet';
@@ -27,14 +27,22 @@ export default class HeroScene extends Scene {
   onShot = (bullet: Bullet) => {
     this.mainScene.enemiesGroup.children.iterate((e) => {
       this.physics.add.overlap(bullet, e, (bullet: Bullet, enemy: Enemy) => {
-        bullet.destroy();
-        enemy?.getDamage && enemy?.getDamage(30);
+        enemy?.animateDamage && enemy.animateDamage(bullet);
+        enemy?.getDamage && enemy.getDamage(30);
+        bullet?.destroy();
       });
+      
+      const wallLayer = this.mainScene.map.getLayer('walls');
+      // TODO MAYBE RE-WORK
+      // @ts-ignore 
+      this.physics.add.overlap(bullet, wallLayer.tilemapLayer, (a: Bullet, b: Tilemaps.Tile) => {
+        b.index === 2 ? bullet?.destroy() : null;
+      })
       return true;
     });
   }
 
   private initHero(): void {
-    this.mainScene.hero = new Hero(this, window.innerWidth / 2, window.innerHeight / 2, 'player', this.onShot).setName('Player');
+    this.mainScene.hero = new Hero(this, window.innerWidth / 2, window.innerHeight / 2, this.onShot).setName('Player');
   }
 }

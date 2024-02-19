@@ -3,5 +3,9 @@ export enum Scenes {
   ScoreScene = 'score-scene',
   EnemyScene = 'enemy-scene',
   MainScene = 'main-scene',
-  HeroScene = 'hero-scene'
+  HeroScene = 'hero-scene',
+  MapScene = 'map-scene',
+  BonusScene = 'bonus-scene',
+  WaveScene = 'wave-scene',
+  LightScene = 'light-scene',
 }

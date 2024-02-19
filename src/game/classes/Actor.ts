@@ -17,13 +17,16 @@ export class Actor extends Physics.Arcade.Sprite {
   public hp = 100;
   protected texts: Text[];
   public isDead: boolean = false;
+  public myTexture: string;
   public collider: Phaser.Physics.Arcade.Collider;
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame);
+    this.myTexture = texture;
 
     scene.add.existing(this);
-    scene.physics.add.existing(this);
+    // scene.physics.add.existing(this);
+    scene.physics.world.enable(this);
 
     this.getBody().setCollideWorldBounds(true);
     this.getBody().setSize(80, 80);
@@ -49,23 +52,9 @@ export class Actor extends Physics.Arcade.Sprite {
     }
   }
 
-  public getDamage(value: number = 20): void {
-    this.active && this.scene.tweens.add({
-      targets: this,
-      duration: 100,
-      repeat: 3,
-      yoyo: true,
-      alpha: 0.5,
-      onStart: () => {
-        if (value) {
-          this.hp = this.hp - value;
-          this.isDead = this.hp <= 0;
-        }
-      },
-      onComplete: () => {
-        this.setAlpha(1);
-      },
-    });
+  public getDamage = (value: number = 20): void => {
+    this.hp = this.hp - value;
+    this.isDead = this.hp <= 0;
   }
 
   public getHPValue(): number {

@@ -20,10 +20,10 @@ const textures = {
   [BonusTypes.Ammo]: 'ammo',
 }
 
-const generateRandomCoordinatesCenter = (): { x: number, y: number } => {
+const generateRandomCoordinatesCenter = (mapSize: { width: number, height: number }): { x: number, y: number } => {
   return {
-    x: 200 + (Math.random() * (window.innerWidth - 400)),
-    y: 200 + (Math.random() * (window.innerHeight - 400)),
+    x: 200 + (Math.random() * (mapSize.width - 400)),
+    y: 200 + (Math.random() * (mapSize.height - 400)),
   }
 }
 
@@ -32,7 +32,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
   bonusType: BonusTypes;
 
   constructor(scene: Phaser.Scene) {
-    const coordinates = generateRandomCoordinatesCenter();
+    const coordinates = generateRandomCoordinatesCenter({ height: scene.game.scale.height, width: scene.game.scale.width });
     const bonusType = types[Math.round(Math.random() * (types.length - 1))];
     const texture = textures[bonusType];
 
@@ -44,6 +44,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    scene.physics.world.enable(this);
     this.body.setSize(60, 60);
 
     const graphics = this.addGraphics();
@@ -61,13 +62,9 @@ export default class Bonus extends Physics.Arcade.Sprite {
   addGraphics() {
     const glowGraphics = this.scene.add.graphics();
 
-    const glowRadius = 40;
-    const glowColor = 0x614198;
-    const glowAlpha = 0.2;
-
     return glowGraphics
-      .fillStyle(glowColor, glowAlpha)
-      .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, glowRadius);
+      .fillStyle(0x614198, 0.2)
+      .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 40);
   }
 
   effect(target: Hero): boolean {
