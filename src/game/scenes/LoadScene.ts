@@ -10,7 +10,14 @@ export enum EImage {
   // BgBlock = 'bg-block',
   // WallBlock = 'wall-block',
   ShadowBg = 'shadow-bg',
+  ButtonBg = 'button-bg',
   Bullet = 'bullet',
+  Riffle = 'riffle',
+  Ammo = 'ammo',
+  Shotgun = 'shotgun',
+  Health = 'health',
+  Armor = 'armor',
+  MenuBg = 'menu-bg',
 }
 
 export default class LoadingScene extends Scene {
@@ -24,17 +31,19 @@ export default class LoadingScene extends Scene {
     // Other
     this.load.image(EImage.Bullet, 'other/m_bullet.png');
     this.load.image(EImage.ShadowBg, 'other/shadow.png');
+    this.load.image(EImage.ButtonBg, 'other/button.png');
+    this.load.image(EImage.MenuBg, 'other/menu-bg.jpg');
 
     // Map
     // this.load.image(EImage.WallBlock, 'map/bg-block.jpg');
     // this.load.image(EImage.BgBlock, 'map/grey-tile.jpeg');
 
     // Bonuses
-    this.load.image('riffle', 'ammo/riffle.png');
-    this.load.image('armor', 'ammo/armor.png');
-    this.load.image('health', 'ammo/health.png');
-    this.load.image('shotgun', 'ammo/shotgun.png');
-    this.load.image('ammo', 'ammo/ammo.png');
+    this.load.image(EImage.Riffle, 'ammo/riffle.png');
+    this.load.image(EImage.Armor, 'ammo/armor.png');
+    this.load.image(EImage.Health, 'ammo/health.png');
+    this.load.image(EImage.Shotgun, 'ammo/shotgun.png');
+    this.load.image(EImage.Ammo, 'ammo/ammo.png');
 
     // v1
     this.load.image(EImage.PlayerHandgun, 'player/default.png');

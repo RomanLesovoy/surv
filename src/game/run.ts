@@ -7,7 +7,7 @@ const config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: '#999999',
+  backgroundColor: '#000000',
   scene: scenes,
   // canvasStyle: `display: block; width: 100%; height: 100%;`,
   scale: {
