@@ -2,6 +2,7 @@ import { IMainScene, mainDataKey } from "./MainScene";
 import { Scenes } from "./scenes-enum";
 import Bonus from "../classes/Bonus";
 import Hero from "../classes/Hero";
+import { timeConfigs } from '../game-events';
 
 export default class BonusScene extends Phaser.Scene {
   protected mainScene: IMainScene;
@@ -15,7 +16,7 @@ export default class BonusScene extends Phaser.Scene {
   }
 
   create() {
-    this.time.addEvent({ delay: 10000, callback: () => {
+    this.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
       const bonus = new Bonus(this);
       this.physics.world.enable(bonus);
       this.physics.add.overlap(bonus, this.mainScene.hero, (b: Bonus, h: Hero) => {

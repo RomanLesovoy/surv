@@ -26,9 +26,6 @@ export class Enemy extends Actor {
     this.timer = 1000;
     this.hp = 90 + (level * 10);
 
-    // scene.add.existing(this);
-    // scene.physics.add.existing(this);
-
     this.getBody().setOffset(0, 15);
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
     this.texts[1].setFontSize(8);

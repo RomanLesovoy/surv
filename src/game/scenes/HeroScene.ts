@@ -28,7 +28,7 @@ export default class HeroScene extends Scene {
     this.mainScene.enemiesGroup.children.iterate((e) => {
       this.physics.add.overlap(bullet, e, (bullet: Bullet, enemy: Enemy) => {
         enemy?.animateDamage && enemy.animateDamage(bullet);
-        enemy?.getDamage && enemy.getDamage(30);
+        enemy?.getDamage && enemy.getDamage(50);
         bullet?.destroy();
       });
       
@@ -43,6 +43,6 @@ export default class HeroScene extends Scene {
   }
 
   private initHero(): void {
-    this.mainScene.hero = new Hero(this, window.innerWidth / 2, window.innerHeight / 2, this.onShot).setName('Player');
+    this.mainScene.hero = new Hero(this, this.game.scale.width / 2, this.game.scale.height / 2, this.onShot).setName('Player');
   }
 }

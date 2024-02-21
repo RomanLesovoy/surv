@@ -30,7 +30,6 @@ export default class LoadingScene extends Scene {
 
     // Other
     this.load.image(EImage.Bullet, 'other/m_bullet.png');
-    this.load.image(EImage.ShadowBg, 'other/shadow.png');
     this.load.image(EImage.ButtonBg, 'other/button.png');
     this.load.image(EImage.MenuBg, 'other/menu-bg.jpg');
 

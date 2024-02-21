@@ -35,7 +35,7 @@ const gameNotActiveScenes = [
 ];
 
 export default class MainScene extends Scene {
-  protected unitsLevel: number = 1; // TODO Not sure
+  protected wave: number = 1; // TODO Not sure
   protected currentWave: number = 1;
   protected enemiesGroup: Phaser.GameObjects.Group;
   protected score: number;
@@ -123,7 +123,7 @@ export default class MainScene extends Scene {
 }
 
 export interface IMainScene {
-  unitsLevel: number;
+  wave: number;
   enemiesGroup: Phaser.GameObjects.Group;
   hero: Hero;
   score: number;

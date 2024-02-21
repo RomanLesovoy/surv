@@ -4,14 +4,13 @@ import { getRandomDoorMap } from '../../utils/randomCoordinates';
 import { Scene } from 'phaser';
 import { IMainScene, mainDataKey } from './MainScene';
 import { EImage } from './LoadScene';
+import { timeConfigs } from '../game-events';
 
 export default class EnemyScene extends Scene {
-  protected timerSpawn!: number;
   protected mainScene: IMainScene;
 
   constructor() {
     super(Scenes.EnemyScene);
-    this.timerSpawn = 2000;
   }
 
   init(data: { [mainDataKey]: IMainScene }) {
@@ -20,7 +19,7 @@ export default class EnemyScene extends Scene {
 
   create() {
     this.physics.add.collider(this.mainScene.enemiesGroup, this.mainScene.enemiesGroup, this.handleEnemyCollision, null, this);
-    this.time.addEvent({ delay: this.timerSpawn, callback: () => this.pushEnemy(), loop: true });
+    this.time.addEvent({ delay: timeConfigs.enemyDelay, callback: () => this.pushEnemy(), loop: true });
   }
 
   update(t, d): void {
@@ -39,14 +38,13 @@ export default class EnemyScene extends Scene {
 
   private createEnemy(): Enemy {
     const coordinates = getRandomDoorMap({ width: this.game.scale.width, height: this.game.scale.height });
-    const enemy = new Enemy(this, coordinates.x, coordinates.y, EImage.Zombie1, this.mainScene.hero, this.mainScene.unitsLevel)
+    const enemy = new Enemy(this, coordinates.x, coordinates.y, EImage.Zombie1, this.mainScene.hero, this.mainScene.wave)
       .setName(`Enemy-${coordinates.x}-${coordinates.y}`)
       .setScale(1);
     return enemy;
   }
 
   private pushEnemy(): void {
-    const enemy = this.createEnemy();
-    this.mainScene.enemiesGroup.add(enemy);
+    this.mainScene.enemiesGroup.addMultiple([this.createEnemy(), this.createEnemy()]);
   }
 }

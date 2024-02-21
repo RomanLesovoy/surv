@@ -21,49 +21,57 @@ export default class MenuScene extends Scene {
 		this.cursors = this.input.keyboard.createCursorKeys()
 	}
 
-  createButton = () => this.add.image(
-    this.scale.width * 0.5,
-    (this.scale.height / 4) / (this.scale.width / this.scale.height),
-    EImage.ButtonBg,
-  ).setDisplaySize(450, buttonHeight);
+  createButton = (_text: string, yOffset: number = 0) => {
+    const button = this.add.image(
+      this.scale.width * 0.5,
+      (this.scale.height / 4) / (this.scale.width / this.scale.height),
+      EImage.ButtonBg,
+    ).setDisplaySize(450, buttonHeight);
+    button.setY(button.y + yOffset);
+    const text = this.add.text(button.x, button.y, _text.toUpperCase()).setFontStyle('bold').setFontSize(40).setOrigin(0.5);
+    return { button, text }
+  }
 
   createPlayButton() {
-    const playButton = this.createButton();
-    this.add.text(playButton.x, playButton.y, 'Start').setFontSize(40).setOrigin(0.5);
+    const { button } = this.createButton('Start');
 
-    playButton.on(selectedAction, () => {
+    button.on(selectedAction, () => {
       this.mainScene.setGameStatus(GameStatus.Reset);
     });
 
-    return playButton;
+    return button;
   }
 
   createResumeButton() {
-    const resumeButton = this.createButton();
-    resumeButton.setY(resumeButton.y + buttonHeight + 100);
-    const text = this.add.text(resumeButton.x, resumeButton.y, 'Resume').setFontSize(40).setOrigin(0.5);
+    const { button, text } = this.createButton('Resume', buttonHeight + 100);
+
     const visible = this.mainScene.getGameStatus() !== GameStatus.NotStarted;
 
-    resumeButton.on(selectedAction, () => {
+    button.on(selectedAction, () => {
       this.mainScene.setGameStatus(GameStatus.Active);
     });
-    resumeButton.visible = visible;
-    text.visible = visible;
 
-    return resumeButton;
+    const changeVisible = (v: boolean) => {
+      button.setVisible(v);
+      text.setVisible(v);
+    }
+
+    changeVisible(visible);
+
+    return { button, text, changeVisible };
   }
 
   createBg() {
-    this.add.image(this.scale.width / 2, this.scale.height / 2, EImage.MenuBg).setTint(0x262525).setAlpha(0.7);
+    this.add.image(this.scale.width / 2, this.scale.height / 2 - 20, EImage.MenuBg).setScale(1.1).setTint(0x262525).setAlpha(0.9);
   }
 
   create() {
     this.createBg();
     const playButton = this.createPlayButton();
-    const resumeButton = this.createResumeButton();
-    this.buttons.push(playButton, resumeButton);
+    const { button: resumeButton, changeVisible } = this.createResumeButton();
+    this.buttons.push(resumeButton, playButton);
 
-    this.selectButton(0);
+    this.selectButton(1);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       playButton.off(selectedAction);
@@ -71,11 +79,11 @@ export default class MenuScene extends Scene {
     });
 
     this.game.events.on(GameStatus.Paused, () => {
-      resumeButton.visible = true;
+      changeVisible(true);
     });
 
     this.game.events.on(GameStatus.NotStarted, () => {
-      resumeButton.visible = false;
+      changeVisible(false);
     });
   }
 
