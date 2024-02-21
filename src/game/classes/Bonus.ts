@@ -1,4 +1,5 @@
 import { Physics } from 'phaser';
+import { EImage } from '../scenes/LoadScene';
 import Hero from './Hero';
 
 export enum BonusTypes {
@@ -13,11 +14,11 @@ const guns = [BonusTypes.Riffle]; // @TODO add other
 const types = [...guns, BonusTypes.Health, BonusTypes.Ammo]; // @TODO add other
 
 const textures = {
-  [BonusTypes.Riffle]: 'riffle',
-  [BonusTypes.Shotgun]: 'shotgun',
-  [BonusTypes.Health]: 'health',
-  [BonusTypes.Armor]: 'armor',
-  [BonusTypes.Ammo]: 'ammo',
+  [BonusTypes.Riffle]: EImage.Riffle,
+  [BonusTypes.Shotgun]: EImage.Shotgun,
+  [BonusTypes.Health]: EImage.Health,
+  [BonusTypes.Armor]: EImage.Armor,
+  [BonusTypes.Ammo]: EImage.Ammo,
 }
 
 const generateRandomCoordinatesCenter = (mapSize: { width: number, height: number }): { x: number, y: number } => {

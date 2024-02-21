@@ -4,7 +4,7 @@ import Bullet from './Bullet';
 import { throttle } from '../../utils/throttle';
 import { BonusTypes } from './Bonus';
 import { EImage } from '../scenes/LoadScene';
-import { Scenes } from '../scenes/scenes-enum';
+import { emitGameStatus, GameStatus } from '../scenes/MainScene';
 
 const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
   // Получаем вектор направления от персонажа к указателю мыши
@@ -60,11 +60,7 @@ export default class Hero extends Actor {
     this.setInteractive();
 
     this.on('destroy', () => {
-      // this.scene.mainScene // todo call mainScene to stop
-      this.scene.game.scene.pause(Scenes.MainScene);
-      this.scene.game.scene.pause(Scenes.EnemyScene);
-      this.scene.game.scene.pause(Scenes.HeroScene);
-      // this.scene.game.pause();
+      this.scene.game.events.emit(emitGameStatus, GameStatus.NotStarted);
     });
   }
 
