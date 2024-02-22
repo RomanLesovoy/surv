@@ -73,6 +73,10 @@ export default class MenuScene extends Scene {
 
     this.selectButton(1);
 
+    this.input.keyboard.on('keydown-ENTER', () => {
+      this.confirmSelection();
+    });
+
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       playButton.off(selectedAction);
       resumeButton.off(selectedAction);

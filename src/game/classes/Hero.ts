@@ -60,13 +60,9 @@ export default class Hero extends Actor {
     this.keyA = input.keyboard.addKey('A');
     this.keyS = input.keyboard.addKey('S');
     this.keyD = input.keyboard.addKey('D');
-    this.bullets = Infinity;
-    this.speed = defaultHeroStats.speed;
-    this.hp = defaultHeroStats.hp;
-    this.damage = defaultHeroStats.damage;
+    
+    this.resetHero();
     this.onShot = onShot;
-
-    this.switchGun(null);
     this.initMakeShot();
     this.setInteractive();
 
@@ -76,6 +72,15 @@ export default class Hero extends Actor {
 
     this.bulletImg = this.scene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false);
     this.bulletsText = new Text(this.scene, game.scale.width - 250, game.scale.height - 90, '');
+  }
+
+  public resetHero = () => {
+    this.bullets = Infinity;
+    this.speed = defaultHeroStats.speed;
+    this.hp = defaultHeroStats.hp;
+    this.damage = defaultHeroStats.damage;
+    this.switchGun(null);
+    this.setPosition(this.scene.game.scale.width / 2, this.scene.game.scale.height / 2);
   }
 
   getTexture = () => {

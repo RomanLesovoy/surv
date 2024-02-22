@@ -26,6 +26,7 @@ export default class LoadingScene extends Scene {
 
   preload(): void {
     this.load.baseURL = './assets/v1/';
+    this.preloadData();
 
     // Other
     this.load.image(EImage.Bullet, 'other/m_bullet.png');
@@ -57,11 +58,39 @@ export default class LoadingScene extends Scene {
   }
 
   create(): void {
-    this.scene.start(Scenes.MainScene);
-
     this.input.setDefaultCursor('url(./assets/v1/other/aim.cur), crosshair');
 
     this.initAnims();
+  }
+
+  preloadData() {
+    const { width: x, height: y } = this.game.scale;
+    const loadingXPosition = 240;
+    const loadingYOffset = 100;
+    const loadingWidth = x - loadingXPosition * 2;
+    const progressBar = this.add.graphics();
+    const progressBox = this.add.graphics().fillStyle(0x333333, 0.8).fillRect(loadingXPosition, y / 2 + loadingYOffset, loadingWidth, 50);
+    const loadingText = this.make.text({
+      x: x / 2,
+      y: y / 2 - 50,
+      text: 'Loading...',
+    }).setColor('white').setFontSize(40).setOrigin(0.5, 0.5);
+
+    this.load.on('progress', function (value) {
+      progressBar.clear();
+      progressBar.fillStyle(0xffffff, 1);
+      progressBar.fillRect(loadingXPosition + 10, y / 2 + (loadingYOffset + 10), loadingWidth * value - 20, 30);
+    });
+
+    this.load.on('complete', () => {
+      setTimeout(() => {
+        progressBar.destroy();
+        progressBox.destroy();
+        loadingText.destroy();
+
+        this.scene.start(Scenes.MainScene);
+      }, 1000)
+    });
   }
 
   initAnims(): void {
