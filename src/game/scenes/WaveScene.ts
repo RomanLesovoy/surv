@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
-import { GameStatus, IMainScene, mainDataKey } from './MainScene';
+import { GameStatus, IMainScene, emitGameStatus, mainDataKey } from './MainScene';
 import { timeConfigs } from '../game-events';
 
 export default class WaveScene extends Scene {
@@ -32,7 +32,6 @@ export default class WaveScene extends Scene {
   onStartNextWave = () => {
     const newWave = this.mainScene.wave + 1;
     this.mainScene.setGameStatus(GameStatus.Active);
-    this.timerWave.paused = false;
     this.mainScene.wave = newWave;
     this.setDarkness(newWave % 3 === 0);
   }
@@ -43,12 +42,15 @@ export default class WaveScene extends Scene {
   }
 
   initEvents() {
+    this.game.events.on(emitGameStatus, (s: GameStatus) => {
+      if ([GameStatus.Active, GameStatus.Reset].includes(s)) {
+        return this.timerWave.paused = false;
+      }
+      return this.timerWave.paused = true;
+    });
+
     this.timerWave = this.time.addEvent({ delay: timeConfigs.waveDelay, callback: () => {
-      this.mainScene.enemiesGroup.children.iterate((e) => {
-        e && e.destroy()
-        return true;
-      });
-      this.timerWave.paused = true;
+      this.mainScene.enemiesGroup.clear(true, true);
       this.mainScene.setGameStatus(GameStatus.Improvement);
       this.improvementScene();
     }, loop: true });

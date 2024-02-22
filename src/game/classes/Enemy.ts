@@ -31,21 +31,25 @@ export class Enemy extends Actor {
 
     this.getBody().setOffset(0, 15);
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
-    this.texts[1].setFontSize(8);
+    this.texts[1].setFontSize(10);
 
     this.on('destroy', () => {
       this.leaveSpotAfterDestroy();
-      this.scene.game.events.emit(GameEvents.AddScore, 10 + level);
+      this.texts.forEach((t) => t?.destroy());
+      if (this.isDead) {
+        this.scene.game.events.emit(GameEvents.CreateRuby, this.body.x, this.body.y);
+        this.scene.game.events.emit(GameEvents.AddScore, 10 + level);
+      }
     });
   }
 
-  public leaveSpotAfterDestroy(): void {
-    const graphics = this.scene.add.graphics();
-    graphics
-      .fillStyle(0xe81b1b, 0.5)
-      .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 20);
+  protected leaveSpotAfterDestroy(): void {
+    // const graphics = this.scene.add.graphics();
+    // graphics
+    //   .fillStyle(0xe81b1b, 0.5)
+    //   .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 30);
 
-    setTimeout(() => graphics.destroy(), 3000);
+    // setTimeout(() => graphics.destroy(), 3000);
   }
 
   public animateDamage(bullet: Bullet): void {

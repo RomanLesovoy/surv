@@ -5,7 +5,8 @@ export class Text extends GameObjects.Text {
     super(scene, x, y, text.toUpperCase(), {
       fontSize: 40,
       color: '#fff',
-      fontFamily: '"GAME"',
+      fontFamily: 'Airborne',
+      // fontFamily: '"Jennie on the Block"',
       stroke: '#000',
       strokeThickness: 4,
       fontStyle: 'bold',

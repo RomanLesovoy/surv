@@ -7,6 +7,7 @@ interface IButtonProps {
   callback: (button: GameObjects.Image) => void,
   text: string,
   textureKey: string,
+  name: string
 }
 
 export type Buttons = Array<{ button: GameObjects.Image, text: GameObjects.Text }>
@@ -27,7 +28,7 @@ export default class ButtonGroup {
       (this.scene.scale.height / 4) / (this.scene.scale.width / this.scene.scale.height),
       buttonProp.textureKey,
     ).setDisplaySize(450, 250);
-    button.setY(button.y + i * 300);
+    button.setY(button.y + i * 300).setName(buttonProp.name);
     const text = new Text(this.scene, button.x, button.y, buttonProp.text).setOrigin(0.5)
 
     button.on(selectedAction, () => {
@@ -39,7 +40,7 @@ export default class ButtonGroup {
   }
 
   create(buttons: Array<IButtonProps>) {
-    buttons.forEach(this.createButton);
+    buttons.filter((b) => !!b).forEach(this.createButton);
 
     this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.buttons.forEach((b) => b.button.off(selectedAction));

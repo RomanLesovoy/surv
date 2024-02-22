@@ -29,8 +29,8 @@ export default class MenuScene extends Scene {
     this.buttonGroup = new ButtonGroup(this);
     this.buttons = this.buttonGroup.create(
       [
-        { text: 'Start', callback: () => this.mainScene.setGameStatus(GameStatus.Reset), textureKey: EImage.ButtonBg },
-        { text: 'Resume', callback: () => this.mainScene.setGameStatus(GameStatus.Active), textureKey: EImage.ButtonBg }
+        { text: 'Start', callback: () => this.mainScene.setGameStatus(GameStatus.Reset), name: 'start', textureKey: EImage.ButtonBg },
+        { text: 'Resume', callback: () => this.mainScene.setGameStatus(GameStatus.Active), name: 'resume', textureKey: EImage.ButtonBg }
       ]
     );
 

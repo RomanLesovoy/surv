@@ -10,17 +10,23 @@ interface IStartData {
   onNextWave: () => void,
   [mainDataKey]: IMainScene
 }
+enum StatsKeys {
+  Damage = 'damage',
+  Hp = 'hp',
+  Speed = 'speed',
+}
 export default class ImprovementScene extends Scene {
   protected mainScene: IMainScene;
   protected improvementsCosts: { speed: number, damage: number, hp: number };
   protected cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   protected stats: Array<Text>;
   private onNextWave: () => void;
-  private buttons: Buttons;
+  protected buttons: Buttons;
   private buttonGroup: ButtonGroup;
 
   constructor() {
     super(Scenes.ImprovementScene);
+    this.buttons = [];
   }
 
   init(data: IStartData) {
@@ -36,49 +42,65 @@ export default class ImprovementScene extends Scene {
     this.add.image(500, this.game.scale.height - 500, EImage.ImproveHeroBg);
   }
 
-  onImproveSpeed() {
+  onImproveSpeed = () => {
     this.mainScene.hero.speed += defaultHeroStats.speedStatIncrease;
+    this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Speed];
+    this.setCosts();
   }
 
-  onImproveDamage() {
+  onImproveDamage = () => {
     this.mainScene.hero.damage += defaultHeroStats.damageStatIncrease;
+    this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Damage];
+    this.setCosts();
   }
 
-  onImproveHp() {
+  onImproveHp = () => {
     this.mainScene.hero.hp += defaultHeroStats.hpStatIncrease;
+    this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Hp];
+    this.setCosts();
   }
 
-  renderHeroStats() {
-    const { hero } = this.mainScene;
+  createHeroStats() {
     this.stats = [
-      new Text(this, 120, 100, `Health: ${hero.hp}`).setFontSize(40),
-      new Text(this, 120, 180, `Damage: ${hero.damage}`).setFontSize(40),
-      new Text(this, 120, 260, `Speed: ${hero.speed}`).setFontSize(40),
+      new Text(this, 120, 100, ''),
+      new Text(this, 120, 180, ''),
+      new Text(this, 120, 260, ''),
+      new Text(this, 120, 330, '').setFontSize(60).setColor('red'),
     ];
+  }
+
+  updateHeroStats() {
+    const { hero, ruby } = this.mainScene;
+    this.stats[0].setText(`Health: ${hero.hp}`);
+    this.stats[1].setText(`Damage: ${hero.damage}`);
+    this.stats[2].setText(`Speed: ${hero.speed}`);
+    this.stats[3].setText(`Ruby: ${ruby}`);
+  }
+
+  setCosts() {
+    this.improvementsCosts = {
+      [StatsKeys.Speed]: Math.round(this.mainScene.hero.speed / defaultHeroStats.speedStatIncrease),
+      [StatsKeys.Damage]: Math.round(this.mainScene.hero.damage / defaultHeroStats.damageStatIncrease),
+      [StatsKeys.Hp]: Math.round(this.mainScene.hero.hp / defaultHeroStats.hpStatIncrease),
+    }
   }
 
   create () {
     this.createBg();
-
-    this.renderHeroStats();
-
-    this.improvementsCosts = {
-      speed: Math.round(this.mainScene.hero.speed / defaultHeroStats.speedStatIncrease),
-      damage: Math.round(this.mainScene.hero.damage / defaultHeroStats.damageStatIncrease),
-      hp: Math.round(this.mainScene.hero.hp / defaultHeroStats.hpStatIncrease),
-    }
-
+    this.createHeroStats();
+    this.setCosts();
     this.buttonGroup = new ButtonGroup(this);
-    this.buttons = this.buttonGroup.create([
-      { text: 'Speed ++', callback: this.onImproveSpeed, textureKey: EImage.ButtonBg },
-      { text: 'Health ++', callback: this.onImproveHp, textureKey: EImage.ButtonBg },
-      { text: 'Damage ++', callback: this.onImproveDamage, textureKey: EImage.ButtonBg },
-      { text: 'ok', callback: this.onNextWave, textureKey: EImage.ButtonBg },
+    const checkEnoughRuby = (costs: number) => costs <= this.mainScene.ruby;
+    this.buttonGroup.create([
+      checkEnoughRuby(this.improvementsCosts[StatsKeys.Speed]) ? { text: 'Speed ++', callback: this.onImproveSpeed, name: StatsKeys.Speed, textureKey: EImage.ButtonBg } : null,
+      checkEnoughRuby(this.improvementsCosts[StatsKeys.Hp]) ? { text: 'Health ++', callback: this.onImproveHp, name: StatsKeys.Hp, textureKey: EImage.ButtonBg } : null,
+      checkEnoughRuby(this.improvementsCosts[StatsKeys.Damage]) ? { text: 'Damage ++', callback: this.onImproveDamage, name: StatsKeys.Damage, textureKey: EImage.ButtonBg } : null,
+      { text: 'ok', callback: this.onNextWave, name: 'ok', textureKey: EImage.ButtonBg },
     ]);
-    console.log(this.buttons)
   }
 
   update(): void {
     this.buttonGroup.update(this.cursors);
+    this.updateHeroStats();
   }
 }

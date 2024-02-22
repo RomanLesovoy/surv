@@ -45,17 +45,17 @@ const otherScenes = [
 
 export default class MainScene extends Scene {
   public wave: number = 1;
-  public currentWave: number = 1;
   public enemiesGroup: Phaser.GameObjects.Group;
   public score: number;
   public hero: Hero;
+  public ruby: number;
   protected map: Tilemaps.Tilemap;
   private mainSceneManager: MainSceneManager;
 
   constructor() {
     super(Scenes.MainScene);
     this.score = 0;
-  
+    this.ruby = 0;
   }
 
   createScenes = () => {
@@ -64,7 +64,7 @@ export default class MainScene extends Scene {
       .forEach((s) => this.game.scene.getIndex(s[0] as Scenes) === -1 && this.scene.add(s[0] as Scenes, s[1] as any, false, sharedThis));
   }
 
-  initAddScoreEvent = () => {
+  initAddScoreEvents = () => {
     this.game.events.on(GameEvents.AddScore, (score: number) => {
       this.score += score;
     });
@@ -81,7 +81,7 @@ export default class MainScene extends Scene {
 
     this.createScenes();
 
-    this.initAddScoreEvent();
+    this.initAddScoreEvents();
 
     this.game.events.on(emitGameStatus, this.mainSceneManager.setGameStatus);
 
@@ -105,6 +105,7 @@ export interface IMainScene {
   hero: Hero;
   score: number;
   map: Tilemaps.Tilemap;
+  ruby: number;
   getGameStatus: () => GameStatus,
   setGameStatus: (status: GameStatus) => void,
 }

@@ -1,13 +1,12 @@
 import MainScene from './MainScene';
 import { GameStatus } from './MainScene';
 import { Scenes } from './scenes-enum';
-import { GameEvents } from '../game-events';
 import MenuScene from './MenuScene';
 import ImprovementScene from './ImprovementScene';
 import MapScene from './MapScene';
 
 interface IScenes {
-  gameScenes: (Scenes | typeof MapScene)[][], // todo
+  gameScenes: (Scenes | typeof MapScene)[][],
   gameNotActiveScenes: (Scenes | typeof MenuScene)[][],
   otherScenes: (Scenes | typeof ImprovementScene)[][],
 }
@@ -26,6 +25,7 @@ export default class MainSceneManager {
   private resetScore = () => {
     this.mainSceneInstance.wave = 1;
     this.mainSceneInstance.score = 0;
+    this.mainSceneInstance.ruby = 0;
   }
 
   private resumeGame = (status: GameStatus) => {
@@ -38,12 +38,10 @@ export default class MainSceneManager {
   }
 
   private restartGame = () => {
-    this.mainSceneInstance.game.events.off(GameEvents.AddScore);
     this.resetScore();
     this.mainSceneInstance.hero.resetHero();
     this.mainSceneInstance.game.scene.getScene(Scenes.EnemyScene).scene.restart();
     this.mainSceneInstance.game.scene.getScene(Scenes.BonusScene).scene.restart();
-    setTimeout(() => this.mainSceneInstance.initAddScoreEvent(), 500); // todo
   }
 
   private resumeGameScenes = (newStatus) => {
