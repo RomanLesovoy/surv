@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
+import { Text } from '../classes/Text';
 
 export enum EImage {
   PlayerHandgun = 'player-handgun',
@@ -16,6 +17,8 @@ export enum EImage {
   Health = 'health',
   Armor = 'armor',
   MenuBg = 'menu-bg',
+  ImproveBg = 'improve-bg',
+  ImproveHeroBg = 'improve-hero-bg',
   BulletAmmo = 'bullet-ammo'
 }
 
@@ -33,6 +36,8 @@ export default class LoadingScene extends Scene {
     this.load.image(EImage.ButtonBg, 'other/button.png');
     this.load.image(EImage.MenuBg, 'other/menu-bg.jpg');
     this.load.image(EImage.BulletAmmo, 'other/bullet-ammo.png');
+    this.load.image(EImage.ImproveBg, 'other/improve-bg.jpg');
+    this.load.image(EImage.ImproveHeroBg, 'other/improve-hero-bg.png');
 
     // Bonuses
     this.load.image(EImage.Riffle, 'ammo/riffle.png');
@@ -53,7 +58,7 @@ export default class LoadingScene extends Scene {
     // this.load.tilemapTiledJSON('map1', 'map1.json');
 
     // ---
-    this.load.image('tilesheet', 'map/tile_sheet/metal_100.png');
+    this.load.image('tilesheet', 'map/tile_sheet/metal_100_2.png');
     this.load.tilemapTiledJSON('map', 'map-big-test.json');
   }
 
@@ -70,11 +75,7 @@ export default class LoadingScene extends Scene {
     const loadingWidth = x - loadingXPosition * 2;
     const progressBar = this.add.graphics();
     const progressBox = this.add.graphics().fillStyle(0x333333, 0.8).fillRect(loadingXPosition, y / 2 + loadingYOffset, loadingWidth, 50);
-    const loadingText = this.make.text({
-      x: x / 2,
-      y: y / 2 - 50,
-      text: 'Loading...',
-    }).setColor('white').setFontSize(40).setOrigin(0.5, 0.5);
+    const loadingText = new Text(this, x / 2, y / 2 - 50, 'Loading...').setColor('white').setFontSize(40).setOrigin(0.5, 0.5);
 
     this.load.on('progress', function (value) {
       progressBar.clear();

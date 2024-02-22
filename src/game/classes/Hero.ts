@@ -38,7 +38,7 @@ export default class Hero extends Actor {
   private keyA: Input.Keyboard.Key;
   private keyS: Input.Keyboard.Key;
   private keyD: Input.Keyboard.Key;
-  private speed: number;
+  public speed: number;
   public bullets: number;
   public activeGun: Gun;
   private fireDelay: number;

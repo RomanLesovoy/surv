@@ -4,9 +4,10 @@ import { Scenes } from './scenes-enum';
 import { GameEvents } from '../game-events';
 import MenuScene from './MenuScene';
 import ImprovementScene from './ImprovementScene';
+import MapScene from './MapScene';
 
 interface IScenes {
-  gameScenes: (any)[][], // todo
+  gameScenes: (Scenes | typeof MapScene)[][], // todo
   gameNotActiveScenes: (Scenes | typeof MenuScene)[][],
   otherScenes: (Scenes | typeof ImprovementScene)[][],
 }

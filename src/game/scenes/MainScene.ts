@@ -71,6 +71,7 @@ export default class MainScene extends Scene {
   }
   
   create() {
+    // @ts-ignore todo
     this.mainSceneManager = new MainSceneManager(this, { gameScenes, gameNotActiveScenes, otherScenes });
 
     this.enemiesGroup = this.physics.add.group({

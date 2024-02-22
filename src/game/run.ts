@@ -7,7 +7,7 @@ const config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: '#000000',
+  backgroundColor: '#070707',
   scene: scenes,
   // canvasStyle: `display: block; width: 100%; height: 100%;`,
   scale: {
@@ -19,7 +19,7 @@ const config = {
     default: 'arcade',
     arcade: {
       // skipQuadTree: false,
-      debug: true,
+      debug: false,
     },
   },
   render: {
