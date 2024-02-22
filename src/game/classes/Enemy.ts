@@ -4,12 +4,14 @@ import Hero from './Hero';
 import { Text } from './Text';
 import { GameEvents } from '../game-events';
 import Bullet from './Bullet';
+import { defaultEnemyStats } from './config';
 
 export class Enemy extends Actor {
   private target: Hero;
   private atlasName: string;
   public speed: number;
   private timer: number;
+  protected damage: number;
 
   constructor(
     scene: Scene,
@@ -22,9 +24,10 @@ export class Enemy extends Actor {
     super(scene, x, y, texture);
     this.target = target;
     this.atlasName = `a-${texture}`;
-    this.speed = 50 + (level * 10);
-    this.timer = 1000;
-    this.hp = 90 + (level * 10);
+    this.speed = defaultEnemyStats.speed + (level * defaultEnemyStats.speedWaveIncrease);
+    this.timer = defaultEnemyStats.timerAttack;
+    this.hp = defaultEnemyStats.hp + (level * defaultEnemyStats.hpWaveIncrease);
+    this.damage = defaultEnemyStats.damage + (level * defaultEnemyStats.damageWaveIncrease);
 
     this.getBody().setOffset(0, 15);
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
@@ -56,15 +59,15 @@ export class Enemy extends Actor {
   // 1 sec delay for attack
   private handleOnTimer(delta: number, callback: Function): void {
     this.timer += delta;
-    while (this.timer >= 1000) {
-      this.timer -= 1000;
+    while (this.timer >= defaultEnemyStats.timerAttack) {
+      this.timer -= defaultEnemyStats.timerAttack;
       callback();
     }
   }
 
   private attackHandler(): void {
     !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-attack`, frameRate: this.speed / 3 }, true);
-    this.target.getDamage();
+    this.target.getDamage(this.damage);
     // this.target.disableBody() // maybe does make sense
   }
 

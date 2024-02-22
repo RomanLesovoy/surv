@@ -1,10 +1,12 @@
 import { Actor } from './Actor';
-import { Input, Scene } from 'phaser';
+import { GameObjects, Input, Scene } from 'phaser';
 import Bullet from './Bullet';
 import { throttle } from '../../utils/throttle';
 import { BonusTypes } from './Bonus';
 import { EImage } from '../scenes/LoadScene';
 import { emitGameStatus, GameStatus } from '../scenes/MainScene';
+import { defaultHeroStats } from './config';
+import { Text } from './Text';
 
 const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
   // Получаем вектор направления от персонажа к указателю мыши
@@ -40,19 +42,28 @@ export default class Hero extends Actor {
   public bullets: number;
   public activeGun: Gun;
   private fireDelay: number;
+  public damage: number;
+  private bulletImg: GameObjects.Image;
   private onShot: (b: Bullet) => void;
   private makeShot: () => void;
+  private bulletsText: Text;
 
   constructor(scene: Scene, x: number, y: number, onShot: (b: Bullet) => void)
   {
     super(scene, x, y, EImage.PlayerHandgun);
 
-    this.keyW = this.scene.input.keyboard.addKey('W');
-    this.keyA = this.scene.input.keyboard.addKey('A');
-    this.keyS = this.scene.input.keyboard.addKey('S');
-    this.keyD = this.scene.input.keyboard.addKey('D');
+    const {
+      input, game
+    } = this.scene;
+
+    this.keyW = input.keyboard.addKey('W');
+    this.keyA = input.keyboard.addKey('A');
+    this.keyS = input.keyboard.addKey('S');
+    this.keyD = input.keyboard.addKey('D');
     this.bullets = Infinity;
-    this.speed = 200;
+    this.speed = defaultHeroStats.speed;
+    this.hp = defaultHeroStats.hp;
+    this.damage = defaultHeroStats.damage;
     this.onShot = onShot;
 
     this.switchGun(null);
@@ -60,8 +71,11 @@ export default class Hero extends Actor {
     this.setInteractive();
 
     this.on('destroy', () => {
-      this.scene.game.events.emit(emitGameStatus, GameStatus.NotStarted);
+      game.events.emit(emitGameStatus, GameStatus.NotStarted);
     });
+
+    this.bulletImg = this.scene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false);
+    this.bulletsText = new Text(this.scene, game.scale.width - 250, game.scale.height - 90, '');
   }
 
   getTexture = () => {
@@ -97,9 +111,19 @@ export default class Hero extends Actor {
     return new Bullet(this.scene, pointer.worldX, pointer.worldY, EImage.Bullet, getOffsetGunPlayer(pointer, this));
   }
 
+  showLeftBullets = () => {
+    if (this.bullets === Infinity) {
+      this.bulletImg.setVisible(false);
+      return this.bulletsText.setText('');
+    }
+    this.bulletImg.setVisible(true);
+    return this.bulletsText.setText(`${this.bullets}`);
+  }
+
   update(_: number, __: number): void {
     const pointer = this.scene.input.activePointer;
     const pointerIsDown = pointer.isDown;
+    this.showLeftBullets();
     this.getBody().setVelocity(0); // stop infinity run
     // console.log(this.body.x, this.body.y)
 

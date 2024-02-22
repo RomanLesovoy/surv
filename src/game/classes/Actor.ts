@@ -52,7 +52,7 @@ export class Actor extends Physics.Arcade.Sprite {
     }
   }
 
-  public getDamage = (value: number = 20): void => {
+  public getDamage = (value: number): void => {
     this.hp = this.hp - value;
     this.isDead = this.hp <= 0;
   }

@@ -51,7 +51,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
     const graphics = this.addGraphics();
 
     const timerEvent = this.scene.time.addEvent({ delay: 100, loop: true, callback: () => {
-      this.setAngle(this.angle + 20);
+      this.setAngle(this.angle + 15);
     }});
 
     this.on('destroy', () => {
@@ -64,7 +64,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
     const glowGraphics = this.scene.add.graphics();
 
     return glowGraphics
-      .fillStyle(0x614198, 0.2)
+      .fillStyle(0x614198, 0.3)
       .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 40);
   }
 

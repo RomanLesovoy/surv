@@ -28,7 +28,7 @@ export default class HeroScene extends Scene {
     this.mainScene.enemiesGroup.children.iterate((e) => {
       this.physics.add.overlap(bullet, e, (bullet: Bullet, enemy: Enemy) => {
         enemy?.animateDamage && enemy.animateDamage(bullet);
-        enemy?.getDamage && enemy.getDamage(50);
+        enemy?.getDamage && enemy.getDamage(this.mainScene.hero.damage);
         bullet?.destroy();
       });
       

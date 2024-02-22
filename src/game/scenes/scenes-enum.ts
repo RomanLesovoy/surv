@@ -9,4 +9,5 @@ export enum Scenes {
   WaveScene = 'wave-scene',
   LightScene = 'light-scene',
   MenuScene = 'menu-scene',
+  ImprovementScene = 'improvement-scene',
 }

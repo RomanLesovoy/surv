@@ -7,8 +7,6 @@ export enum EImage {
   Zombie1 = 'zombie1',
   Zombie1Move = 'a-zombie1-move',
   Zombie1Attack = 'a-zombie1-attack',
-  // BgBlock = 'bg-block',
-  // WallBlock = 'wall-block',
   ShadowBg = 'shadow-bg',
   ButtonBg = 'button-bg',
   Bullet = 'bullet',
@@ -18,6 +16,7 @@ export enum EImage {
   Health = 'health',
   Armor = 'armor',
   MenuBg = 'menu-bg',
+  BulletAmmo = 'bullet-ammo'
 }
 
 export default class LoadingScene extends Scene {
@@ -32,10 +31,7 @@ export default class LoadingScene extends Scene {
     this.load.image(EImage.Bullet, 'other/m_bullet.png');
     this.load.image(EImage.ButtonBg, 'other/button.png');
     this.load.image(EImage.MenuBg, 'other/menu-bg.jpg');
-
-    // Map
-    // this.load.image(EImage.WallBlock, 'map/bg-block.jpg');
-    // this.load.image(EImage.BgBlock, 'map/grey-tile.jpeg');
+    this.load.image(EImage.BulletAmmo, 'other/bullet-ammo.png');
 
     // Bonuses
     this.load.image(EImage.Riffle, 'ammo/riffle.png');
@@ -56,7 +52,7 @@ export default class LoadingScene extends Scene {
     // this.load.tilemapTiledJSON('map1', 'map1.json');
 
     // ---
-    this.load.image('tilesheet', 'map/tile_sheet/lava_100.png');
+    this.load.image('tilesheet', 'map/tile_sheet/metal_100.png');
     this.load.tilemapTiledJSON('map', 'map-big-test.json');
   }
 
