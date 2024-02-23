@@ -1,4 +1,5 @@
 import { GameObjects, Scene } from 'phaser';
+import { EImage } from '../scenes/LoadScene';
 import { Text } from './Text';
 
 export const selectedAction = 'selected';
@@ -16,6 +17,7 @@ export default class ButtonGroup {
   public buttons: Buttons;
   private scene: Scene;
   public selectedButtonIndex = 0;
+  private arrow: GameObjects.Image;
 
   constructor (scene: Scene) {
     this.scene = scene;
@@ -31,8 +33,8 @@ export default class ButtonGroup {
     button.setY(button.y + i * 300).setName(buttonProp.name);
     const text = new Text(this.scene, button.x, button.y, buttonProp.text).setOrigin(0.5)
 
-    button.on(selectedAction, () => {
-      buttonProp.callback(button);
+    button.on(selectedAction, (available: boolean) => {
+      available && buttonProp.callback(button);
     });
 
     this.buttons.push({ button, text });
@@ -43,11 +45,16 @@ export default class ButtonGroup {
     const button = this.buttons.find((b) => b.button.name === name);
     if (button) {
       !value ? button.button.setTint(0x444444) : button.button.clearTint();
-      button.text.setColor('white');
     }
   }
 
+  createArrow() {
+    this.arrow = this.scene.add.image(0, 0, EImage.Arrow);
+  }
+
   create(buttons: Array<IButtonProps>) {
+    this.createArrow();
+
     buttons.filter((b) => !!b).forEach(this.createButton);
 
     this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -90,16 +97,16 @@ export default class ButtonGroup {
 
   confirmSelection() {
     const { button } = this.buttons[this.selectedButtonIndex];
-    button.emit(selectedAction);
+    button.emit(selectedAction, !button.isTinted);
 	}
 
   selectButton() {
     const currentButton = this.buttons[this.selectedButtonIndex];
     
-    if (currentButton.button.isTinted) return this.selectNextButton();
+    if (currentButton.button.isTinted) {
+      return this.selectNextButton();
+    }
 
-    // set the newly selected button to a green tint
-    // currentButton.setTint(0x66ff7f);
-    currentButton.text.setColor('green');
+    this.arrow.setPosition(currentButton.button.x + 400, currentButton.button.y);
   }
 }
