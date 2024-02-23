@@ -21,7 +21,7 @@ export default class LightScene extends Phaser.Scene
 
 		this.overlay.fillStyle(0x000000, 0.85).fillRect(0, 0, this.game.scale.width, this.game.scale.height);
 
-		this.maskGraphics = this.make.graphics();
+		this.maskGraphics = this.make.graphics({});
 
 		const mask = new Phaser.Display.Masks.BitmapMask(this, this.maskGraphics);
 

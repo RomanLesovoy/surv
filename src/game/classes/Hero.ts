@@ -39,6 +39,7 @@ export default class Hero extends Actor {
   private keyS: Input.Keyboard.Key;
   private keyD: Input.Keyboard.Key;
   public speed: number;
+  public maxHp: number;
   public bullets: number;
   public activeGun: Gun;
   private fireDelay: number;
@@ -78,6 +79,7 @@ export default class Hero extends Actor {
     this.bullets = Infinity;
     this.speed = defaultHeroStats.speed;
     this.hp = defaultHeroStats.hp;
+    this.maxHp = defaultHeroStats.hp;
     this.damage = defaultHeroStats.damage;
     this.switchGun(null);
     this.setPosition(this.scene.game.scale.width / 2, this.scene.game.scale.height / 2);

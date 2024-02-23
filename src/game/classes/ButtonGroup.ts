@@ -39,6 +39,14 @@ export default class ButtonGroup {
     return { button, text }
   }
 
+  setDisableAvailableButton = (name: string, value: boolean) => {
+    const button = this.buttons.find((b) => b.button.name === name);
+    if (button) {
+      !value ? button.button.setTint(0x444444) : button.button.clearTint();
+      button.text.setColor('white');
+    }
+  }
+
   create(buttons: Array<IButtonProps>) {
     buttons.filter((b) => !!b).forEach(this.createButton);
 
@@ -46,7 +54,7 @@ export default class ButtonGroup {
       this.buttons.forEach((b) => b.button.off(selectedAction));
     });
 
-    this.selectButton(0);
+    this.selectNextButton(0);
 
     this.scene.input.keyboard.on('keydown-ENTER', () => {
       this.confirmSelection();
@@ -75,7 +83,9 @@ export default class ButtonGroup {
       index < 0 && (index = this.buttons.length - 1),
     ].find((_) => _!!);
 
-    this.selectButton(index);
+    this.selectedButtonIndex = index;
+
+    this.selectButton();
 	}
 
   confirmSelection() {
@@ -83,18 +93,13 @@ export default class ButtonGroup {
     button.emit(selectedAction);
 	}
 
-  selectButton(index: number) {
-    const { button: currentButton } = this.buttons[this.selectedButtonIndex]
-
-    // set the current selected button to a white tint
-    currentButton.setTint(0xffffff);
-
-    const { button } = this.buttons[index];
+  selectButton() {
+    const currentButton = this.buttons[this.selectedButtonIndex];
+    
+    if (currentButton.button.isTinted) return this.selectNextButton();
 
     // set the newly selected button to a green tint
-    button.setTint(0x66ff7f);
-
-    // store the new selected index
-    this.selectedButtonIndex = index;
+    // currentButton.setTint(0x66ff7f);
+    currentButton.text.setColor('green');
   }
 }

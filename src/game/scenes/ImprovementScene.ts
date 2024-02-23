@@ -46,18 +46,22 @@ export default class ImprovementScene extends Scene {
     this.mainScene.hero.speed += defaultHeroStats.speedStatIncrease;
     this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Speed];
     this.setCosts();
+    this.updateButtons();
   }
 
   onImproveDamage = () => {
     this.mainScene.hero.damage += defaultHeroStats.damageStatIncrease;
     this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Damage];
     this.setCosts();
+    this.updateButtons();
   }
 
   onImproveHp = () => {
-    this.mainScene.hero.hp += defaultHeroStats.hpStatIncrease;
+    this.mainScene.hero.maxHp += defaultHeroStats.hpStatIncrease;
+    this.mainScene.hero.hp = this.mainScene.hero.maxHp;
     this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Hp];
     this.setCosts();
+    this.updateButtons();
   }
 
   createHeroStats() {
@@ -85,18 +89,30 @@ export default class ImprovementScene extends Scene {
     }
   }
 
+  checkEnoughRuby = (costs: number) => costs <= this.mainScene.ruby;
+
   create () {
     this.createBg();
     this.createHeroStats();
     this.setCosts();
     this.buttonGroup = new ButtonGroup(this);
-    const checkEnoughRuby = (costs: number) => costs <= this.mainScene.ruby;
     this.buttonGroup.create([
-      checkEnoughRuby(this.improvementsCosts[StatsKeys.Speed]) ? { text: 'Speed ++', callback: this.onImproveSpeed, name: StatsKeys.Speed, textureKey: EImage.ButtonBg } : null,
-      checkEnoughRuby(this.improvementsCosts[StatsKeys.Hp]) ? { text: 'Health ++', callback: this.onImproveHp, name: StatsKeys.Hp, textureKey: EImage.ButtonBg } : null,
-      checkEnoughRuby(this.improvementsCosts[StatsKeys.Damage]) ? { text: 'Damage ++', callback: this.onImproveDamage, name: StatsKeys.Damage, textureKey: EImage.ButtonBg } : null,
+      { text: 'Speed ++', callback: this.onImproveSpeed, name: StatsKeys.Speed, textureKey: EImage.ButtonBg },
+      { text: 'Health ++', callback: this.onImproveHp, name: StatsKeys.Hp, textureKey: EImage.ButtonBg },
+      { text: 'Damage ++', callback: this.onImproveDamage, name: StatsKeys.Damage, textureKey: EImage.ButtonBg },
       { text: 'ok', callback: this.onNextWave, name: 'ok', textureKey: EImage.ButtonBg },
     ]);
+    this.updateButtons();
+  }
+
+  updateButtons() {
+    this.buttonGroup.buttons
+      .forEach((b) => {
+        if(b.button.name !== 'ok') {
+          this.buttonGroup.setDisableAvailableButton(b.button.name, this.checkEnoughRuby(this.improvementsCosts[b.button.name]))
+          // currentButton.text.setColor('white');
+        }
+      })
   }
 
   update(): void {
