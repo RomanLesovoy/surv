@@ -19,7 +19,7 @@ export default class MapScene extends Scene {
       this.cameras.main.setZoom(scale);
       this.cameras.main.setSize((this.game.scale.width / 2) * scale, (this.game.scale.height / 2) * scale)
       this.cameras.main.startFollow(this.mainScene.hero, false, 0.1, 0.1)
-      this.cameras.main.setBounds(0, 0, this.game.scale.width, this.game.scale.height, true)
+      this.cameras.main.setBounds(0, 0, this.game.scale.width * 2, this.game.scale.height * 2, true)
     }, 0);
   }
 

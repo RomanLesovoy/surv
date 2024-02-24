@@ -61,16 +61,35 @@ export class Actor extends Physics.Arcade.Sprite {
     return this.hp;
   }
 
-  getAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
-    const dx = point.x - view.x;
-    const dy = point.y - view.y;
-    const targetAngle = (360 / (2 * Math.PI)) * Math.atan2(dy, dx);
+  // getAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
+  //   const dx = point.x - view.x;
+  //   const dy = point.y - view.y;
+  //   const targetAngle = (360 / (2 * Math.PI)) * Math.atan2(dy, dx);
+
+  //   return targetAngle;
+  // }
+
+  // updateAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
+  //   view.angle = this.getAngle(point, view);
+  // }
+
+  getAngle(point, view, cameras) {
+    // Получаем координаты указателя мыши в системе координат игры с учетом положения камеры
+    const pointerX = cameras.main.worldView.x + point.x / cameras.main.zoom;
+    const pointerY = cameras.main.worldView.y + point.y / cameras.main.zoom;
+
+    // Получаем вектор направления от игрока к указателю мыши
+    const directionVector = new Phaser.Math.Vector2(pointerX - view.x, pointerY - view.y);
+
+    // Получаем угол в градусах от вектора направления
+    const targetAngle = Phaser.Math.RadToDeg(directionVector.angle());
 
     return targetAngle;
   }
 
-  updateAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
-    view.angle = this.getAngle(point, view);
+  updateAngle(point, view, cameras) {
+    // Обновляем угол игрока
+    view.angle = this.getAngle(point, view, cameras);
   }
 
   protected getBody(): Physics.Arcade.Body {

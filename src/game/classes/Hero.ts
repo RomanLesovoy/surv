@@ -8,7 +8,7 @@ import { emitGameStatus, GameStatus } from '../scenes/MainScene';
 import { defaultHeroStats } from './config';
 import { Text } from './Text';
 
-const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
+const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras) => {
   // Получаем вектор направления от персонажа к указателю мыши
   const directionVector = new Phaser.Math.Vector2(pointer.worldX - hero.x, pointer.worldY - hero.y);
 
@@ -25,9 +25,12 @@ const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
   const bulletX = hero.x + rotatedOffset.x;
   const bulletY = hero.y + rotatedOffset.y;
 
+  const screenPoint = cameras.main.getWorldPoint(pointer.x, pointer.y); // TODO worldX, worldY
+
   return {
     x: bulletX,
     y: bulletY,
+    screenPoint,
   }
 }
 
@@ -115,8 +118,8 @@ export default class Hero extends Actor {
     const pointer = this.scene.input.activePointer;
     this.bullets--;
     if (!this.bullets) this.switchGun(null);
-    console.log(pointer)
-    return new Bullet(this.scene, pointer.worldX, pointer.worldY, EImage.Bullet, getOffsetGunPlayer(pointer, this)).setDepth(5);
+    const offset = getOffsetGunPlayer(pointer, this, this.scene.cameras);
+    return new Bullet(this.scene, offset.screenPoint.x, offset.screenPoint.y, EImage.Bullet, { x: offset.x, y: offset.y });
   }
 
   showLeftBullets = () => {
@@ -145,6 +148,6 @@ export default class Hero extends Actor {
       this.makeShot && this.makeShot();
     }
 
-    this.updateAngle(this.scene.input.activePointer, this);
+    this.updateAngle(this.scene.input.activePointer, this, this.scene.cameras);
   }
 }

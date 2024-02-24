@@ -98,6 +98,6 @@ export class Enemy extends Actor {
     } else {
       this.run();
     }
-    this.updateAngle(this.target, this);
+    this.updateAngle(this.target, this, this.scene.cameras);
   }
 }

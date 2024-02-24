@@ -34,8 +34,8 @@ export default class EnemyScene extends Scene {
   private handleEnemyCollision = (enemy1: Enemy, enemy2: Enemy) => {
     const angleBetweenZombies = Phaser.Math.Angle.Between(enemy1.x, enemy1.y, enemy2.x, enemy2.y);
     const avoidanceSpeed = 50;
-    this.physics.velocityFromAngle(angleBetweenZombies + Math.PI, avoidanceSpeed, enemy1.body.velocity);
-    this.physics.velocityFromAngle(angleBetweenZombies, avoidanceSpeed, enemy2.body.velocity);
+    this.mapScene.physics.velocityFromAngle(angleBetweenZombies + Math.PI, avoidanceSpeed, enemy1.body.velocity);
+    this.mapScene.physics.velocityFromAngle(angleBetweenZombies, avoidanceSpeed, enemy2.body.velocity);
   }
 
   private createEnemy = (): Enemy => {
