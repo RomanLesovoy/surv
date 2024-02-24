@@ -43,6 +43,7 @@ export default class HeroScene extends Scene {
   }
 
   private initHero(): void {
+    console.log('hero init')
     this.mainScene.hero = new Hero(this, this.game.scale.width / 2, this.game.scale.height / 2, this.onShot).setName('Player');
   }
 }

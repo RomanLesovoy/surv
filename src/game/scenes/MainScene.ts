@@ -25,7 +25,7 @@ export enum GameStatus {
 
 export const emitGameStatus = 'emit-game-status';
 
-const gameScenes = [
+export const gameScenes = [
   [Scenes.MapScene, MapScene],
   [Scenes.EnemyScene, EnemyScene],
   [Scenes.HeroScene, HeroScene],
@@ -34,11 +34,11 @@ const gameScenes = [
   [Scenes.WaveScene, WaveScene],
 ];
 
-const gameNotActiveScenes = [
+export const gameNotActiveScenes = [
   [Scenes.MenuScene, MenuScene],
 ];
 
-const otherScenes = [
+export const otherScenes = [
   [Scenes.LightScene, LightScene],
   [Scenes.ImprovementScene, ImprovementScene],
 ];
@@ -60,7 +60,7 @@ export default class MainScene extends Scene {
 
   createScenes = () => {
     const sharedThis = { [mainDataKey]: this };
-    [gameNotActiveScenes, otherScenes, gameScenes].flat()
+    [[[Scenes.MapScene, MapScene]], [[Scenes.MenuScene, MenuScene]]].flat()
       .forEach((s) => this.game.scene.getIndex(s[0] as Scenes) === -1 && this.scene.add(s[0] as Scenes, s[1] as any, false, sharedThis));
   }
 

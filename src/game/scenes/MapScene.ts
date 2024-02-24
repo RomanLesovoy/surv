@@ -1,6 +1,6 @@
 import { Scene } from 'phaser'
 import { Scenes } from './scenes-enum'
-import { IMainScene, mainDataKey } from './MainScene';
+import { IMainScene, gameScenes, mainDataKey, otherScenes } from './MainScene';
 
 export default class MapScene extends Scene {
   protected mainScene: IMainScene;
@@ -14,15 +14,25 @@ export default class MapScene extends Scene {
   }
 
   initView() {
-    // this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
-    this.cameras.main.setZoom(1);
-
     setTimeout(() => {
-      // this.cameras.main.startFollow(this.mainScene.hero, false);
-    })
+      const scale = 2;
+      this.cameras.main.setZoom(scale);
+      this.cameras.main.setSize((this.game.scale.width / 2) * scale, (this.game.scale.height / 2) * scale)
+      console.log('hero')
+      this.cameras.main.startFollow(this.mainScene.hero, false, 0.1, 0.1)
+      this.cameras.main.setBounds(0, 0, this.game.scale.width, this.game.scale.height)
+    }, 500);
+  }
+
+  createScenes = () => {
+    const sharedThis = { [mainDataKey]: this.mainScene };
+    [otherScenes, gameScenes].flat()
+      .forEach((s) => this.game.scene.getIndex(s[0] as Scenes) === -1 && this.scene.add(s[0] as Scenes, s[1] as any, false, sharedThis));
   }
 
   create() {
+    console.log(1)
+    this.createScenes();
     this.initView()
 
     this.mainScene.map = this.add.tilemap('map');
@@ -40,7 +50,7 @@ export default class MapScene extends Scene {
       this.physics.world.enable(this.mainScene.hero);
       this.physics.add.collider(this.mainScene.hero, wallLayer, () => false);
       this.physics.add.collider(this.mainScene.hero, worldLayer, () => false);
-    });
+    }, 500);
   }
 
   // create() {
