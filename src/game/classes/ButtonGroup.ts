@@ -1,5 +1,5 @@
 import { GameObjects, Scene } from 'phaser';
-import { EImage } from '../scenes/LoadScene';
+import { EAudio, EImage } from '../scenes/LoadScene';
 import { Text } from './Text';
 
 export const selectedAction = 'selected';
@@ -18,6 +18,8 @@ export default class ButtonGroup {
   private scene: Scene;
   public selectedButtonIndex = 0;
   private arrow: GameObjects.Image;
+  private switchSound: any;
+  private clickSound: any;
 
   constructor (scene: Scene) {
     this.scene = scene;
@@ -54,6 +56,9 @@ export default class ButtonGroup {
 
   create(buttons: Array<IButtonProps>) {
     this.createArrow();
+
+    this.switchSound = this.scene.sound.add(EAudio.SwitchMenu);
+    this.clickSound = this.scene.sound.add(EAudio.ClickButton);
 
     buttons.filter((b) => !!b).forEach(this.createButton);
 
@@ -98,6 +103,7 @@ export default class ButtonGroup {
   confirmSelection() {
     const { button } = this.buttons[this.selectedButtonIndex];
     button.emit(selectedAction, !button.isTinted);
+    this.clickSound.play();
 	}
 
   selectButton() {
@@ -107,6 +113,7 @@ export default class ButtonGroup {
       return this.selectNextButton();
     }
 
+    this.switchSound.play();
     this.arrow.setPosition(currentButton.button.x + 400, currentButton.button.y);
   }
 }
