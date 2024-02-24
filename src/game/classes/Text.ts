@@ -12,7 +12,7 @@ export class Text extends GameObjects.Text {
       fontStyle: 'bold',
     });
 
-    this.setOrigin(0, 0);
+    this.setOrigin(0, 0).setDepth(5);
 
     scene.add.existing(this);
   }

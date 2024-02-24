@@ -1,12 +1,13 @@
-import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
 import { Text } from '../classes/Text';
 import { IMainScene, mainDataKey } from './MainScene';
+import { Scene } from 'phaser';
 
 export default class ScoreScene extends Scene {
   protected mainScene: IMainScene;
   protected score: Text;
   protected wave: Text;
+  protected mapScene: Scene;
 
   constructor() {
     super(Scenes.ScoreScene);
@@ -14,6 +15,7 @@ export default class ScoreScene extends Scene {
 
   init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
+    this.mapScene = this.game.scene.getScene(Scenes.MapScene);
   }
 
   get scoreText(): string {
@@ -25,8 +27,8 @@ export default class ScoreScene extends Scene {
   }
 
   create() {
-    this.score = new Text(this, 25, 25, this.scoreText).setFontSize(40);
-    this.wave = new Text(this, 300, 20, this.waveText).setFontSize(50).setColor('red');
+    this.score = new Text(this.mapScene, 25, 25, this.scoreText).setFontSize(40);
+    this.wave = new Text(this.mapScene, 300, 20, this.waveText).setFontSize(50).setColor('red');
   }
 
   update(): void {

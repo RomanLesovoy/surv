@@ -65,7 +65,7 @@ export default class Hero extends Actor {
     this.resetHero();
     this.onShot = onShot;
     this.initMakeShot();
-    this.setInteractive();
+    // this.setInteractive();
 
     this.on('destroy', () => {
       game.events.emit(emitGameStatus, GameStatus.NotStarted);
@@ -115,7 +115,8 @@ export default class Hero extends Actor {
     const pointer = this.scene.input.activePointer;
     this.bullets--;
     if (!this.bullets) this.switchGun(null);
-    return new Bullet(this.scene, pointer.worldX, pointer.worldY, EImage.Bullet, getOffsetGunPlayer(pointer, this));
+    console.log(pointer)
+    return new Bullet(this.scene, pointer.worldX, pointer.worldY, EImage.Bullet, getOffsetGunPlayer(pointer, this)).setDepth(5);
   }
 
   showLeftBullets = () => {

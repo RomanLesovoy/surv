@@ -18,10 +18,9 @@ export default class MapScene extends Scene {
       const scale = 2;
       this.cameras.main.setZoom(scale);
       this.cameras.main.setSize((this.game.scale.width / 2) * scale, (this.game.scale.height / 2) * scale)
-      console.log('hero')
       this.cameras.main.startFollow(this.mainScene.hero, false, 0.1, 0.1)
-      this.cameras.main.setBounds(0, 0, this.game.scale.width, this.game.scale.height)
-    }, 500);
+      this.cameras.main.setBounds(0, 0, this.game.scale.width, this.game.scale.height, true)
+    }, 0);
   }
 
   createScenes = () => {
@@ -31,7 +30,6 @@ export default class MapScene extends Scene {
   }
 
   create() {
-    console.log(1)
     this.createScenes();
     this.initView()
 
@@ -52,19 +50,4 @@ export default class MapScene extends Scene {
       this.physics.add.collider(this.mainScene.hero, worldLayer, () => false);
     }, 500);
   }
-
-  // create() {
-  //   let map1 = this.add.tilemap('map1');
-  //   let tileSet = map1.addTilesetImage('tilesheet_complete', 'tileSet');
-  //   let topLayer = map1.createLayer('top', [tileSet], 0, 0).setDepth(1);
-  //   let botLayer = map1.createLayer('bottom', [tileSet], 0, 0).setDepth(0);
-  //   topLayer.setCollisionByProperty({collides:true}, true);
-
-  //   setTimeout(() => {
-  //     this.physics.world.enable(this.mainScene.hero)
-  //     this.physics.add.collider(this.mainScene.hero, topLayer, (a: any, t) => {
-  //       return false;
-  //     });
-  //   })
-  // }
 }

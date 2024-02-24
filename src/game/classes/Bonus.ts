@@ -47,6 +47,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
     scene.physics.world.enable(this);
     this.body.setSize(60, 60);
+    this.setDepth(5);
 
     const graphics = this.addGraphics();
 

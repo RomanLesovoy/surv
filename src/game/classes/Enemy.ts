@@ -32,6 +32,7 @@ export class Enemy extends Actor {
     this.getBody().setOffset(0, 15);
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
     this.texts[1].setFontSize(10);
+    this.setDepth(5);
 
     this.on('destroy', () => {
       this.leaveSpotAfterDestroy();

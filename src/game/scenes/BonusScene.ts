@@ -4,9 +4,11 @@ import Bonus from "../classes/Bonus";
 import Hero from "../classes/Hero";
 import { GameEvents, timeConfigs } from '../game-events';
 import { EImage } from './LoadScene';
+import { Scene } from 'phaser';
 
-export default class BonusScene extends Phaser.Scene {
+export default class BonusScene extends Scene {
   protected mainScene: IMainScene;
+  protected mapScene: Scene;
 
   constructor() {
     super(Scenes.BonusScene);
@@ -14,13 +16,14 @@ export default class BonusScene extends Phaser.Scene {
   
   init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
+    this.mapScene = this.game.scene.getScene(Scenes.MapScene);
   }
 
   create() {
-    this.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
-      const bonus = new Bonus(this);
-      this.physics.world.enable(bonus);
-      this.physics.add.overlap(bonus, this.mainScene.hero, (b: Bonus, h: Hero) => {
+    this.mapScene.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
+      const bonus = new Bonus(this.mapScene);
+      this.mapScene.physics.world.enable(bonus);
+      this.mapScene.physics.add.overlap(bonus, this.mainScene.hero, (b: Bonus, h: Hero) => {
         b.effect(h) && b.destroy();
       });
     }, loop: true });
@@ -35,8 +38,8 @@ export default class BonusScene extends Phaser.Scene {
       .fillStyle(0x614198, 0.5)
       .fillCircle(ruby.x, ruby.y, 25);
 
-    this.physics.world.enable(ruby);
-    this.physics.add.overlap(ruby, this.mainScene.hero, () => {
+    this.mapScene.physics.world.enable(ruby);
+    this.mapScene.physics.add.overlap(ruby, this.mainScene.hero, () => {
       ruby.destroy();
       graphics.destroy();
       this.mainScene.ruby++;
