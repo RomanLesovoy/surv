@@ -3,7 +3,7 @@ import { GameObjects, Input, Scene } from 'phaser';
 import Bullet from './Bullet';
 import { throttle } from '../../utils/throttle';
 import { BonusTypes } from './Bonus';
-import { EImage } from '../scenes/LoadScene';
+import { EAudio, EImage } from '../scenes/LoadScene';
 import { emitGameStatus, GameStatus } from '../scenes/MainScene';
 import { defaultHeroStats } from './config';
 import { Text } from './Text';
@@ -115,6 +115,8 @@ export default class Hero extends Actor {
     const pointer = this.scene.input.activePointer;
     this.bullets--;
     if (!this.bullets) this.switchGun(null);
+    this.scene.sound.add(EAudio.Pistol).play()
+
     return new Bullet(this.scene, pointer.worldX, pointer.worldY, EImage.Bullet, getOffsetGunPlayer(pointer, this));
   }
 
@@ -132,7 +134,6 @@ export default class Hero extends Actor {
     const pointerIsDown = pointer.isDown;
     this.showLeftBullets();
     this.getBody().setVelocity(0); // stop infinity run
-    // console.log(this.body.x, this.body.y)
 
     this.keyW?.isDown && !pointerIsDown && this.getBody().setVelocityY(-this.speed);
     this.keyA?.isDown && !pointerIsDown && this.getBody().setVelocityX(-this.speed);

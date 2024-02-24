@@ -3,10 +3,13 @@ import { Scenes } from "./scenes-enum";
 import Bonus from "../classes/Bonus";
 import Hero from "../classes/Hero";
 import { GameEvents, timeConfigs } from '../game-events';
-import { EImage } from './LoadScene';
+import { EAudio, EImage } from './LoadScene';
 
 export default class BonusScene extends Phaser.Scene {
   protected mainScene: IMainScene;
+  private bonusSound: any;
+  private bonusPickSound: any;
+  private rubySound: any;
 
   constructor() {
     super(Scenes.BonusScene);
@@ -17,10 +20,16 @@ export default class BonusScene extends Phaser.Scene {
   }
 
   create() {
+    this.rubySound = this.sound.add(EAudio.Ruby);
+    this.bonusSound = this.sound.add(EAudio.Bonus);
+    this.bonusPickSound = this.sound.add(EAudio.BonusPick);
+
     this.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
       const bonus = new Bonus(this);
       this.physics.world.enable(bonus);
+      this.bonusSound.play();
       this.physics.add.overlap(bonus, this.mainScene.hero, (b: Bonus, h: Hero) => {
+        this.bonusPickSound.play();
         b.effect(h) && b.destroy();
       });
     }, loop: true });
@@ -37,6 +46,7 @@ export default class BonusScene extends Phaser.Scene {
 
     this.physics.world.enable(ruby);
     this.physics.add.overlap(ruby, this.mainScene.hero, () => {
+      this.rubySound.play();
       ruby.destroy();
       graphics.destroy();
       this.mainScene.ruby++;

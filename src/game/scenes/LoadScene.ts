@@ -24,6 +24,14 @@ export enum EImage {
   Arrow = 'arrow',
 }
 
+export enum EAudio {
+  Pistol = 'pistol',
+  Ruby = 'ruby',
+  Bonus = 'bonus',
+  Death = 'death',
+  BonusPick = 'bonus-pick',
+}
+
 export default class LoadingScene extends Scene {
   constructor(sceme: string = Scenes.LoadingScene) {
     super(sceme);
@@ -32,6 +40,13 @@ export default class LoadingScene extends Scene {
   preload(): void {
     this.load.baseURL = './assets/v1/';
     this.preloadData();
+
+    // Audio
+    this.load.audio(EAudio.Pistol, 'audio/9mm.mp3');
+    this.load.audio(EAudio.Ruby, 'audio/ruby.mp3');
+    this.load.audio(EAudio.Bonus, 'audio/bonus.mp3');
+    this.load.audio(EAudio.BonusPick, 'audio/bonus-pick.mp3');
+    this.load.audio(EAudio.Death, 'audio/death.mp3');
 
     // Other
     this.load.image(EImage.Bullet, 'other/m_bullet.png');

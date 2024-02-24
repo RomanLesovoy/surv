@@ -5,6 +5,7 @@ import { Text } from './Text';
 import { GameEvents } from '../game-events';
 import Bullet from './Bullet';
 import { defaultEnemyStats } from './config';
+import { EAudio } from '../scenes/LoadScene';
 
 export class Enemy extends Actor {
   private target: Hero;
@@ -12,6 +13,7 @@ export class Enemy extends Actor {
   public speed: number;
   private timer: number;
   protected damage: number;
+  private deathSound: any;
 
   constructor(
     scene: Scene,
@@ -37,10 +39,17 @@ export class Enemy extends Actor {
       this.leaveSpotAfterDestroy();
       this.texts.forEach((t) => t?.destroy());
       if (this.isDead) {
+        this.deathSound.play();
         this.scene.game.events.emit(GameEvents.CreateRuby, this.body.x, this.body.y);
         this.scene.game.events.emit(GameEvents.AddScore, 10 + level);
       }
     });
+
+    this.init();
+  }
+
+  init() {
+    this.deathSound = this.scene.sound.add(EAudio.Death);
   }
 
   protected leaveSpotAfterDestroy(): void {
