@@ -32,6 +32,7 @@ export enum EAudio {
   BonusPick = 'bonus-pick',
   SwitchMenu = 'switch-menu',
   ClickButton = 'click-button',
+  HeroRun = 'hero-run',
 }
 
 export default class LoadingScene extends Scene {
@@ -51,6 +52,7 @@ export default class LoadingScene extends Scene {
     this.load.audio(EAudio.Death, 'audio/death.mp3');
     this.load.audio(EAudio.SwitchMenu, 'audio/switch-menu.mp3');
     this.load.audio(EAudio.ClickButton, 'audio/click-button.mp3');
+    this.load.audio(EAudio.HeroRun, 'audio/run.mp3');
 
     // Other
     this.load.image(EImage.Bullet, 'other/m_bullet.png');

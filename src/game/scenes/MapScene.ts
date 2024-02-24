@@ -14,8 +14,9 @@ export default class MapScene extends Scene {
   }
 
   initView() {
-    // this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
+    this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
     this.cameras.main.setZoom(1);
+    // this.cameras.main.setScroll(500, 1000)
 
     setTimeout(() => {
       // this.cameras.main.startFollow(this.mainScene.hero, false);

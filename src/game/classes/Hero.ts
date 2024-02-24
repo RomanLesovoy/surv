@@ -48,6 +48,7 @@ export default class Hero extends Actor {
   private onShot: (b: Bullet) => void;
   private makeShot: () => void;
   private bulletsText: Text;
+  private runSound: any;
 
   constructor(scene: Scene, x: number, y: number, onShot: (b: Bullet) => void)
   {
@@ -73,6 +74,12 @@ export default class Hero extends Actor {
 
     this.bulletImg = this.scene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false);
     this.bulletsText = new Text(this.scene, game.scale.width - 250, game.scale.height - 90, '');
+
+    this.init();
+  }
+
+  init () {
+    this.runSound = this.scene.sound.add(EAudio.HeroRun, {volume: 1});
   }
 
   public resetHero = () => {
@@ -115,7 +122,7 @@ export default class Hero extends Actor {
     const pointer = this.scene.input.activePointer;
     this.bullets--;
     if (!this.bullets) this.switchGun(null);
-    this.scene.sound.add(EAudio.Pistol).play()
+    this.scene.sound.add(EAudio.Pistol).play();
 
     return new Bullet(this.scene, pointer.worldX, pointer.worldY, EImage.Bullet, getOffsetGunPlayer(pointer, this));
   }
@@ -134,6 +141,9 @@ export default class Hero extends Actor {
     const pointerIsDown = pointer.isDown;
     this.showLeftBullets();
     this.getBody().setVelocity(0); // stop infinity run
+    const isRunning = (this.keyW?.isDown || this.keyA?.isDown || this.keyS?.isDown || this.keyD?.isDown) && !pointerIsDown;
+    isRunning && !this.runSound.isPlaying && this.runSound.play();
+    !isRunning && this.runSound.stop();
 
     this.keyW?.isDown && !pointerIsDown && this.getBody().setVelocityY(-this.speed);
     this.keyA?.isDown && !pointerIsDown && this.getBody().setVelocityX(-this.speed);
