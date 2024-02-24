@@ -3,7 +3,7 @@ import { GameObjects, Scene } from 'phaser';
 export class Text extends GameObjects.Text {
   constructor(scene: Scene, x: number, y: number, text: string) {
     super(scene, x, y, text.toUpperCase(), {
-      fontSize: 40,
+      fontSize: '40px',
       color: '#fff',
       fontFamily: 'Airborne',
       // fontFamily: '"Jennie on the Block"',

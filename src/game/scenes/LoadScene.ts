@@ -20,7 +20,8 @@ export enum EImage {
   MenuBg = 'menu-bg',
   ImproveBg = 'improve-bg',
   ImproveHeroBg = 'improve-hero-bg',
-  BulletAmmo = 'bullet-ammo'
+  BulletAmmo = 'bullet-ammo',
+  Arrow = 'arrow',
 }
 
 export default class LoadingScene extends Scene {
@@ -40,6 +41,7 @@ export default class LoadingScene extends Scene {
     this.load.image(EImage.ImproveBg, 'other/improve-bg.jpg');
     this.load.image(EImage.ImproveHeroBg, 'other/improve-hero-bg.png');
     this.load.image(EImage.Ruby, 'other/ruby_small.png');
+    this.load.image(EImage.Arrow, 'other/arrow_small.png');
 
     // Bonuses
     this.load.image(EImage.Riffle, 'ammo/riffle.png');
