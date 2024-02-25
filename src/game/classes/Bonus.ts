@@ -59,7 +59,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
 
     const graphics = this.addGraphics();
 
-    const timerEvent = this.scene.time.addEvent({ delay: 100, loop: true, callback: () => {
+    const timerEvent = this.scene.time.addEvent({ delay: 120, loop: true, callback: () => {
       this.setAngle(this.angle + 15);
     }});
 

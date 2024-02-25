@@ -4,7 +4,7 @@ import { scenes } from './scenes';
 const size = 100 * 20; // 1 - tile size, 2 - tiles for row
 
 const config = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   width: window.innerWidth,
   height: window.innerHeight,
   backgroundColor: '#070707',

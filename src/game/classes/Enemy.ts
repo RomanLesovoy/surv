@@ -36,7 +36,6 @@ export class Enemy extends Actor {
     this.texts[1].setFontSize(10);
 
     this.on('destroy', () => {
-      this.leaveSpotAfterDestroy();
       this.texts.forEach((t) => t?.destroy());
       if (this.isDead) {
         this.deathSound.play();
@@ -50,15 +49,6 @@ export class Enemy extends Actor {
 
   init() {
     this.deathSound = this.scene.sound.add(EAudio.Death);
-  }
-
-  protected leaveSpotAfterDestroy(): void {
-    // const graphics = this.scene.add.graphics();
-    // graphics
-    //   .fillStyle(0xe81b1b, 0.5)
-    //   .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 30);
-
-    // setTimeout(() => graphics.destroy(), 3000);
   }
 
   public animateDamage(bullet: Bullet): void {
@@ -79,7 +69,7 @@ export class Enemy extends Actor {
   }
 
   private attackHandler(): void {
-    !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-attack`, frameRate: this.speed / 3 }, true);
+    !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-attack`, frameRate: Math.RoundTo(this.speed / 5, 0) }, true);
     this.target.getDamage(this.damage);
   }
 
@@ -88,7 +78,7 @@ export class Enemy extends Actor {
       this.target.x > this.x ? this.speed : -this.speed,
       this.target.y > this.y ? this.speed : -this.speed,
     );
-    !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-move`, frameRate: this.speed / 2 }, true);
+    !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-move`, frameRate: Math.RoundTo(this.speed / 5, 0) }, true);
   }
 
   public update(_: number, delta: number): void {

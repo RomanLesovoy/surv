@@ -41,7 +41,7 @@ export default class EnemyScene extends Scene {
   private createEnemy = (): Enemy => {
     const coordinates = getRandomDoorMap({ width: this.game.scale.width, height: this.game.scale.height });
     const enemy = new Enemy(this.mapScene, coordinates.x, coordinates.y, EImage.Zombie1, this.mainScene.hero, this.mainScene.wave)
-      .setName(`Enemy-${coordinates.x}-${coordinates.y}`);
+      .setName(`Enemy-#${Phaser.Math.RND.between(0, 99999)}`);
     return enemy;
   }
 
