@@ -63,9 +63,9 @@ export default class Bonus extends Physics.Arcade.Sprite {
       this.setAngle(this.angle + 15);
     }});
 
-    this.on('destroy', () => {
-      timerEvent.destroy();
-      graphics.destroy();
+    this.on(Phaser.Scenes.Events.DESTROY, () => {
+      timerEvent?.destroy();
+      graphics?.destroy();
     });
   }
 

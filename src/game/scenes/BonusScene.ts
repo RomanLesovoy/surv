@@ -29,7 +29,7 @@ export default class BonusScene extends Scene {
     this.bonusSound = this.sound.add(EAudio.Bonus);
     this.bonusPickSound = this.sound.add(EAudio.BonusPick);
 
-    this.mapScene.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
+    const timer = this.mapScene.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
       const bonus = new Bonus(this.mapScene, this.mainScene.wave >= highLevelBonus);
       this.mainScene.bonusGroup.add(bonus);
       this.bonusSound.play();
@@ -40,6 +40,11 @@ export default class BonusScene extends Scene {
     }, loop: true });
 
     this.game.events.on(GameEvents.CreateRuby, this.leaveRubyAfterEnemyDestroy);
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      timer?.destroy();
+      this.game.events.off(GameEvents.CreateRuby);
+    });
   }
 
   protected leaveRubyAfterEnemyDestroy = (x, y): void => {

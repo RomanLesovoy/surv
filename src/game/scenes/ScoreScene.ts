@@ -43,10 +43,14 @@ export default class ScoreScene extends Scene {
     this.waveTime = this.waveDelaySec;
     this.waveTimeText = new Text(this, this.game.scale.width - 400, 20, this.getWaveTimeText()).setFontSize(50);
 
-    this.time.addEvent({ delay: 1000, callback: () => {
+    const timerEvent = this.time.addEvent({ delay: 1000, callback: () => {
       this.waveTime--;
       this.waveTimeText.setText(this.getWaveTimeText());
     }, loop: true });
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      timerEvent?.destroy();
+    });
   }
 
   update(): void {

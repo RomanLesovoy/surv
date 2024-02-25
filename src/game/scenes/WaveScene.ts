@@ -22,6 +22,10 @@ export default class WaveScene extends Scene {
   create() {
     this.initEvents();
     this.runScore();
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.timerWave?.destroy();
+    });
   }
 
   runScore() {

@@ -21,7 +21,11 @@ export default class EnemyScene extends Scene {
 
   create() {
     this.mapScene.physics.add.collider(this.mainScene.enemiesGroup, this.mainScene.enemiesGroup, this.handleEnemyCollision, null, this.mapScene);
-    this.mapScene.time.addEvent({ delay: timeConfigs.enemyDelay, callback: this.pushEnemies, loop: true });
+    const timerEvent = this.mapScene.time.addEvent({ delay: timeConfigs.enemyDelay, callback: this.pushEnemies, loop: true });
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      timerEvent.destroy();
+    });
   }
 
   update(t, d): void {
