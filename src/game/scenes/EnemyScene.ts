@@ -21,7 +21,7 @@ export default class EnemyScene extends Scene {
 
   create() {
     this.mapScene.physics.add.collider(this.mainScene.enemiesGroup, this.mainScene.enemiesGroup, this.handleEnemyCollision, null, this.mapScene);
-    this.mapScene.time.addEvent({ delay: timeConfigs.enemyDelay, callback: () => this.pushEnemy(), loop: true });
+    this.mapScene.time.addEvent({ delay: timeConfigs.enemyDelay, callback: this.pushEnemies, loop: true });
   }
 
   update(t, d): void {
@@ -45,7 +45,10 @@ export default class EnemyScene extends Scene {
     return enemy;
   }
 
-  private pushEnemy = (): void => {
-    this.mainScene.enemiesGroup.addMultiple([this.createEnemy(), this.createEnemy()]);
+  private pushEnemies = (): void => {
+    const amount = Math.ceil(this.mainScene.wave / timeConfigs.waveEnemyAdd);
+    for (let i = 0; i < amount; i++) {
+      this.mainScene.enemiesGroup.add(this.createEnemy());
+    }
   }
 }

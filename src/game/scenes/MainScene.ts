@@ -3,7 +3,6 @@ import { Scenes } from './scenes-enum';
 import Hero from '../classes/Hero';
 import HeroScene from './HeroScene';
 import EnemyScene from './EnemyScene';
-import ScoreScene from './ScoreScene';
 import { GameEvents } from '../game-events';
 import MapScene from './MapScene';
 import BonusScene from './BonusScene';
@@ -12,6 +11,7 @@ import MenuScene from './MenuScene';
 import LightScene from './LightScene';
 import ImprovementScene from './ImprovementScene';
 import MainSceneManager from './MainSceneManager';
+import ScoreScene from './ScoreScene';
 
 export const mainDataKey = 'mainSceneData';
 
@@ -30,7 +30,6 @@ export const gameScenes = [
   [Scenes.EnemyScene, EnemyScene],
   [Scenes.HeroScene, HeroScene],
   [Scenes.BonusScene, BonusScene],
-  [Scenes.ScoreScene, ScoreScene],
   [Scenes.WaveScene, WaveScene],
 ];
 
@@ -41,6 +40,7 @@ export const gameNotActiveScenes = [
 export const otherScenes = [
   [Scenes.LightScene, LightScene],
   [Scenes.ImprovementScene, ImprovementScene],
+  [Scenes.ScoreScene, ScoreScene],
 ];
 
 export default class MainScene extends Scene {
