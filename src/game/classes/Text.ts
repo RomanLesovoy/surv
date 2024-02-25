@@ -1,4 +1,5 @@
 import { GameObjects, Scene } from 'phaser';
+import { defaultBodyDepth } from './config';
 
 export class Text extends GameObjects.Text {
   constructor(scene: Scene, x: number, y: number, text: string) {
@@ -12,7 +13,7 @@ export class Text extends GameObjects.Text {
       fontStyle: 'bold',
     });
 
-    this.setOrigin(0, 0).setDepth(5);
+    this.setOrigin(0, 0).setDepth(defaultBodyDepth);
 
     scene.add.existing(this);
   }

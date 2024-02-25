@@ -5,7 +5,7 @@ import { throttle } from '../../utils/throttle';
 import { BonusTypes } from './Bonus';
 import { EImage } from '../scenes/LoadScene';
 import { emitGameStatus, GameStatus } from '../scenes/MainScene';
-import { defaultHeroStats } from './config';
+import { defaultBodyDepth, defaultHeroStats } from './config';
 import { Text } from './Text';
 
 const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras) => {
@@ -52,7 +52,7 @@ export default class Hero extends Actor {
   private makeShot: () => void;
   private bulletsText: Text;
 
-  constructor(scene: Scene, x: number, y: number, onShot: (b: Bullet) => void)
+  constructor(scene: Scene, heroScene: Scene, x: number, y: number, onShot: (b: Bullet) => void)
   {
     super(scene, x, y, EImage.PlayerHandgun);
 
@@ -68,14 +68,14 @@ export default class Hero extends Actor {
     this.resetHero();
     this.onShot = onShot;
     this.initMakeShot();
-    // this.setInteractive();
+    this.setInteractive();
 
     this.on('destroy', () => {
       game.events.emit(emitGameStatus, GameStatus.NotStarted);
     });
 
-    this.bulletImg = this.scene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false);
-    this.bulletsText = new Text(this.scene, game.scale.width - 250, game.scale.height - 90, '');
+    this.bulletImg = heroScene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false).setDepth(defaultBodyDepth);
+    this.bulletsText = new Text(heroScene, game.scale.width - 250, game.scale.height - 75, '').setDepth(defaultBodyDepth);
   }
 
   public resetHero = () => {
@@ -136,7 +136,6 @@ export default class Hero extends Actor {
     const pointerIsDown = pointer.isDown;
     this.showLeftBullets();
     this.getBody().setVelocity(0); // stop infinity run
-    // console.log(this.body.x, this.body.y)
 
     this.keyW?.isDown && !pointerIsDown && this.getBody().setVelocityY(-this.speed);
     this.keyA?.isDown && !pointerIsDown && this.getBody().setVelocityX(-this.speed);
@@ -148,6 +147,6 @@ export default class Hero extends Actor {
       this.makeShot && this.makeShot();
     }
 
-    this.updateAngle(this.scene.input.activePointer, this, this.scene.cameras);
+    this.updateAngleCamera(this.scene.input.activePointer, this, this.scene.cameras);
   }
 }

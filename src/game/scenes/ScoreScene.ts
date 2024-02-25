@@ -27,8 +27,8 @@ export default class ScoreScene extends Scene {
   }
 
   create() {
-    this.score = new Text(this.mapScene, 25, 25, this.scoreText).setFontSize(40);
-    this.wave = new Text(this.mapScene, 300, 20, this.waveText).setFontSize(50).setColor('red');
+    this.score = new Text(this, 25, 25, this.scoreText).setFontSize(40);
+    this.wave = new Text(this, 300, 20, this.waveText).setFontSize(50).setColor('red');
   }
 
   update(): void {

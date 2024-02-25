@@ -45,6 +45,6 @@ export default class HeroScene extends Scene {
   }
 
   private initHero(): void {
-    this.mainScene.hero = new Hero(this.mapScene, this.game.scale.width / 2, this.game.scale.height / 2, this.onShot).setName('Player').setDepth(5);
+    this.mainScene.hero = new Hero(this.mapScene, this, this.game.scale.width / 2, this.game.scale.height / 2, this.onShot).setName('Player');
   }
 }

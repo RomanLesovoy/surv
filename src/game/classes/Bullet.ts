@@ -1,4 +1,5 @@
 import { Physics } from 'phaser';
+import { defaultBodyDepth } from './config';
 
 export default class Bullet extends Physics.Arcade.Sprite {
   public damage: number = 20;
@@ -14,7 +15,7 @@ export default class Bullet extends Physics.Arcade.Sprite {
     this.setCollideWorldBounds(false);
     this.body.setSize(4, 4);
     this.direction = { x, y };
-    this.setDepth(5);
+    this.setDepth(defaultBodyDepth);
 
     scene.physics.moveTo(this, this.direction.x, this.direction.y, 6000);
   }

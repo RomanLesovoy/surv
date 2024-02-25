@@ -1,5 +1,6 @@
 import { Physics } from 'phaser';
 import { Text } from './Text';
+import { defaultBodyDepth } from './config';
 
 const createTexts = (actor: Actor): Array<Text> => {
   return [
@@ -25,12 +26,12 @@ export class Actor extends Physics.Arcade.Sprite {
     this.myTexture = texture;
 
     scene.add.existing(this);
-    // scene.physics.add.existing(this);
     scene.physics.world.enable(this);
 
     this.getBody().setCollideWorldBounds(true);
     this.getBody().setSize(80, 80);
     this.getBody().setOffset(10, -15);
+    this.setDepth(defaultBodyDepth)
 
     this.texts = createTexts(this);
   }
@@ -61,19 +62,7 @@ export class Actor extends Physics.Arcade.Sprite {
     return this.hp;
   }
 
-  // getAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
-  //   const dx = point.x - view.x;
-  //   const dy = point.y - view.y;
-  //   const targetAngle = (360 / (2 * Math.PI)) * Math.atan2(dy, dx);
-
-  //   return targetAngle;
-  // }
-
-  // updateAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
-  //   view.angle = this.getAngle(point, view);
-  // }
-
-  getAngle(point, view, cameras) {
+  getAngleCamera(point, view, cameras) {
     // Получаем координаты указателя мыши в системе координат игры с учетом положения камеры
     const pointerX = cameras.main.worldView.x + point.x / cameras.main.zoom;
     const pointerY = cameras.main.worldView.y + point.y / cameras.main.zoom;
@@ -87,9 +76,21 @@ export class Actor extends Physics.Arcade.Sprite {
     return targetAngle;
   }
 
-  updateAngle(point, view, cameras) {
+  updateAngleCamera(point, view, cameras) {
     // Обновляем угол игрока
-    view.angle = this.getAngle(point, view, cameras);
+    view.angle = this.getAngleCamera(point, view, cameras);
+  }
+
+  getAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
+    const dx = point.x - view.x;
+    const dy = point.y - view.y;
+    const targetAngle = (360 / (2 * Math.PI)) * Math.atan2(dy, dx);
+
+    return targetAngle;
+  }
+
+  updateAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
+    view.angle = this.getAngle(point, view);
   }
 
   protected getBody(): Physics.Arcade.Body {

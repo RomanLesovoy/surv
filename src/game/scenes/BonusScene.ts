@@ -5,6 +5,7 @@ import Hero from "../classes/Hero";
 import { GameEvents, timeConfigs } from '../game-events';
 import { EImage } from './LoadScene';
 import { Scene } from 'phaser';
+import { defaultBodyDepth } from '../classes/config';
 
 export default class BonusScene extends Scene {
   protected mainScene: IMainScene;
@@ -32,11 +33,12 @@ export default class BonusScene extends Scene {
   }
 
   protected leaveRubyAfterEnemyDestroy = (x, y): void => {
-    const ruby = this.add.image(x + 20, y + 20, EImage.Ruby).setSize(30, 30);
+    const ruby = this.mapScene.add.image(x + 20, y + 20, EImage.Ruby).setSize(30, 30).setDepth(defaultBodyDepth);
 
-    const graphics = this.add.graphics()
+    const graphics = this.mapScene.add.graphics()
       .fillStyle(0x614198, 0.5)
-      .fillCircle(ruby.x, ruby.y, 25);
+      .fillCircle(ruby.x, ruby.y, 25)
+      .setDepth(defaultBodyDepth);
 
     this.mapScene.physics.world.enable(ruby);
     this.mapScene.physics.add.overlap(ruby, this.mainScene.hero, () => {

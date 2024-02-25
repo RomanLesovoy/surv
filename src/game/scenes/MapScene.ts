@@ -48,6 +48,6 @@ export default class MapScene extends Scene {
       this.physics.world.enable(this.mainScene.hero);
       this.physics.add.collider(this.mainScene.hero, wallLayer, () => false);
       this.physics.add.collider(this.mainScene.hero, worldLayer, () => false);
-    }, 500);
+    }, 100);
   }
 }

@@ -32,7 +32,6 @@ export class Enemy extends Actor {
     this.getBody().setOffset(0, 15);
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
     this.texts[1].setFontSize(10);
-    this.setDepth(5);
 
     this.on('destroy', () => {
       this.leaveSpotAfterDestroy();
@@ -73,7 +72,6 @@ export class Enemy extends Actor {
   private attackHandler(): void {
     !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-attack`, frameRate: this.speed / 3 }, true);
     this.target.getDamage(this.damage);
-    // this.target.disableBody() // maybe does make sense
   }
 
   private run(): void {
@@ -98,6 +96,6 @@ export class Enemy extends Actor {
     } else {
       this.run();
     }
-    this.updateAngle(this.target, this, this.scene.cameras);
+    this.updateAngle(this.target, this);
   }
 }
