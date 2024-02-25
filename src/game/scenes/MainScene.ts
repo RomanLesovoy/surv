@@ -31,6 +31,7 @@ export const gameScenes = [
   [Scenes.HeroScene, HeroScene],
   [Scenes.BonusScene, BonusScene],
   [Scenes.WaveScene, WaveScene],
+  [Scenes.ScoreScene, ScoreScene],
 ];
 
 export const gameNotActiveScenes = [
@@ -40,12 +41,12 @@ export const gameNotActiveScenes = [
 export const otherScenes = [
   [Scenes.LightScene, LightScene],
   [Scenes.ImprovementScene, ImprovementScene],
-  [Scenes.ScoreScene, ScoreScene],
 ];
 
 export default class MainScene extends Scene {
   public wave: number = 1;
   public enemiesGroup: Phaser.GameObjects.Group;
+  public bonusGroup: Phaser.GameObjects.Group;
   public score: number;
   public hero: Hero;
   public ruby: number;
@@ -79,6 +80,10 @@ export default class MainScene extends Scene {
       collideWorldBounds: true,
     });
 
+    this.bonusGroup = this.physics.add.group({
+      key: 'bonusGroup',
+    });
+
     this.createScenes();
 
     this.initAddScoreEvents();
@@ -102,6 +107,7 @@ export default class MainScene extends Scene {
 export interface IMainScene {
   wave: number;
   enemiesGroup: Phaser.GameObjects.Group;
+  bonusGroup: Phaser.GameObjects.Group;
   hero: Hero;
   score: number;
   map: Tilemaps.Tilemap;

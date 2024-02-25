@@ -1,4 +1,4 @@
-import MainScene from './MainScene';
+import MainScene, { emitGameStatus } from './MainScene';
 import { GameStatus } from './MainScene';
 import { Scenes } from './scenes-enum';
 import MenuScene from './MenuScene';
@@ -39,9 +39,12 @@ export default class MainSceneManager {
 
   private restartGame = () => {
     this.resetScore();
+    this.mainSceneInstance.enemiesGroup.clear(true, true);
+    this.mainSceneInstance.bonusGroup.clear(true, true);
     this.mainSceneInstance.hero.resetHero();
     this.mainSceneInstance.game.scene.getScene(Scenes.EnemyScene).scene.restart();
     this.mainSceneInstance.game.scene.getScene(Scenes.BonusScene).scene.restart();
+    this.mainSceneInstance.game.scene.getScene(Scenes.WaveScene).scene.restart();
   }
 
   private resumeGameScenes = (newStatus) => {
@@ -93,6 +96,6 @@ export default class MainSceneManager {
     
     actions[status] && actions[status](status);
     this.gameStatus = status; // update after action processed.
-    this.mainSceneInstance.game.events.emit(status);
+    this.mainSceneInstance.game.events.emit(emitGameStatus, status);
   }
 }

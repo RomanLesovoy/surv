@@ -76,14 +76,12 @@ export default class ButtonGroup {
   }
 
   update(cursors: Phaser.Types.Input.Keyboard.CursorKeys, ) {
-		const upJustPressed = Phaser.Input.Keyboard.JustDown(cursors.up!)
-		const downJustPressed = Phaser.Input.Keyboard.JustDown(cursors.down!)
-		const spaceJustPressed = Phaser.Input.Keyboard.JustDown(cursors.space!);
+		const upJustPressed = Phaser.Input.Keyboard.JustDown(cursors.up!);
+		const downJustPressed = Phaser.Input.Keyboard.JustDown(cursors.down!);
 
     [
       upJustPressed && this.selectNextButton(-1),
       downJustPressed && this.selectNextButton(1),
-      spaceJustPressed && this.confirmSelection(),
     ].find((_) => _!!);
 	}
 

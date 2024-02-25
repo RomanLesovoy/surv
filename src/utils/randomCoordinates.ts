@@ -19,5 +19,5 @@ export const getRandomDoorMap = (mapSize: { width: number, height: number }):  {
     { y: mapSize.height / 2, x: mapSize.width }
   ];
 
-  return places[Math.round(Math.random() * 3)]
+  return places[Phaser.Math.RND.between(0, 3)];
 }

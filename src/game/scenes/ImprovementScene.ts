@@ -100,7 +100,7 @@ export default class ImprovementScene extends Scene {
       { text: 'Speed ++', callback: this.onImproveSpeed, name: StatsKeys.Speed, textureKey: EImage.ButtonBg },
       { text: 'Health ++', callback: this.onImproveHp, name: StatsKeys.Hp, textureKey: EImage.ButtonBg },
       { text: 'Damage ++', callback: this.onImproveDamage, name: StatsKeys.Damage, textureKey: EImage.ButtonBg },
-      { text: 'ok', callback: this.onNextWave, name: 'ok', textureKey: EImage.ButtonBg },
+      { text: 'ok', callback: () => { this.onNextWave(); this.scene.stop() }, name: 'ok', textureKey: EImage.ButtonBg },
     ]);
     this.updateButtons();
   }

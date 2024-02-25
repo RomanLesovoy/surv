@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import { EImage } from "./LoadScene";
 import { Scenes } from "./scenes-enum";
-import { GameStatus, IMainScene, mainDataKey } from './MainScene';
+import { GameStatus, IMainScene, emitGameStatus, mainDataKey } from './MainScene';
 import ButtonGroup, { Buttons } from '../classes/ButtonGroup';
 import { defaultVolume } from '../classes/config';
 
@@ -42,12 +42,8 @@ export default class MenuScene extends Scene {
     }
     changeVisible(false);
 
-    this.game.events.on(GameStatus.Paused, () => {
-      changeVisible(true);
-    });
-
-    this.game.events.on(GameStatus.NotStarted, () => {
-      changeVisible(false);
+    this.game.events.on(emitGameStatus, (s: GameStatus) => {
+      changeVisible(s === GameStatus.Paused);
     });
   }
 

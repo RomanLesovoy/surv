@@ -14,6 +14,7 @@ export default class BonusScene extends Scene {
   private rubySound: any;
   protected mapScene: Scene;
 
+
   constructor() {
     super(Scenes.BonusScene);
   }
@@ -30,6 +31,7 @@ export default class BonusScene extends Scene {
 
     this.mapScene.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
       const bonus = new Bonus(this.mapScene, this.mainScene.wave >= highLevelBonus);
+      this.mainScene.bonusGroup.add(bonus);
       this.bonusSound.play();
       this.mapScene.physics.world.enable(bonus);
       this.mapScene.physics.add.overlap(bonus, this.mainScene.hero, (b: Bonus, h: Hero) => {
@@ -47,6 +49,8 @@ export default class BonusScene extends Scene {
       .fillStyle(0x614198, 0.5)
       .fillCircle(ruby.x, ruby.y, 25)
       .setDepth(defaultBodyDepth);
+
+    this.mainScene.bonusGroup.addMultiple([ruby, graphics]);
 
     this.mapScene.physics.world.enable(ruby);
     this.mapScene.physics.add.overlap(ruby, this.mainScene.hero, () => {

@@ -29,8 +29,8 @@ export default class WaveScene extends Scene {
     this.scene.bringToTop(Scenes.ScoreScene);
   }
 
-  setDarkness = (active?: boolean) => {
-    if (active) {
+  runLightScene = () => {
+    if (this.mainScene.wave % 3 === 0) {
       this.scene.bringToTop(Scenes.LightScene);
       return this.scene.run(Scenes.LightScene);
     }
@@ -43,7 +43,7 @@ export default class WaveScene extends Scene {
     this.mainScene.wave = newWave;
     this.runScore();
     this.scene.sendToBack(Scenes.ImprovementScene);
-    this.setDarkness(newWave % 3 === 0);
+    this.runLightScene();
   }
 
   improvementScene = () => {
@@ -53,16 +53,14 @@ export default class WaveScene extends Scene {
 
   initEvents() {
     this.game.events.on(emitGameStatus, (s: GameStatus) => {
-      if ([GameStatus.Active, GameStatus.Reset].includes(s)) {
-        return this.timerWave.paused = false;
+      if (s === GameStatus.Active) {
+        this.runLightScene();
       }
-      return this.timerWave.paused = true;
     });
 
     this.timerWave = this.time.addEvent({ delay: timeConfigs.waveDelay, callback: () => {
       this.mainScene.enemiesGroup.clear(true, true);
       this.mainScene.setGameStatus(GameStatus.Improvement);
-      this.scene.stop(Scenes.ScoreScene);
       this.improvementScene();
     }, loop: true });
   }
