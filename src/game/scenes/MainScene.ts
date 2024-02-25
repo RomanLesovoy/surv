@@ -3,7 +3,6 @@ import { Scenes } from './scenes-enum';
 import Hero from '../classes/Hero';
 import HeroScene from './HeroScene';
 import EnemyScene from './EnemyScene';
-import ScoreScene from './ScoreScene';
 import { GameEvents } from '../game-events';
 import MapScene from './MapScene';
 import BonusScene from './BonusScene';
@@ -12,6 +11,7 @@ import MenuScene from './MenuScene';
 import LightScene from './LightScene';
 import ImprovementScene from './ImprovementScene';
 import MainSceneManager from './MainSceneManager';
+import ScoreScene from './ScoreScene';
 
 export const mainDataKey = 'mainSceneData';
 
@@ -25,22 +25,22 @@ export enum GameStatus {
 
 export const emitGameStatus = 'emit-game-status';
 
-const gameScenes = [
+export const gameScenes = [
   [Scenes.MapScene, MapScene],
   [Scenes.EnemyScene, EnemyScene],
   [Scenes.HeroScene, HeroScene],
   [Scenes.BonusScene, BonusScene],
-  [Scenes.ScoreScene, ScoreScene],
   [Scenes.WaveScene, WaveScene],
 ];
 
-const gameNotActiveScenes = [
+export const gameNotActiveScenes = [
   [Scenes.MenuScene, MenuScene],
 ];
 
-const otherScenes = [
+export const otherScenes = [
   [Scenes.LightScene, LightScene],
   [Scenes.ImprovementScene, ImprovementScene],
+  [Scenes.ScoreScene, ScoreScene],
 ];
 
 export default class MainScene extends Scene {
@@ -60,7 +60,7 @@ export default class MainScene extends Scene {
 
   createScenes = () => {
     const sharedThis = { [mainDataKey]: this };
-    [gameNotActiveScenes, otherScenes, gameScenes].flat()
+    [[[Scenes.MapScene, MapScene]], [[Scenes.MenuScene, MenuScene]]].flat()
       .forEach((s) => this.game.scene.getIndex(s[0] as Scenes) === -1 && this.scene.add(s[0] as Scenes, s[1] as any, false, sharedThis));
   }
 

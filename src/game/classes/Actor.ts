@@ -1,5 +1,6 @@
 import { Physics } from 'phaser';
 import { Text } from './Text';
+import { defaultBodyDepth } from './config';
 
 const createTexts = (actor: Actor): Array<Text> => {
   return [
@@ -25,12 +26,12 @@ export class Actor extends Physics.Arcade.Sprite {
     this.myTexture = texture;
 
     scene.add.existing(this);
-    // scene.physics.add.existing(this);
     scene.physics.world.enable(this);
 
     this.getBody().setCollideWorldBounds(true);
     this.getBody().setSize(80, 80);
     this.getBody().setOffset(10, -15);
+    this.setDepth(defaultBodyDepth)
 
     this.texts = createTexts(this);
   }
@@ -59,6 +60,25 @@ export class Actor extends Physics.Arcade.Sprite {
 
   public getHPValue(): number {
     return this.hp;
+  }
+
+  getAngleCamera(point, view, cameras) {
+    // Получаем координаты указателя мыши в системе координат игры с учетом положения камеры
+    const pointerX = cameras.main.worldView.x + point.x / cameras.main.zoom;
+    const pointerY = cameras.main.worldView.y + point.y / cameras.main.zoom;
+
+    // Получаем вектор направления от игрока к указателю мыши
+    const directionVector = new Phaser.Math.Vector2(pointerX - view.x, pointerY - view.y);
+
+    // Получаем угол в градусах от вектора направления
+    const targetAngle = Phaser.Math.RadToDeg(directionVector.angle());
+
+    return targetAngle;
+  }
+
+  updateAngleCamera(point, view, cameras) {
+    // Обновляем угол игрока
+    view.angle = this.getAngleCamera(point, view, cameras);
   }
 
   getAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {

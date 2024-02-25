@@ -1,6 +1,6 @@
 import { Scene } from 'phaser'
 import { Scenes } from './scenes-enum'
-import { IMainScene, mainDataKey } from './MainScene';
+import { IMainScene, gameScenes, mainDataKey, otherScenes } from './MainScene';
 
 export default class MapScene extends Scene {
   protected mainScene: IMainScene;
@@ -13,18 +13,41 @@ export default class MapScene extends Scene {
     this.mainScene = data[mainDataKey];
   }
 
-  initView() {
-    this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
-    this.cameras.main.setZoom(1);
-    // this.cameras.main.setScroll(500, 1000)
-
+  setCameraView(scale) {
     setTimeout(() => {
-      // this.cameras.main.startFollow(this.mainScene.hero, false);
-    })
+      this.cameras.main.setZoom(scale);
+      this.cameras.main.setSize(this.game.scale.width, this.game.scale.height)
+      this.cameras.main.zoom > 1
+        ? this.cameras.main.startFollow(this.mainScene.hero, false, 0.1, 0.1)
+        : this.cameras.main.stopFollow()
+      this.cameras.main.zoom <= 1 && this.setCameraCenter();
+      // this.cameras.main.setBounds(0, 0, this.game.scale.width * 2, this.game.scale.height * 2, true)
+    }, 0);
+  }
+
+  setCameraCenter() {
+    const sceneWidth = this.game.scale.width;
+    const sceneHeight = this.game.scale.height;
+
+    const cameraWidth = this.cameras.main.width;
+    const cameraHeight = this.cameras.main.height;
+
+    const centerX = (sceneWidth - cameraWidth) / 2;
+    const centerY = (sceneHeight - cameraHeight) / 2;
+
+    this.cameras.main.setScroll(centerX, centerY);
+  }
+
+  createScenes = () => {
+    const sharedThis = { [mainDataKey]: this.mainScene };
+    [otherScenes, gameScenes].flat()
+      .forEach((s) => this.game.scene.getIndex(s[0] as Scenes) === -1 && this.scene.add(s[0] as Scenes, s[1] as any, false, sharedThis));
   }
 
   create() {
-    this.initView()
+    this.createScenes();
+    this.input.on('wheel', this.handleWheel, this);
+    this.setCameraView(1);
 
     this.mainScene.map = this.add.tilemap('map');
     const tileset = this.mainScene.map.addTilesetImage('tilesheet', 'tilesheet');
@@ -41,21 +64,14 @@ export default class MapScene extends Scene {
       this.physics.world.enable(this.mainScene.hero);
       this.physics.add.collider(this.mainScene.hero, wallLayer, () => false);
       this.physics.add.collider(this.mainScene.hero, worldLayer, () => false);
-    });
+    }, 100);
   }
 
-  // create() {
-  //   let map1 = this.add.tilemap('map1');
-  //   let tileSet = map1.addTilesetImage('tilesheet_complete', 'tileSet');
-  //   let topLayer = map1.createLayer('top', [tileSet], 0, 0).setDepth(1);
-  //   let botLayer = map1.createLayer('bottom', [tileSet], 0, 0).setDepth(0);
-  //   topLayer.setCollisionByProperty({collides:true}, true);
+  handleWheel = (_pointer, _gameObjects, _deltaX, deltaY, _deltaZ) => {
+    const zoomSpeed = 0.5;
+    deltaY < 0 && this.cameras.main.zoom < 2 && (this.cameras.main.zoom += zoomSpeed);
+    deltaY > 0 && this.cameras.main.zoom > 1 && (this.cameras.main.zoom -= zoomSpeed);
 
-  //   setTimeout(() => {
-  //     this.physics.world.enable(this.mainScene.hero)
-  //     this.physics.add.collider(this.mainScene.hero, topLayer, (a: any, t) => {
-  //       return false;
-  //     });
-  //   })
-  // }
+    this.setCameraView(this.cameras.main.zoom);
+  }
 }

@@ -81,7 +81,6 @@ export class Enemy extends Actor {
   private attackHandler(): void {
     !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-attack`, frameRate: this.speed / 3 }, true);
     this.target.getDamage(this.damage);
-    // this.target.disableBody() // maybe does make sense
   }
 
   private run(): void {

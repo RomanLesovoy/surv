@@ -1,6 +1,7 @@
 import { Physics } from 'phaser';
 import { EImage } from '../scenes/LoadScene';
 import Hero from './Hero';
+import { defaultBodyDepth } from './config';
 
 export enum BonusTypes {
   Health = 'health',
@@ -47,6 +48,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
     scene.physics.world.enable(this);
     this.body.setSize(60, 60);
+    this.setDepth(defaultBodyDepth);
 
     const graphics = this.addGraphics();
 
@@ -65,6 +67,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
 
     return glowGraphics
       .fillStyle(0x614198, 0.3)
+      .setDepth(defaultBodyDepth)
       .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 40);
   }
 

@@ -19,6 +19,12 @@ export default class WaveScene extends Scene {
 
   create() {
     this.initEvents();
+    this.runScore();
+  }
+
+  runScore() {
+    this.scene.run(Scenes.ScoreScene);
+    this.scene.bringToTop(Scenes.ScoreScene);
   }
 
   setDarkness = (active?: boolean) => {
@@ -33,6 +39,7 @@ export default class WaveScene extends Scene {
     const newWave = this.mainScene.wave + 1;
     this.mainScene.setGameStatus(GameStatus.Active);
     this.mainScene.wave = newWave;
+    this.runScore();
     this.setDarkness(newWave % 3 === 0);
   }
 
@@ -52,6 +59,7 @@ export default class WaveScene extends Scene {
     this.timerWave = this.time.addEvent({ delay: timeConfigs.waveDelay, callback: () => {
       this.mainScene.enemiesGroup.clear(true, true);
       this.mainScene.setGameStatus(GameStatus.Improvement);
+      this.scene.stop(Scenes.ScoreScene);
       this.improvementScene();
     }, loop: true });
   }

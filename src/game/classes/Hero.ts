@@ -5,10 +5,10 @@ import { throttle } from '../../utils/throttle';
 import { BonusTypes } from './Bonus';
 import { EAudio, EImage } from '../scenes/LoadScene';
 import { emitGameStatus, GameStatus } from '../scenes/MainScene';
-import { defaultHeroStats } from './config';
+import { defaultBodyDepth, defaultHeroStats } from './config';
 import { Text } from './Text';
 
-const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
+const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras) => {
   // Получаем вектор направления от персонажа к указателю мыши
   const directionVector = new Phaser.Math.Vector2(pointer.worldX - hero.x, pointer.worldY - hero.y);
 
@@ -25,9 +25,12 @@ const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero) => {
   const bulletX = hero.x + rotatedOffset.x;
   const bulletY = hero.y + rotatedOffset.y;
 
+  const screenPoint = cameras.main.getWorldPoint(pointer.x, pointer.y); // TODO worldX, worldY
+
   return {
     x: bulletX,
     y: bulletY,
+    screenPoint,
   }
 }
 
@@ -50,7 +53,7 @@ export default class Hero extends Actor {
   private bulletsText: Text;
   private runSound: any;
 
-  constructor(scene: Scene, x: number, y: number, onShot: (b: Bullet) => void)
+  constructor(scene: Scene, heroScene: Scene, x: number, y: number, onShot: (b: Bullet) => void)
   {
     super(scene, x, y, EImage.PlayerHandgun);
 
@@ -72,14 +75,9 @@ export default class Hero extends Actor {
       game.events.emit(emitGameStatus, GameStatus.NotStarted);
     });
 
-    this.bulletImg = this.scene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false);
-    this.bulletsText = new Text(this.scene, game.scale.width - 250, game.scale.height - 90, '');
-
-    this.init();
-  }
-
-  init () {
     this.runSound = this.scene.sound.add(EAudio.HeroRun, {volume: 1});
+    this.bulletImg = heroScene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false).setDepth(defaultBodyDepth);
+    this.bulletsText = new Text(heroScene, game.scale.width - 250, game.scale.height - 75, '').setDepth(defaultBodyDepth);
   }
 
   public resetHero = () => {
@@ -123,8 +121,8 @@ export default class Hero extends Actor {
     this.bullets--;
     if (!this.bullets) this.switchGun(null);
     this.scene.sound.add(EAudio.Pistol).play();
-
-    return new Bullet(this.scene, pointer.worldX, pointer.worldY, EImage.Bullet, getOffsetGunPlayer(pointer, this));
+    const offset = getOffsetGunPlayer(pointer, this, this.scene.cameras);
+    return new Bullet(this.scene, offset.screenPoint.x, offset.screenPoint.y, EImage.Bullet, { x: offset.x, y: offset.y });
   }
 
   showLeftBullets = () => {
@@ -155,6 +153,6 @@ export default class Hero extends Actor {
       this.makeShot && this.makeShot();
     }
 
-    this.updateAngle(this.scene.input.activePointer, this);
+    this.updateAngleCamera(this.scene.input.activePointer, this, this.scene.cameras);
   }
 }

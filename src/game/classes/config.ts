@@ -16,3 +16,5 @@ export const defaultEnemyStats = {
   speedWaveIncrease: 5,
   hpWaveIncrease: 5,
 }
+
+export const defaultBodyDepth = 5;
