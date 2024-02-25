@@ -7,19 +7,25 @@ export enum BonusTypes {
   Health = 'health',
   Armor = 'armor',
   Riffle = 'riffle',
-  Shotgun = 'shotgun',
+  MachineGun = 'machine-gun',
   Ammo = 'ammo',
 }
 
-const guns = [BonusTypes.Riffle]; // @TODO add other
-const types = [...guns, BonusTypes.Health, BonusTypes.Ammo]; // @TODO add other
+const guns = [BonusTypes.Riffle];
+const highLevelGuns = [BonusTypes.MachineGun];
+const getTypes = (highLevelBonus: boolean = false) => [
+  ...guns,
+  BonusTypes.Health,
+  BonusTypes.Ammo,
+  (highLevelBonus ? highLevelGuns : null),
+].filter(b => !!b).flat();
 
 const textures = {
   [BonusTypes.Riffle]: EImage.Riffle,
-  [BonusTypes.Shotgun]: EImage.Shotgun,
   [BonusTypes.Health]: EImage.Health,
   [BonusTypes.Armor]: EImage.Armor,
   [BonusTypes.Ammo]: EImage.Ammo,
+  [BonusTypes.MachineGun]: EImage.MachineGun,
 }
 
 const generateRandomCoordinatesCenter = (mapSize: { width: number, height: number }): { x: number, y: number } => {
@@ -33,8 +39,9 @@ export default class Bonus extends Physics.Arcade.Sprite {
   coordinates: { x: number, y: number };
   bonusType: BonusTypes;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, highLevelBonus: boolean) {
     const coordinates = generateRandomCoordinatesCenter({ height: scene.game.scale.height, width: scene.game.scale.width });
+    const types = getTypes(highLevelBonus);
     const bonusType = types[Math.round(Math.random() * (types.length - 1))];
     const texture = textures[bonusType];
 
@@ -71,17 +78,21 @@ export default class Bonus extends Physics.Arcade.Sprite {
       .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 40);
   }
 
-  effect(target: Hero): boolean {
+  effect(target: Hero): number | boolean {
     return [
 
-      this.bonusType === BonusTypes.Health && target.hp < 100 && (target.hp <= 50 ? target.hp += 50 : target.hp = 100),
+      this.bonusType === BonusTypes.Health && target.hp < target.maxHp && (target.hp = target.hp + 50 > target.maxHp ? target.maxHp : target.hp + 50),
 
       this.bonusType === BonusTypes.Ammo && target.activeGun && (target.bullets += 150),
 
       this.bonusType === BonusTypes.Riffle && target.activeGun === BonusTypes.Riffle && (target.bullets += 50),
 
-      [BonusTypes.Riffle, BonusTypes.Shotgun].includes(this.bonusType) && !target.activeGun && target.switchGun(this.bonusType as BonusTypes.Riffle | BonusTypes.Shotgun),
+      this.bonusType === BonusTypes.MachineGun && target.activeGun === BonusTypes.MachineGun && (target.bullets += 100),
 
-    ].some((b) => !!b)
+      this.bonusType === BonusTypes.MachineGun && target.activeGun === BonusTypes.Riffle && target.switchGun(this.bonusType),
+
+      [BonusTypes.Riffle, BonusTypes.MachineGun].includes(this.bonusType) && !target.activeGun && target.switchGun(this.bonusType as BonusTypes.Riffle | BonusTypes.MachineGun),
+
+    ].find((b) => !!b)
   }
 }

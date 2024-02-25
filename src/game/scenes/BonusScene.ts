@@ -5,7 +5,7 @@ import Hero from "../classes/Hero";
 import { GameEvents, timeConfigs } from '../game-events';
 import { EAudio, EImage } from './LoadScene';
 import { Scene } from 'phaser';
-import { defaultBodyDepth } from '../classes/config';
+import { defaultBodyDepth, highLevelBonus } from '../classes/config';
 
 export default class BonusScene extends Scene {
   protected mainScene: IMainScene;
@@ -29,7 +29,7 @@ export default class BonusScene extends Scene {
     this.bonusPickSound = this.sound.add(EAudio.BonusPick);
 
     this.mapScene.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
-      const bonus = new Bonus(this.mapScene);
+      const bonus = new Bonus(this.mapScene, this.mainScene.wave >= highLevelBonus);
       this.bonusSound.play();
       this.mapScene.physics.world.enable(bonus);
       this.mapScene.physics.add.overlap(bonus, this.mainScene.hero, (b: Bonus, h: Hero) => {

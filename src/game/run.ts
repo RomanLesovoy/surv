@@ -19,7 +19,7 @@ const config = {
     default: 'arcade',
     arcade: {
       // skipQuadTree: false,
-      debug: true,
+      debug: false,
     },
   },
   render: {

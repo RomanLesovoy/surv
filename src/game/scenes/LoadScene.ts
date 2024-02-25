@@ -5,6 +5,7 @@ import { Text } from '../classes/Text';
 export enum EImage {
   PlayerHandgun = 'player-handgun',
   PlayerRiffle = 'player-riffle',
+  PlayerMachineGun = 'player-machine-gun',
   Zombie1 = 'zombie1',
   Zombie1Move = 'a-zombie1-move',
   Zombie1Attack = 'a-zombie1-attack',
@@ -13,7 +14,7 @@ export enum EImage {
   Bullet = 'bullet',
   Riffle = 'riffle',
   Ammo = 'ammo',
-  Shotgun = 'shotgun',
+  MachineGun = 'machine-gun',
   Health = 'health',
   Armor = 'armor',
   Ruby = 'ruby',
@@ -68,21 +69,18 @@ export default class LoadingScene extends Scene {
     this.load.image(EImage.Riffle, 'ammo/riffle.png');
     this.load.image(EImage.Armor, 'ammo/armor.png');
     this.load.image(EImage.Health, 'ammo/health.png');
-    this.load.image(EImage.Shotgun, 'ammo/shotgun.png');
     this.load.image(EImage.Ammo, 'ammo/ammo.png');
+    this.load.image(EImage.MachineGun, 'ammo/machine-gun.png');
 
-    // v1
+    // Actors
     this.load.image(EImage.PlayerHandgun, 'player/default.png');
+    this.load.image(EImage.PlayerMachineGun, 'player/player-machine-gun.png');
     this.load.image(EImage.PlayerRiffle, 'player/idle-riffle.png');
     this.load.image(EImage.Zombie1, 'enemies/zombie1/idle.png');
     this.load.atlas(EImage.Zombie1Move, 'enemies/zombie1/move.png', 'enemies/zombie1/zombie1-atlas.json');
     this.load.atlas(EImage.Zombie1Attack, 'enemies/zombie1/attack.png', 'enemies/zombie1/zombie1-atlas.json');
 
-    // TEST
-    // this.load.image('tileSet', 'tilesheet_complete.png');
-    // this.load.tilemapTiledJSON('map1', 'map1.json');
-
-    // ---
+    // Map
     this.load.image('tilesheet', 'map/tile_sheet/metal_100_2.png');
     this.load.tilemapTiledJSON('map', 'map-big-test.json');
   }

@@ -20,3 +20,5 @@ export const defaultEnemyStats = {
 export const defaultBodyDepth = 5;
 
 export const defaultVolume = 0.1;
+
+export const highLevelBonus = 5;

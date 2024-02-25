@@ -42,6 +42,7 @@ export default class WaveScene extends Scene {
     this.mainScene.setGameStatus(GameStatus.Active);
     this.mainScene.wave = newWave;
     this.runScore();
+    this.scene.sendToBack(Scenes.ImprovementScene);
     this.setDarkness(newWave % 3 === 0);
   }
 

@@ -8,7 +8,7 @@ import { emitGameStatus, GameStatus } from '../scenes/MainScene';
 import { defaultBodyDepth, defaultHeroStats } from './config';
 import { Text } from './Text';
 
-const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras) => {
+const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras, randomOffset: boolean = false) => {
   // Получаем вектор направления от персонажа к указателю мыши
   const directionVector = new Phaser.Math.Vector2(pointer.worldX - hero.x, pointer.worldY - hero.y);
 
@@ -21,11 +21,25 @@ const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras) => {
   // Вращаем оффсет вокруг центра на угол направления
   const rotatedOffset = offsetFromCenter.rotate(unitDirectionVector.angle());
 
-  // Конечные координаты пули
-  const bulletX = hero.x + rotatedOffset.x;
-  const bulletY = hero.y + rotatedOffset.y;
+  // Расстояние от игрока до точки выстрела (в данном случае, от дула)
+  const distanceToShot = -30; // Подставьте нужное вам значение
 
-  const screenPoint = cameras.main.getWorldPoint(pointer.x, pointer.y); // TODO worldX, worldY
+  // Сдвиг по осям X и Y для учета отклонения
+  // const offsetX = -15; // Подставьте нужное вам значение
+  // const offsetY = 15;  // Подставьте нужное вам значение
+
+  // // Угол поворота персонажа
+  // const angle = hero.rotation;
+
+  // Конечные координаты пули откуда выстрел
+  // const bulletX = hero.x + rotatedOffset.x + unitDirectionVector.x * distanceToShot + offsetX * Math.cos(angle) - offsetY * Math.sin(angle);
+  // const bulletY = hero.y + rotatedOffset.y + unitDirectionVector.y * distanceToShot + offsetX * Math.sin(angle) + offsetY * Math.cos(angle);
+
+  // Конечные координаты пули откуда выстрел
+  const bulletX = hero.x + rotatedOffset.x + unitDirectionVector.x * distanceToShot;
+  const bulletY = hero.y + rotatedOffset.y + unitDirectionVector.y * distanceToShot;
+
+  const screenPoint = randomOffset ? getShotRandomOffset(pointer, hero, cameras) : cameras.main.getWorldPoint(pointer.x, pointer.y);
 
   return {
     x: bulletX,
@@ -33,8 +47,32 @@ const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras) => {
     screenPoint,
   }
 }
+const getShotRandomOffset = (pointer: Input.Pointer, hero: Hero, cameras) => {
+  const distance = Phaser.Math.Distance.Between(hero.x, hero.y, pointer.worldX, pointer.worldY);
 
-type Gun = BonusTypes.Riffle | BonusTypes.Shotgun | null;
+  // Максимальное расстояние, при котором сдвигаем позицию курсора
+  const maxDistanceForRandomOffset = 2000; // Подставьте нужное значение
+
+  // Вычисляем коэффициент сдвига в зависимости от расстояния
+  const offsetMultiplier = Phaser.Math.Clamp(distance / maxDistanceForRandomOffset, 0, 1);
+
+  // Задаем максимальный диапазон сдвига для X и Y
+  const maxOffsetRange = 200; // Подставьте нужное значение
+
+  // Вычисляем сдвиг для X и Y в зависимости от расстояния
+  const offsetX = Phaser.Math.RND.between(-maxOffsetRange * offsetMultiplier, maxOffsetRange * offsetMultiplier);
+  const offsetY = Phaser.Math.RND.between(-maxOffsetRange * offsetMultiplier, maxOffsetRange * offsetMultiplier);
+
+  // Применяем случайный сдвиг к позиции курсора
+  // const bulletX = hero.x;
+  // const bulletY = hero.y;
+
+  const screenPoint = cameras.main.getWorldPoint(pointer.worldX + offsetX, pointer.worldY + offsetY);
+
+  return screenPoint;
+};
+
+type Gun = BonusTypes.Riffle | BonusTypes.MachineGun | null;
 
 export default class Hero extends Actor {
   private keyW: Input.Keyboard.Key;
@@ -91,10 +129,11 @@ export default class Hero extends Actor {
   }
 
   getTexture = () => {
-    if (this.activeGun) {
-      return EImage.PlayerRiffle;
+    const guns = {
+      [BonusTypes.MachineGun]: EImage.PlayerMachineGun,
+      [BonusTypes.Riffle]: EImage.PlayerRiffle,
     }
-    return EImage.PlayerHandgun;
+    return guns[this.activeGun] || EImage.PlayerHandgun;
   }
 
   initMakeShot = () => {
@@ -105,22 +144,24 @@ export default class Hero extends Actor {
   }
 
   switchGun = (gun: Gun) => {
-    if (this.activeGun === gun) {
-      this.bullets += 50;
-      return;
+    if (this.activeGun === gun) return !!this.activeGun;
+    const guns = {
+      [BonusTypes.Riffle]: () => (this.bullets = 50) && (this.fireDelay = 70),
+      [BonusTypes.MachineGun]: () => (this.bullets = 100) && (this.fireDelay = 40),
     }
     this.activeGun = gun;
+    guns[this.activeGun] && guns[this.activeGun]();
     !this.activeGun && (this.bullets = Infinity) && (this.fireDelay = 250);
-    this.activeGun && (this.bullets = 50) && (this.fireDelay = 70);
     this.initMakeShot();
     this.setTexture(this.getTexture());
+    return !!this.activeGun;
   }
 
   makeBullet = () => {
     const pointer = this.scene.input.activePointer;
     this.bullets--;
     if (!this.bullets) this.switchGun(null);
-    const offset = getOffsetGunPlayer(pointer, this, this.scene.cameras);
+    const offset = getOffsetGunPlayer(pointer, this, this.scene.cameras, this.activeGun === BonusTypes.MachineGun);
     return new Bullet(this.scene, offset.screenPoint.x, offset.screenPoint.y, EImage.Bullet, { x: offset.x, y: offset.y });
   }
 
