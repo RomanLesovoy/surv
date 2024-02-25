@@ -4,7 +4,7 @@ export enum GameEvents {
 }
 
 export const timeConfigs = {
-  bonusDelay: 1000,
+  bonusDelay: 15000,
   waveDelay: 30000,
   enemyDelay: 2000,
 }

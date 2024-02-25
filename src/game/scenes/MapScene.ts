@@ -13,14 +13,29 @@ export default class MapScene extends Scene {
     this.mainScene = data[mainDataKey];
   }
 
-  initView() {
+  setCameraView(scale) {
     setTimeout(() => {
-      const scale = 2;
       this.cameras.main.setZoom(scale);
-      this.cameras.main.setSize((this.game.scale.width / 2) * scale, (this.game.scale.height / 2) * scale)
-      this.cameras.main.startFollow(this.mainScene.hero, false, 0.1, 0.1)
-      this.cameras.main.setBounds(0, 0, this.game.scale.width * 2, this.game.scale.height * 2, true)
+      this.cameras.main.setSize(this.game.scale.width, this.game.scale.height)
+      this.cameras.main.zoom > 1
+        ? this.cameras.main.startFollow(this.mainScene.hero, false, 0.1, 0.1)
+        : this.cameras.main.stopFollow()
+      this.cameras.main.zoom <= 1 && this.setCameraCenter();
+      // this.cameras.main.setBounds(0, 0, this.game.scale.width * 2, this.game.scale.height * 2, true)
     }, 0);
+  }
+
+  setCameraCenter() {
+    const sceneWidth = this.game.scale.width;
+    const sceneHeight = this.game.scale.height;
+
+    const cameraWidth = this.cameras.main.width;
+    const cameraHeight = this.cameras.main.height;
+
+    const centerX = (sceneWidth - cameraWidth) / 2;
+    const centerY = (sceneHeight - cameraHeight) / 2;
+
+    this.cameras.main.setScroll(centerX, centerY);
   }
 
   createScenes = () => {
@@ -31,7 +46,8 @@ export default class MapScene extends Scene {
 
   create() {
     this.createScenes();
-    this.initView()
+    this.input.on('wheel', this.handleWheel, this);
+    this.setCameraView(1);
 
     this.mainScene.map = this.add.tilemap('map');
     const tileset = this.mainScene.map.addTilesetImage('tilesheet', 'tilesheet');
@@ -49,5 +65,13 @@ export default class MapScene extends Scene {
       this.physics.add.collider(this.mainScene.hero, wallLayer, () => false);
       this.physics.add.collider(this.mainScene.hero, worldLayer, () => false);
     }, 100);
+  }
+
+  handleWheel = (_pointer, _gameObjects, _deltaX, deltaY, _deltaZ) => {
+    const zoomSpeed = 0.5;
+    deltaY < 0 && this.cameras.main.zoom < 2 && (this.cameras.main.zoom += zoomSpeed);
+    deltaY > 0 && this.cameras.main.zoom > 1 && (this.cameras.main.zoom -= zoomSpeed);
+
+    this.setCameraView(this.cameras.main.zoom);
   }
 }
