@@ -120,7 +120,6 @@ export default class Hero extends Actor {
     const pointer = this.scene.input.activePointer;
     this.bullets--;
     if (!this.bullets) this.switchGun(null);
-    this.scene.sound.add(EAudio.Pistol).play();
     const offset = getOffsetGunPlayer(pointer, this, this.scene.cameras);
     return new Bullet(this.scene, offset.screenPoint.x, offset.screenPoint.y, EImage.Bullet, { x: offset.x, y: offset.y });
   }

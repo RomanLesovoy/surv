@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
 import { GameStatus, IMainScene, emitGameStatus, mainDataKey } from './MainScene';
 import { timeConfigs } from '../game-events';
+import { defaultVolume } from '../classes/config';
 
 export default class WaveScene extends Scene {
   protected mainScene: IMainScene;
@@ -15,6 +16,7 @@ export default class WaveScene extends Scene {
 
   init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
+    this.sound.volume = defaultVolume;
   }
 
   create() {
