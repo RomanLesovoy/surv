@@ -10,6 +10,10 @@ export enum EImage {
   Zombie1 = 'zombie1',
   Zombie1Move = 'a-zombie1-move',
   Zombie1Attack = 'a-zombie1-attack',
+  Monster1 = 'monster1',
+  Monster1Move = 'monster1-move',
+  Monster1Attack = 'monster1-attack',
+  Monster1Death = 'monster1-death',
   ShadowBg = 'shadow-bg',
   ButtonBg = 'button-bg',
   Bullet = 'bullet',
@@ -81,6 +85,9 @@ export default class LoadingScene extends Scene {
     this.load.atlas(EImage.Zombie1Move, 'enemies/zombie1/move.png', 'enemies/zombie1/zombie1-atlas.json');
     this.load.atlas(EImage.Zombie1Attack, 'enemies/zombie1/attack.png', 'enemies/zombie1/zombie1-atlas.json');
     this.load.image(EImage.PlayerFire, 'player/gun-fire_small.png');
+    this.load.spritesheet(EImage.Monster1Move, 'enemies/monsters/monster1.1-move.png', { frameWidth: 200, frameHeight: 200 });
+    this.load.spritesheet(EImage.Monster1Attack, 'enemies/monsters/monster1.1-attack-1.png', { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet(EImage.Monster1Death, 'enemies/monsters/monster1.1-death.png', { frameWidth: 200, frameHeight: 300 });
 
     // Map
     this.load.image('tilesheet', 'map/tile_sheet/metal_100_2.png');
@@ -135,6 +142,24 @@ export default class LoadingScene extends Scene {
         prefix: `zombie1-attack-`,
         end: 8,
         start: 0
+      }),
+      frameRate: 8,
+    });
+
+    this.anims.create({
+      key: EImage.Monster1Move,
+      frames: this.anims.generateFrameNames(EImage.Monster1Move, {
+        end: 8,
+        start: 0,
+      }),
+      frameRate: 8,
+    });
+
+    this.anims.create({
+      key: EImage.Monster1Attack,
+      frames: this.anims.generateFrameNames(EImage.Monster1Attack, {
+        end: 7,
+        start: 0,
       }),
       frameRate: 8,
     });

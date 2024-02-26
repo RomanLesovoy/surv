@@ -3,7 +3,7 @@ import { EImage } from "./LoadScene";
 import { Scenes } from "./scenes-enum";
 import { GameStatus, IMainScene, mainDataKey } from './MainScene';
 import ButtonGroup, { Buttons } from '../classes/ButtonGroup';
-import { defaultVolume } from '../classes/config';
+import config from '../config';
 
 export default class MenuScene extends Scene {
   protected mainScene: IMainScene;
@@ -18,7 +18,7 @@ export default class MenuScene extends Scene {
   init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
 		this.cursors = this.input.keyboard.createCursorKeys();
-    this.sound.volume = defaultVolume;
+    this.sound.volume = config.general.defaultVolume;
 	}
 
   createBg() {

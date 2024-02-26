@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
 import { IMainScene, mainDataKey } from './MainScene';
-import { defaultHeroStats } from '../classes/config';
+import config from '../config';
 import { EImage } from './LoadScene';
 import ButtonGroup, { Buttons } from '../classes/ButtonGroup';
 import { Text } from '../classes/Text';
@@ -43,21 +43,21 @@ export default class ImprovementScene extends Scene {
   }
 
   onImproveSpeed = () => {
-    this.mainScene.hero.speed += defaultHeroStats.speedStatIncrease;
+    this.mainScene.hero.speed += config.defaultHeroStats.speedStatIncrease;
     this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Speed];
     this.setCosts();
     this.updateButtons();
   }
 
   onImproveDamage = () => {
-    this.mainScene.hero.damage += defaultHeroStats.damageStatIncrease;
+    this.mainScene.hero.damage += config.defaultHeroStats.damageStatIncrease;
     this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Damage];
     this.setCosts();
     this.updateButtons();
   }
 
   onImproveHp = () => {
-    this.mainScene.hero.maxHp += defaultHeroStats.hpStatIncrease;
+    this.mainScene.hero.maxHp += config.defaultHeroStats.hpStatIncrease;
     this.mainScene.hero.hp = this.mainScene.hero.maxHp;
     this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Hp];
     this.setCosts();
@@ -83,9 +83,9 @@ export default class ImprovementScene extends Scene {
 
   setCosts() {
     this.improvementsCosts = {
-      [StatsKeys.Speed]: Math.round(this.mainScene.hero.speed / defaultHeroStats.speedStatIncrease),
-      [StatsKeys.Damage]: Math.round(this.mainScene.hero.damage / defaultHeroStats.damageStatIncrease),
-      [StatsKeys.Hp]: Math.round(this.mainScene.hero.hp / defaultHeroStats.hpStatIncrease),
+      [StatsKeys.Speed]: Math.round(this.mainScene.hero.speed / config.defaultHeroStats.speedStatIncrease),
+      [StatsKeys.Damage]: Math.round(this.mainScene.hero.damage / config.defaultHeroStats.damageStatIncrease),
+      [StatsKeys.Hp]: Math.round(this.mainScene.hero.hp / config.defaultHeroStats.hpStatIncrease),
     }
   }
 

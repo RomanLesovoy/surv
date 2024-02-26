@@ -1,5 +1,5 @@
 import { Physics } from 'phaser';
-import { defaultBodyDepth } from './config';
+import config from '../config';
 import { EAudio, EImage } from '../scenes/LoadScene';
 
 export default class Bullet extends Physics.Arcade.Sprite {
@@ -17,12 +17,12 @@ export default class Bullet extends Physics.Arcade.Sprite {
     this.body.setSize(4, 4);
     this.setDisplaySize(3, 3);
     this.direction = { x, y };
-    this.setDepth(defaultBodyDepth);
+    this.setDepth(config.general.defaultBodyDepth);
 
     this.scene.sound.add(EAudio.Pistol).play();
 
     if (this.scene.cameras.main.zoom === 1) {
-      const image = scene.add.image(from.x, from.y, EImage.PlayerFire).setDepth(defaultBodyDepth + 1);
+      const image = scene.add.image(from.x, from.y, EImage.PlayerFire).setDepth(config.general.defaultBodyDepth + 1);
       setTimeout(() => image?.destroy(), 50);
     }
 

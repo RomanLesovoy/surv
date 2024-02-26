@@ -2,10 +2,10 @@ import { Scene, Math } from 'phaser';
 import { Actor } from './Actor';
 import Hero from './Hero';
 import { Text } from './Text';
-import { GameEvents } from '../game-events';
 import Bullet from './Bullet';
-import { defaultEnemyStats } from './config';
+import config, { EnemyType, GameEvents } from '../config';
 import { EAudio } from '../scenes/LoadScene';
+
 
 export class Enemy extends Actor {
   private target: Hero;
@@ -14,6 +14,7 @@ export class Enemy extends Actor {
   private timer: number;
   protected damage: number;
   private deathSound: any;
+  private stats: any; // todo
 
   constructor(
     scene: Scene,
@@ -21,15 +22,19 @@ export class Enemy extends Actor {
     y: number,
     texture: string,
     target: Hero,
+    type: EnemyType,
+    wave: number = 1,
     level: number = 1,
   ) {
     super(scene, x, y, texture);
     this.target = target;
-    this.atlasName = `a-${texture}`;
-    this.speed = defaultEnemyStats.speed + (level * defaultEnemyStats.speedWaveIncrease);
-    this.timer = defaultEnemyStats.timerAttack;
-    this.hp = defaultEnemyStats.hp + (level * defaultEnemyStats.hpWaveIncrease);
-    this.damage = defaultEnemyStats.damage + (level * defaultEnemyStats.damageWaveIncrease);
+    this.atlasName = type === EnemyType.Zombie ? `a-${texture}` : texture;
+    this.stats = config.enemiesStats[`${type}Level${level}`];
+    if (!this.stats) throw 'Enemy not found';
+    this.speed = this.stats.speed + (wave * this.stats.speedWaveIncrease);
+    this.timer = this.stats.timerAttack;
+    this.hp = this.stats.hp + (wave * this.stats.hpWaveIncrease);
+    this.damage = this.stats.damage + (wave * this.stats.damageWaveIncrease);
 
     this.getBody().setOffset(0, 15);
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
@@ -40,7 +45,7 @@ export class Enemy extends Actor {
       if (this.isDead) {
         this.deathSound.play();
         this.scene.game.events.emit(GameEvents.CreateRuby, this.body.x, this.body.y);
-        this.scene.game.events.emit(GameEvents.AddScore, 10 + level);
+        this.scene.game.events.emit(GameEvents.AddScore, 10 + wave + (level * 10));
       }
     });
 
@@ -62,8 +67,8 @@ export class Enemy extends Actor {
   // 1 sec delay for attack
   private handleOnTimer(delta: number, callback: Function): void {
     this.timer += delta;
-    while (this.timer >= defaultEnemyStats.timerAttack) {
-      this.timer -= defaultEnemyStats.timerAttack;
+    while (this.timer >= this.stats.timerAttack) {
+      this.timer -= this.stats.timerAttack;
       callback();
     }
   }

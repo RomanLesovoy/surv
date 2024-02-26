@@ -2,10 +2,9 @@ import { IMainScene, mainDataKey } from "./MainScene";
 import { Scenes } from "./scenes-enum";
 import Bonus from "../classes/Bonus";
 import Hero from "../classes/Hero";
-import { GameEvents, timeConfigs } from '../game-events';
+import config, { GameEvents } from '../config';
 import { EAudio, EImage } from './LoadScene';
 import { Scene } from 'phaser';
-import { defaultBodyDepth, highLevelBonus } from '../classes/config';
 
 export default class BonusScene extends Scene {
   protected mainScene: IMainScene;
@@ -29,8 +28,8 @@ export default class BonusScene extends Scene {
     this.bonusSound = this.sound.add(EAudio.Bonus);
     this.bonusPickSound = this.sound.add(EAudio.BonusPick);
 
-    const timer = this.mapScene.time.addEvent({ delay: timeConfigs.bonusDelay, callback: () => {
-      const bonus = new Bonus(this.mapScene, this.mainScene.wave >= highLevelBonus);
+    const timer = this.mapScene.time.addEvent({ delay: config.timeConfigs.bonusDelay, callback: () => {
+      const bonus = new Bonus(this.mapScene, this.mainScene.wave >= config.general.highLevelBonus);
       this.mainScene.bonusGroup.add(bonus);
       this.bonusSound.play();
       this.mapScene.physics.world.enable(bonus);
@@ -48,12 +47,12 @@ export default class BonusScene extends Scene {
   }
 
   protected leaveRubyAfterEnemyDestroy = (x, y): void => {
-    const ruby = this.mapScene.add.image(x + 20, y + 20, EImage.Ruby).setSize(30, 30).setDepth(defaultBodyDepth);
+    const ruby = this.mapScene.add.image(x + 20, y + 20, EImage.Ruby).setSize(30, 30).setDepth(config.general.defaultBodyDepth);
 
     const graphics = this.mapScene.add.graphics()
       .fillStyle(0x614198, 0.5)
       .fillCircle(ruby.x, ruby.y, 25)
-      .setDepth(defaultBodyDepth);
+      .setDepth(config.general.defaultBodyDepth);
 
     this.mainScene.bonusGroup.addMultiple([ruby, graphics]);
 

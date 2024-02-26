@@ -1,7 +1,7 @@
 import { Scene } from 'phaser'
 import { Scenes } from './scenes-enum'
 import { IMainScene, gameScenes, mainDataKey, otherScenes } from './MainScene';
-import { defaultVolume } from '../classes/config';
+import config from '../config';
 
 export default class MapScene extends Scene {
   protected mainScene: IMainScene;
@@ -12,7 +12,7 @@ export default class MapScene extends Scene {
 
   init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
-    this.sound.volume = defaultVolume; // todo
+    this.sound.volume = config.general.defaultVolume; // todo
   }
 
   setCameraView(scale) {

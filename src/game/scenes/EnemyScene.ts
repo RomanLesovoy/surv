@@ -3,8 +3,8 @@ import { Scenes } from './scenes-enum';
 import { getRandomDoorMap } from '../../utils/randomCoordinates';
 import { IMainScene, mainDataKey } from './MainScene';
 import { EImage } from './LoadScene';
-import { timeConfigs } from '../game-events';
 import { Scene } from 'phaser';
+import config, { EnemyType } from '../config';
 
 export default class EnemyScene extends Scene {
   protected mainScene: IMainScene;
@@ -21,10 +21,12 @@ export default class EnemyScene extends Scene {
 
   create() {
     this.mapScene.physics.add.collider(this.mainScene.enemiesGroup, this.mainScene.enemiesGroup, this.handleEnemyCollision, null, this.mapScene);
-    const timerEvent = this.mapScene.time.addEvent({ delay: timeConfigs.enemyDelay, callback: this.pushEnemies, loop: true });
+    const timerZombieEvent = this.mapScene.time.addEvent({ delay: config.timeConfigs.enemyDelay, callback: () => this.pushEnemies(EnemyType.Zombie), loop: true });
+    const timerMonsterEvent = this.mapScene.time.addEvent({ delay: config.timeConfigs.enemyDelay, callback: () => this.pushEnemies(EnemyType.Monster), loop: true });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      timerEvent.destroy();
+      timerZombieEvent.destroy();
+      timerMonsterEvent.destroy();
     });
   }
 
@@ -42,17 +44,30 @@ export default class EnemyScene extends Scene {
     this.mapScene.physics.velocityFromAngle(angleBetweenZombies, avoidanceSpeed, enemy2.body.velocity);
   }
 
-  private createEnemy = (): Enemy => {
-    const coordinates = getRandomDoorMap({ width: this.game.scale.width, height: this.game.scale.height });
-    const enemy = new Enemy(this.mapScene, coordinates.x, coordinates.y, EImage.Zombie1, this.mainScene.hero, this.mainScene.wave)
-      .setName(`Enemy-#${Phaser.Math.RND.between(0, 99999)}`);
-    return enemy;
+  private createZombieFn = (coordinates: { x: number, y: number }) => {
+    return () => new Enemy(this.mapScene, coordinates.x, coordinates.y, EImage.Zombie1, this.mainScene.hero, EnemyType.Zombie, this.mainScene.wave) // todo level
+      .setName(`Zombie-#${Phaser.Math.RND.between(0, 99999)}`)
   }
 
-  private pushEnemies = (): void => {
-    const amount = Math.ceil(this.mainScene.wave / timeConfigs.waveEnemyAdd);
+  private createMonsterFn = (coordinates: { x: number, y: number }) => {
+    // Portal
+    const wave = this.mainScene.wave;
+    const enemyLevel = wave <= 5 ? 1 : Phaser.Math.RND.between(1, wave >= 10 ? 3 : 2);
+    const texture = enemyLevel === 3 ? EImage.Monster1 : EImage.Monster1; // todo image
+    return () => new Enemy(this.mapScene, coordinates.x, coordinates.y, texture, this.mainScene.hero, EnemyType.Monster, this.mainScene.wave, enemyLevel)
+      .setName(`Monster-#${Phaser.Math.RND.between(0, 99999)}`)
+  }
+
+  private createEnemy = (enemyType: EnemyType): Enemy => {
+    const coordinates = getRandomDoorMap({ width: this.game.scale.width, height: this.game.scale.height });
+    const enemy = enemyType === EnemyType.Monster ? this.createMonsterFn(coordinates) : this.createZombieFn(coordinates);
+    return enemy();
+  }
+
+  private pushEnemies = (type: EnemyType): void => {
+    const amount = Math.ceil(this.mainScene.wave / config.general.waveEnemyAdd);
     for (let i = 0; i < amount; i++) {
-      this.mainScene.enemiesGroup.add(this.createEnemy());
+      this.mainScene.enemiesGroup.add(this.createEnemy(type));
     }
   }
 }

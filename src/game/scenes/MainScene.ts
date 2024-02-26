@@ -3,7 +3,7 @@ import { Scenes } from './scenes-enum';
 import Hero from '../classes/Hero';
 import HeroScene from './HeroScene';
 import EnemyScene from './EnemyScene';
-import { GameEvents } from '../game-events';
+import { GameEvents } from '../config';
 import MapScene from './MapScene';
 import BonusScene from './BonusScene';
 import WaveScene from './WaveScene';

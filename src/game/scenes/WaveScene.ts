@@ -1,8 +1,7 @@
 import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
 import { GameStatus, IMainScene, emitGameStatus, mainDataKey } from './MainScene';
-import { timeConfigs } from '../game-events';
-import { defaultVolume } from '../classes/config';
+import config from '../config';
 
 export default class WaveScene extends Scene {
   protected mainScene: IMainScene;
@@ -16,7 +15,7 @@ export default class WaveScene extends Scene {
 
   init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
-    this.sound.volume = defaultVolume;
+    this.sound.volume = config.general.defaultVolume;
   }
 
   create() {
@@ -62,7 +61,7 @@ export default class WaveScene extends Scene {
       }
     });
 
-    this.timerWave = this.time.addEvent({ delay: timeConfigs.waveDelay, callback: () => {
+    this.timerWave = this.time.addEvent({ delay: config.timeConfigs.waveDelay, callback: () => {
       this.mainScene.enemiesGroup.clear(true, true);
       this.mainScene.setGameStatus(GameStatus.Improvement);
       this.improvementScene();

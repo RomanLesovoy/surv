@@ -1,6 +1,6 @@
 import { Physics } from 'phaser';
 import { Text } from './Text';
-import { defaultBodyDepth } from './config';
+import config from '../config';
 
 const createTexts = (actor: Actor): Array<Text> => {
   return [
@@ -31,7 +31,7 @@ export class Actor extends Physics.Arcade.Sprite {
     this.getBody().setCollideWorldBounds(true);
     this.getBody().setSize(80, 80);
     this.getBody().setOffset(10, -15);
-    this.setDepth(defaultBodyDepth)
+    this.setDepth(config.general.defaultBodyDepth)
 
     this.texts = createTexts(this);
   }
