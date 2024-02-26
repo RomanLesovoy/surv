@@ -9,35 +9,24 @@ import { defaultBodyDepth, defaultHeroStats } from './config';
 import { Text } from './Text';
 
 const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras, randomOffset: boolean = false) => {
-  // Получаем вектор направления от персонажа к указателю мыши
+   // Получаем вектор направления от персонажа к указателю мыши
   const directionVector = new Phaser.Math.Vector2(pointer.worldX - hero.x, pointer.worldY - hero.y);
 
-  // Получаем единичный вектор направления
-  const unitDirectionVector = directionVector.clone().normalize();
+  // Получаем угол в радианах от вектора направления
+  const targetAngle = directionVector.angle();
 
   // Оффсет относительно центра персонажа (или точки, где находится оружие)
-  const offsetFromCenter = new Phaser.Math.Vector2(30, 15); // Подставьте нужные вам значения
+  const offsetFromCenter = new Phaser.Math.Vector2(40, 15); // Подставьте нужные вам значения
 
-  // Вращаем оффсет вокруг центра на угол направления
-  const rotatedOffset = offsetFromCenter.rotate(unitDirectionVector.angle());
+  // Поворачиваем оффсет вокруг центра на угол поворота персонажа
+  const rotatedOffset = offsetFromCenter.rotate(targetAngle);
 
   // Расстояние от игрока до точки выстрела (в данном случае, от дула)
-  const distanceToShot = -30; // Подставьте нужное вам значение
-
-  // Сдвиг по осям X и Y для учета отклонения
-  // const offsetX = -15; // Подставьте нужное вам значение
-  // const offsetY = 15;  // Подставьте нужное вам значение
-
-  // // Угол поворота персонажа
-  // const angle = hero.rotation;
+  const distanceToShot = 20; // Подставьте нужное вам значение
 
   // Конечные координаты пули откуда выстрел
-  // const bulletX = hero.x + rotatedOffset.x + unitDirectionVector.x * distanceToShot + offsetX * Math.cos(angle) - offsetY * Math.sin(angle);
-  // const bulletY = hero.y + rotatedOffset.y + unitDirectionVector.y * distanceToShot + offsetX * Math.sin(angle) + offsetY * Math.cos(angle);
-
-  // Конечные координаты пули откуда выстрел
-  const bulletX = hero.x + rotatedOffset.x + unitDirectionVector.x * distanceToShot;
-  const bulletY = hero.y + rotatedOffset.y + unitDirectionVector.y * distanceToShot;
+  const bulletX = hero.x + rotatedOffset.x + Math.cos(targetAngle) * distanceToShot;
+  const bulletY = hero.y + rotatedOffset.y + Math.sin(targetAngle) * distanceToShot;
 
   const screenPoint = randomOffset ? getShotRandomOffset(pointer, hero, cameras) : cameras.main.getWorldPoint(pointer.x, pointer.y);
 
@@ -62,10 +51,6 @@ const getShotRandomOffset = (pointer: Input.Pointer, hero: Hero, cameras) => {
   // Вычисляем сдвиг для X и Y в зависимости от расстояния
   const offsetX = Phaser.Math.RND.between(-maxOffsetRange * offsetMultiplier, maxOffsetRange * offsetMultiplier);
   const offsetY = Phaser.Math.RND.between(-maxOffsetRange * offsetMultiplier, maxOffsetRange * offsetMultiplier);
-
-  // Применяем случайный сдвиг к позиции курсора
-  // const bulletX = hero.x;
-  // const bulletY = hero.y;
 
   const screenPoint = cameras.main.getWorldPoint(pointer.worldX + offsetX, pointer.worldY + offsetY);
 
@@ -146,7 +131,7 @@ export default class Hero extends Actor {
   switchGun = (gun: Gun) => {
     if (this.activeGun === gun) return !!this.activeGun;
     const guns = {
-      [BonusTypes.Riffle]: () => (this.bullets = 50) && (this.fireDelay = 70),
+      [BonusTypes.Riffle]: () => (this.bullets = 50) && (this.fireDelay = 80),
       [BonusTypes.MachineGun]: () => (this.bullets = 100) && (this.fireDelay = 40),
     }
     this.activeGun = gun;
@@ -189,7 +174,6 @@ export default class Hero extends Actor {
     this.keyD?.isDown && !pointerIsDown && this.getBody().setVelocityX(this.speed);
 
     if (pointerIsDown) {
-      // this.anims.play(`${this.atlasName}-shot`, true); // TODO
       this.makeShot && this.makeShot();
     }
 

@@ -5,6 +5,7 @@ import { Text } from '../classes/Text';
 export enum EImage {
   PlayerHandgun = 'player-handgun',
   PlayerRiffle = 'player-riffle',
+  PlayerFire = 'player-fire',
   PlayerMachineGun = 'player-machine-gun',
   Zombie1 = 'zombie1',
   Zombie1Move = 'a-zombie1-move',
@@ -79,6 +80,7 @@ export default class LoadingScene extends Scene {
     this.load.image(EImage.Zombie1, 'enemies/zombie1/idle.png');
     this.load.atlas(EImage.Zombie1Move, 'enemies/zombie1/move.png', 'enemies/zombie1/zombie1-atlas.json');
     this.load.atlas(EImage.Zombie1Attack, 'enemies/zombie1/attack.png', 'enemies/zombie1/zombie1-atlas.json');
+    this.load.image(EImage.PlayerFire, 'player/gun-fire_small.png');
 
     // Map
     this.load.image('tilesheet', 'map/tile_sheet/metal_100_2.png');

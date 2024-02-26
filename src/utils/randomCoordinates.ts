@@ -13,10 +13,10 @@ export const getRandomCoordinates = (): { x: number, y: number } => {
 
 export const getRandomDoorMap = (mapSize: { width: number, height: number }):  { x: number, y: number } => {
   const places = [
-    { x: mapSize.width / 2, y: 0 },
-    { y: mapSize.height / 2, x: 0 },
-    { x: mapSize.width / 2, y: mapSize.height },
-    { y: mapSize.height / 2, x: mapSize.width }
+    { x: mapSize.width / 2, y: 50 },
+    { y: mapSize.height / 2, x: 50 },
+    { x: mapSize.width / 2, y: mapSize.height - 50 },
+    { y: mapSize.height / 2, x: mapSize.width - 50 }
   ];
 
   return places[Phaser.Math.RND.between(0, 3)];

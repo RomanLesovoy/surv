@@ -62,7 +62,7 @@ export default class MainSceneManager {
 
   private pauseNotActiveScenes = () => {
     this.scenes.gameNotActiveScenes.forEach((s) => {
-      this.mainSceneInstance.game.scene.isActive(s[0] as Scenes) && this.mainSceneInstance.scene.pause(s[0] as Scenes);
+      this.mainSceneInstance.game.scene.isActive(s[0] as Scenes) && this.mainSceneInstance.scene.stop(s[0] as Scenes);
       this.mainSceneInstance.scene.sendToBack(s[0] as Scenes);
     });
   }
@@ -70,7 +70,7 @@ export default class MainSceneManager {
   private resumeNotActiveScenes = () => {
     this.scenes.gameNotActiveScenes.forEach((s) => {
       this.mainSceneInstance.scene.bringToTop(s[0] as Scenes);
-      this.mainSceneInstance.scene.resume(s[0] as Scenes);
+      this.mainSceneInstance.scene.run(s[0] as Scenes);
     });
   }
 
