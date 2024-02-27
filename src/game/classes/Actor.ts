@@ -20,6 +20,7 @@ export class Actor extends Physics.Arcade.Sprite {
   public isDead: boolean = false;
   public myTexture: string;
   public collider: Phaser.Physics.Arcade.Collider;
+  protected onKillEvent: string = 'onKill';
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame);
@@ -30,32 +31,35 @@ export class Actor extends Physics.Arcade.Sprite {
 
     this.getBody().setCollideWorldBounds(true);
     this.getBody().setSize(80, 80);
-    this.getBody().setOffset(10, -15);
     this.setDepth(config.general.defaultBodyDepth)
 
     this.texts = createTexts(this);
   }
 
-  public handleTexts(): void {
+  public updateTexts(): void {
     this.texts[0].setText(this.hp.toString()).setColor(this.hp > 50 ? '#38d738' : 'red');
     this.texts[1].setText(this.name);
     this.texts.forEach((t) => t.setPosition(this.x, this.y - this.height * 0.4));
   }
 
   public preUpdate(time, delta): void {
-    if (this.hp > 0) {
-      this.handleTexts();
-      super.preUpdate(time, delta);
+    super.preUpdate(time, delta);
+
+    if (this.isDead) return;
+    this.isDead = this.hp <= 0;
+
+    if (!this.isDead) {
+      return this.updateTexts();
     } else {
       this.texts.forEach((t) => t?.destroy());
-      this.collider && this.scene.physics.world.removeCollider(this.collider)
-      this.destroy();
+      this.scene.physics.world.disable(this);
+      this.collider && this.scene.physics.world.removeCollider(this.collider);
+      this.emit(this.onKillEvent);
     }
   }
 
   public getDamage = (value: number): void => {
     this.hp = this.hp - value;
-    this.isDead = this.hp <= 0;
   }
 
   public getHPValue(): number {

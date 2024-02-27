@@ -47,10 +47,10 @@ export default class BonusScene extends Scene {
   }
 
   protected leaveRubyAfterEnemyDestroy = (x, y): void => {
-    const ruby = this.mapScene.add.image(x + 20, y + 20, EImage.Ruby).setSize(30, 30).setDepth(config.general.defaultBodyDepth);
+    const ruby = this.mapScene.add.image(x + 30, y + 30, EImage.Ruby).setSize(30, 30).setDepth(config.general.defaultBodyDepth);
 
     const graphics = this.mapScene.add.graphics()
-      .fillStyle(0x614198, 0.5)
+      .fillStyle(0x614198, 0.3)
       .fillCircle(ruby.x, ruby.y, 25)
       .setDepth(config.general.defaultBodyDepth);
 
@@ -59,8 +59,8 @@ export default class BonusScene extends Scene {
     this.mapScene.physics.world.enable(ruby);
     this.mapScene.physics.add.overlap(ruby, this.mainScene.hero, () => {
       this.rubySound.play();
-      ruby.destroy();
-      graphics.destroy();
+      ruby?.destroy(); // todo error when game debug is active
+      graphics?.destroy();
       this.mainScene.ruby++;
     });
   }
