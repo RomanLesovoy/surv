@@ -16,6 +16,7 @@ const createTexts = (actor: Actor): Array<Text> => {
 
 export class Actor extends Physics.Arcade.Sprite {
   public hp = 100;
+  public maxHp = 100;
   protected texts: Text[];
   public isDead: boolean = false;
   public myTexture: string;
@@ -37,7 +38,7 @@ export class Actor extends Physics.Arcade.Sprite {
   }
 
   public updateTexts(): void {
-    this.texts[0].setText(this.hp.toString()).setColor(this.hp > 50 ? '#38d738' : 'red');
+    this.texts[0].setText(this.hp.toString()).setColor(this.hp > this.maxHp / 2 ? '#38d738' : 'red');
     this.texts[1].setText(this.name);
     this.texts.forEach((t) => t.setPosition(this.x, this.y - this.height * 0.4));
   }

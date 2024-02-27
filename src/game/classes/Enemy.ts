@@ -35,7 +35,7 @@ export class Enemy extends Actor {
 
     this.speed = this.stats.speed + (wave * this.stats.speedWaveIncrease);
     this.timer = this.stats.timerAttack / 2;
-    this.hp = this.stats.hp + (wave * this.stats.hpWaveIncrease);
+    this.hp = this.maxHp = this.stats.hp + (wave * this.stats.hpWaveIncrease);
     this.damage = this.stats.damage + (wave * this.stats.damageWaveIncrease);
 
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
