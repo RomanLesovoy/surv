@@ -49,11 +49,20 @@ export default class EnemyScene extends Scene {
       .setName(`Zombie-#${Phaser.Math.RND.between(0, 99999)}`)
   }
 
+  private getRandomMonster = (level: 1 | 2 | 3) => {
+    const monsters = {
+      [1]: [EImage.Monster11, EImage.Monster12],
+      [2]: [EImage.Monster21, EImage.Monster22],
+      [3]: [EImage.Monster11, EImage.Monster12],
+    }
+    return monsters[level][Phaser.Math.RND.between(0, monsters[level].length - 1)];
+  }
+
   private createMonsterFn = (coordinates: { x: number, y: number }) => {
     // Portal
     const wave = this.mainScene.wave;
     const enemyLevel = wave <= 5 ? 1 : Phaser.Math.RND.between(1, wave >= 10 ? 3 : 2);
-    const texture = enemyLevel === 3 ? EImage.Monster1 : EImage.Monster1; // todo image
+    const texture = this.getRandomMonster(enemyLevel as 1 | 2 | 3);
     return () => new Enemy(this.mapScene, coordinates.x, coordinates.y, texture, this.mainScene.hero, EnemyType.Monster, this.mainScene.wave, enemyLevel)
       .setName(`Monster-#${Phaser.Math.RND.between(0, 99999)}`)
   }

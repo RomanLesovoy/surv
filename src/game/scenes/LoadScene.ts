@@ -10,10 +10,22 @@ export enum EImage {
   Zombie1 = 'zombie1',
   Zombie1Move = 'a-zombie1-move',
   Zombie1Attack = 'a-zombie1-attack',
-  Monster1 = 'monster1',
-  Monster1Move = 'monster1-move',
-  Monster1Attack = 'monster1-attack',
-  Monster1Death = 'monster1-death',
+  Monster11 = 'monster11',
+  Monster11Move = 'monster11-move',
+  Monster11Attack = 'monster11-attack',
+  Monster11Death = 'monster11-death',
+  Monster12 = 'monster12',
+  Monster12Move = 'monster12-move',
+  Monster12Attack = 'monster12-attack',
+  Monster12Death = 'monster12-death',
+  Monster21 = 'monster21',
+  Monster21Move = 'monster21-move',
+  Monster21Attack = 'monster21-attack',
+  Monster21Death = 'monster21-death',
+  Monster22 = 'monster22',
+  Monster22Move = 'monster22-move',
+  Monster22Attack = 'monster22-attack',
+  Monster22Death = 'monster22-death',
   ShadowBg = 'shadow-bg',
   ButtonBg = 'button-bg',
   Bullet = 'bullet',
@@ -85,9 +97,20 @@ export default class LoadingScene extends Scene {
     this.load.atlas(EImage.Zombie1Move, 'enemies/zombie1/move.png', 'enemies/zombie1/zombie1-atlas.json');
     this.load.atlas(EImage.Zombie1Attack, 'enemies/zombie1/attack.png', 'enemies/zombie1/zombie1-atlas.json');
     this.load.image(EImage.PlayerFire, 'player/gun-fire_small.png');
-    this.load.spritesheet(EImage.Monster1Move, 'enemies/monsters/monster1.1-move.png', { frameWidth: 150, frameHeight: 150 });
-    this.load.spritesheet(EImage.Monster1Attack, 'enemies/monsters/monster1.1-attack-1.png', { frameWidth: 225, frameHeight: 225 });
-    this.load.spritesheet(EImage.Monster1Death, 'enemies/monsters/monster1.1-death.png', { frameWidth: 225, frameHeight: 150 });
+    this.load.spritesheet(EImage.Monster11Move, 'enemies/monsters/monster1.1-move.png', { frameWidth: 150, frameHeight: 150 });
+    this.load.spritesheet(EImage.Monster11Attack, 'enemies/monsters/monster1.1-attack-1.png', { frameWidth: 225, frameHeight: 225 });
+    this.load.spritesheet(EImage.Monster11Death, 'enemies/monsters/monster1.1-death.png', { frameWidth: 225, frameHeight: 150 });
+    this.load.spritesheet(EImage.Monster12Move, 'enemies/monsters/monster1.2-move.png', { frameWidth: 150, frameHeight: 150 });
+    this.load.spritesheet(EImage.Monster12Attack, 'enemies/monsters/monster1.2-attack-1.png', { frameWidth: 225, frameHeight: 150 });
+    this.load.spritesheet(EImage.Monster12Death, 'enemies/monsters/monster1.2-death.png', { frameWidth: 225, frameHeight: 150 });
+
+    this.load.spritesheet(EImage.Monster21Move, 'enemies/monsters/monster2.1-move.png', { frameWidth: 150, frameHeight: 150 });
+    this.load.spritesheet(EImage.Monster21Attack, 'enemies/monsters/monster2.1-attack-1.png', { frameWidth: 225, frameHeight: 225 });
+    this.load.spritesheet(EImage.Monster21Death, 'enemies/monsters/monster2.1-death.png', { frameWidth: 225, frameHeight: 150 });
+
+    this.load.spritesheet(EImage.Monster22Move, 'enemies/monsters/monster2.2-move.png', { frameWidth: 150, frameHeight: 150 });
+    this.load.spritesheet(EImage.Monster22Attack, 'enemies/monsters/monster2.2-attack-1.png', { frameWidth: 150, frameHeight: 150 });
+    this.load.spritesheet(EImage.Monster22Death, 'enemies/monsters/monster2.2-death.png', { frameWidth: 225, frameHeight: 150 });
 
     // Map
     this.load.image('tilesheet', 'map/tile_sheet/metal_100_2.png');
@@ -133,7 +156,7 @@ export default class LoadingScene extends Scene {
         prefix: `zombie1-move-`,
         end: 15,
       }),
-      frameRate: 8,
+      frameRate: 10,
     });
 
     this.anims.create({
@@ -147,17 +170,17 @@ export default class LoadingScene extends Scene {
     });
 
     this.anims.create({
-      key: EImage.Monster1Death,
-      frames: this.anims.generateFrameNames(EImage.Monster1Death, {
+      key: EImage.Monster11Death,
+      frames: this.anims.generateFrameNames(EImage.Monster11Death, {
         end: 5,
         start: 0,
       }),
-      frameRate: 5,
+      frameRate: 10,
     });
 
     this.anims.create({
-      key: EImage.Monster1Move,
-      frames: this.anims.generateFrameNames(EImage.Monster1Move, {
+      key: EImage.Monster11Move,
+      frames: this.anims.generateFrameNames(EImage.Monster11Move, {
         end: 8,
         start: 0,
       }),
@@ -165,12 +188,95 @@ export default class LoadingScene extends Scene {
     });
 
     this.anims.create({
-      key: EImage.Monster1Attack,
-      frames: this.anims.generateFrameNames(EImage.Monster1Attack, {
+      key: EImage.Monster11Attack,
+      frames: this.anims.generateFrameNames(EImage.Monster11Attack, {
         end: 5,
         start: 0,
       }),
       frameRate: 6,
+    });
+
+    this.anims.create({
+      key: EImage.Monster12Death,
+      frames: this.anims.generateFrameNames(EImage.Monster12Death, {
+        end: 5,
+        start: 0,
+      }),
+      frameRate: 10,
+    });
+
+    this.anims.create({
+      key: EImage.Monster12Move,
+      frames: this.anims.generateFrameNames(EImage.Monster12Move, {
+        end: 8,
+        start: 0,
+      }),
+      frameRate: 8,
+    });
+
+    this.anims.create({
+      key: EImage.Monster12Attack,
+      frames: this.anims.generateFrameNames(EImage.Monster12Attack, {
+        end: 5,
+        start: 0,
+      }),
+      frameRate: 6,
+    });
+
+
+    this.anims.create({
+      key: EImage.Monster21Death,
+      frames: this.anims.generateFrameNames(EImage.Monster21Death, {
+        end: 8,
+        start: 0,
+      }),
+      frameRate: 10,
+    });
+
+    this.anims.create({
+      key: EImage.Monster21Move,
+      frames: this.anims.generateFrameNames(EImage.Monster21Move, {
+        end: 7,
+        start: 0,
+      }),
+      frameRate: 5,
+    });
+
+    this.anims.create({
+      key: EImage.Monster21Attack,
+      frames: this.anims.generateFrameNames(EImage.Monster21Attack, {
+        end: 9,
+        start: 0,
+      }),
+      frameRate: 10,
+    });
+
+
+    this.anims.create({
+      key: EImage.Monster22Death,
+      frames: this.anims.generateFrameNames(EImage.Monster22Death, {
+        end: 7,
+        start: 0,
+      }),
+      frameRate: 10,
+    });
+
+    this.anims.create({
+      key: EImage.Monster22Move,
+      frames: this.anims.generateFrameNames(EImage.Monster22Move, {
+        end: 7,
+        start: 0,
+      }),
+      frameRate: 5,
+    });
+
+    this.anims.create({
+      key: EImage.Monster22Attack,
+      frames: this.anims.generateFrameNames(EImage.Monster22Attack, {
+        end: 6,
+        start: 0,
+      }),
+      frameRate: 3,
     });
   }
 }

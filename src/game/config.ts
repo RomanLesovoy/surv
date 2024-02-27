@@ -62,7 +62,7 @@ export default {
   },
   timeConfigs: {
     bonusDelay: 15000,
-    waveDelay: 20000,
+    waveDelay: 30000,
     enemyDelay: 3000,
   }
 }
