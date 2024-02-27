@@ -5,7 +5,7 @@ import { throttle } from '../../utils/throttle';
 import { BonusTypes } from './Bonus';
 import { EAudio, EImage } from '../scenes/LoadScene';
 import { emitGameStatus, GameStatus } from '../scenes/MainScene';
-import { defaultBodyDepth, defaultHeroStats } from './config';
+import config from '../config';
 import { Text } from './Text';
 
 const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras, randomOffset: boolean = false) => {
@@ -65,7 +65,6 @@ export default class Hero extends Actor {
   private keyS: Input.Keyboard.Key;
   private keyD: Input.Keyboard.Key;
   public speed: number;
-  public maxHp: number;
   public bullets: number;
   public activeGun: Gun;
   private fireDelay: number;
@@ -94,21 +93,20 @@ export default class Hero extends Actor {
     this.initMakeShot();
     this.setInteractive();
 
-    this.on('destroy', () => {
+    this.on(this.onKillEvent, () => {
       game.events.emit(emitGameStatus, GameStatus.NotStarted);
     });
 
     this.runSound = this.scene.sound.add(EAudio.HeroRun, {volume: 1});
-    this.bulletImg = heroScene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false).setDepth(defaultBodyDepth);
-    this.bulletsText = new Text(heroScene, game.scale.width - 250, game.scale.height - 75, '').setDepth(defaultBodyDepth);
+    this.bulletImg = heroScene.add.image(game.scale.width - 300, game.scale.height - 50, EImage.BulletAmmo).setVisible(false).setDepth(config.general.defaultBodyDepth);
+    this.bulletsText = new Text(heroScene, game.scale.width - 250, game.scale.height - 75, '').setDepth(config.general.defaultBodyDepth);
   }
 
   public resetHero = () => {
     this.bullets = Infinity;
-    this.speed = defaultHeroStats.speed;
-    this.hp = defaultHeroStats.hp;
-    this.maxHp = defaultHeroStats.hp;
-    this.damage = defaultHeroStats.damage;
+    this.speed = config.defaultHeroStats.speed;
+    this.hp = this.maxHp = config.defaultHeroStats.hp;
+    this.damage = config.defaultHeroStats.damage;
     this.switchGun(null);
     this.setPosition(this.scene.game.scale.width / 2, this.scene.game.scale.height / 2);
   }

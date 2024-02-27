@@ -1,7 +1,9 @@
 import { Physics } from 'phaser';
 import { EImage } from '../scenes/LoadScene';
 import Hero from './Hero';
-import { defaultBodyDepth } from './config';
+import config from '../config';
+import { generateRandomCoordinatesCenter } from '../../utils/randomCoordinates';
+import { Coords } from '../../utils/types';
 
 export enum BonusTypes {
   Health = 'health',
@@ -28,15 +30,8 @@ const textures = {
   [BonusTypes.MachineGun]: EImage.MachineGun,
 }
 
-const generateRandomCoordinatesCenter = (mapSize: { width: number, height: number }): { x: number, y: number } => {
-  return {
-    x: 200 + (Math.random() * (mapSize.width - 400)),
-    y: 200 + (Math.random() * (mapSize.height - 400)),
-  }
-}
-
 export default class Bonus extends Physics.Arcade.Sprite {
-  coordinates: { x: number, y: number };
+  coordinates: Coords;
   bonusType: BonusTypes;
 
   constructor(scene: Phaser.Scene, highLevelBonus: boolean) {
@@ -55,7 +50,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
     scene.physics.world.enable(this);
     this.body.setSize(60, 60);
-    this.setDepth(defaultBodyDepth);
+    this.setDepth(config.general.defaultBodyDepth);
 
     const graphics = this.addGraphics();
 
@@ -74,7 +69,7 @@ export default class Bonus extends Physics.Arcade.Sprite {
 
     return glowGraphics
       .fillStyle(0x614198, 0.3)
-      .setDepth(defaultBodyDepth)
+      .setDepth(config.general.defaultBodyDepth)
       .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 40);
   }
 
