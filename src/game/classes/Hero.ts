@@ -94,7 +94,7 @@ export default class Hero extends Actor {
     this.initMakeShot();
     this.setInteractive();
 
-    this.on('destroy', () => {
+    this.on(this.onKillEvent, () => {
       game.events.emit(emitGameStatus, GameStatus.NotStarted);
     });
 
