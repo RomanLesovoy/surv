@@ -51,7 +51,7 @@ export default {
       damageWaveIncrease: 5,
       speedWaveIncrease: 5,
       hpWaveIncrease: 20,
-      size: 200,
+      size: 250,
     },
   },
   general: {
@@ -62,7 +62,7 @@ export default {
   },
   timeConfigs: {
     bonusDelay: 15000,
-    waveDelay: 20000,
+    waveDelay: 30000,
     enemyDelay: 3000,
   }
 }

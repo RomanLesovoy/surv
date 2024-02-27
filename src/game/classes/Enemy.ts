@@ -35,7 +35,7 @@ export class Enemy extends Actor {
 
     this.speed = this.stats.speed + (wave * this.stats.speedWaveIncrease);
     this.timer = this.stats.timerAttack / 2;
-    this.hp = this.stats.hp + (wave * this.stats.hpWaveIncrease);
+    this.hp = this.maxHp = this.stats.hp + (wave * this.stats.hpWaveIncrease);
     this.damage = this.stats.damage + (wave * this.stats.damageWaveIncrease);
 
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
@@ -48,13 +48,17 @@ export class Enemy extends Actor {
     this.on(this.onKillEvent, () => {
       this.texts.forEach((t) => t?.destroy());
       this.deathSound.play();
-      this.anims.play({ key: `${texture}-death`, frameRate: 10 }, true);
+      this.anims.play({ key: `${texture}-death` }, true);
       this.scene.game.events.emit(GameEvents.CreateRuby, this.body.x, this.body.y);
       this.scene.game.events.emit(GameEvents.AddScore, 10 + wave + (level * 10));
 
       setTimeout(() => {
         this.destroy();
       }, 3000)
+    });
+
+    this.on(Phaser.Scenes.Events.DESTROY, () => {
+      this.texts.forEach((t) => t?.destroy());
     });
 
     this.init();
@@ -82,7 +86,7 @@ export class Enemy extends Actor {
   }
 
   private attackHandler(): void {
-    this.anims.play({ key: `${this.textureName}-attack`, frameRate: 10 }, true);
+    this.anims.play({ key: `${this.textureName}-attack` }, true);
     this.target.getDamage(this.damage);
   }
 
@@ -91,7 +95,8 @@ export class Enemy extends Actor {
       this.target.x > this.x ? this.speed : -this.speed,
       this.target.y > this.y ? this.speed : -this.speed,
     );
-    !this.anims.isPlaying && this.anims.play({ key: `${this.textureName}-move`, frameRate: Math.RoundTo(this.speed / 5, 0) }, true);
+
+    !this.anims.isPlaying && this.anims.play({ key: `${this.textureName}-move` }, true);
   }
 
   public update(_: number, delta: number): void {
