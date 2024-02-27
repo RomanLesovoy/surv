@@ -26,6 +26,10 @@ export enum EImage {
   Monster22Move = 'monster22-move',
   Monster22Attack = 'monster22-attack',
   Monster22Death = 'monster22-death',
+  Monster31 = 'monster31',
+  Monster31Move = 'monster31-move',
+  Monster31Attack = 'monster31-attack',
+  Monster31Death = 'monster31-death',
   ShadowBg = 'shadow-bg',
   ButtonBg = 'button-bg',
   Bullet = 'bullet',
@@ -97,6 +101,8 @@ export default class LoadingScene extends Scene {
     this.load.atlas(EImage.Zombie1Move, 'enemies/zombie1/move.png', 'enemies/zombie1/zombie1-atlas.json');
     this.load.atlas(EImage.Zombie1Attack, 'enemies/zombie1/attack.png', 'enemies/zombie1/zombie1-atlas.json');
     this.load.image(EImage.PlayerFire, 'player/gun-fire_small.png');
+
+    // Monsters
     this.load.spritesheet(EImage.Monster11Move, 'enemies/monsters/monster1.1-move.png', { frameWidth: 150, frameHeight: 150 });
     this.load.spritesheet(EImage.Monster11Attack, 'enemies/monsters/monster1.1-attack-1.png', { frameWidth: 225, frameHeight: 225 });
     this.load.spritesheet(EImage.Monster11Death, 'enemies/monsters/monster1.1-death.png', { frameWidth: 225, frameHeight: 150 });
@@ -111,6 +117,10 @@ export default class LoadingScene extends Scene {
     this.load.spritesheet(EImage.Monster22Move, 'enemies/monsters/monster2.2-move.png', { frameWidth: 150, frameHeight: 150 });
     this.load.spritesheet(EImage.Monster22Attack, 'enemies/monsters/monster2.2-attack-1.png', { frameWidth: 150, frameHeight: 150 });
     this.load.spritesheet(EImage.Monster22Death, 'enemies/monsters/monster2.2-death.png', { frameWidth: 225, frameHeight: 150 });
+
+    this.load.spritesheet(EImage.Monster31Move, 'enemies/monsters/monster3.1-move.png', { frameWidth: 250, frameHeight: 250 });
+    this.load.spritesheet(EImage.Monster31Attack, 'enemies/monsters/monster3.1-attack-1.png', { frameWidth: 400, frameHeight: 400 });
+    this.load.spritesheet(EImage.Monster31Death, 'enemies/monsters/monster3.1-death.png', { frameWidth: 400, frameHeight: 400 });
 
     // Map
     this.load.image('tilesheet', 'map/tile_sheet/metal_100_2.png');
@@ -251,7 +261,6 @@ export default class LoadingScene extends Scene {
       frameRate: 10,
     });
 
-
     this.anims.create({
       key: EImage.Monster22Death,
       frames: this.anims.generateFrameNames(EImage.Monster22Death, {
@@ -277,6 +286,33 @@ export default class LoadingScene extends Scene {
         start: 0,
       }),
       frameRate: 3,
+    });
+
+    this.anims.create({
+      key: EImage.Monster31Death,
+      frames: this.anims.generateFrameNames(EImage.Monster31Death, {
+        end: 13,
+        start: 0,
+      }),
+      frameRate: 14,
+    });
+
+    this.anims.create({
+      key: EImage.Monster31Move,
+      frames: this.anims.generateFrameNames(EImage.Monster31Move, {
+        end: 7,
+        start: 0,
+      }),
+      frameRate: 8,
+    });
+
+    this.anims.create({
+      key: EImage.Monster31Attack,
+      frames: this.anims.generateFrameNames(EImage.Monster31Attack, {
+        end: 8,
+        start: 0,
+      }),
+      frameRate: 5,
     });
   }
 }

@@ -53,7 +53,7 @@ export default class EnemyScene extends Scene {
     const monsters = {
       [1]: [EImage.Monster11, EImage.Monster12],
       [2]: [EImage.Monster21, EImage.Monster22],
-      [3]: [EImage.Monster11, EImage.Monster12],
+      [3]: [EImage.Monster31],
     }
     return monsters[level][Phaser.Math.RND.between(0, monsters[level].length - 1)];
   }

@@ -51,7 +51,7 @@ export default {
       damageWaveIncrease: 5,
       speedWaveIncrease: 5,
       hpWaveIncrease: 20,
-      size: 200,
+      size: 250,
     },
   },
   general: {
