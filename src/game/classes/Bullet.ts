@@ -1,12 +1,13 @@
 import { Physics } from 'phaser';
 import config from '../config';
 import { EAudio, EImage } from '../scenes/LoadScene';
+import { Coords } from '../../utils/types';
 
 export default class Bullet extends Physics.Arcade.Sprite {
   public damage: number = 20;
-  public direction!: { x: number, y: number };
+  public direction!: Coords;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, from: { x: number, y: number }) {
+  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, from: Coords) {
     super(scene, from.x, from.y, texture);
 
     scene.add.existing(this);

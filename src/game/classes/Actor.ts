@@ -1,6 +1,7 @@
 import { Physics } from 'phaser';
 import { Text } from './Text';
 import config from '../config';
+import { Coords } from '../../utils/types';
 
 const createTexts = (actor: Actor): Array<Text> => {
   return [
@@ -86,7 +87,7 @@ export class Actor extends Physics.Arcade.Sprite {
     view.angle = this.getAngleCamera(point, view, cameras);
   }
 
-  getAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
+  getAngle(point: Coords, view: Physics.Arcade.Sprite) {
     const dx = point.x - view.x;
     const dy = point.y - view.y;
     const targetAngle = (360 / (2 * Math.PI)) * Math.atan2(dy, dx);
@@ -94,7 +95,7 @@ export class Actor extends Physics.Arcade.Sprite {
     return targetAngle;
   }
 
-  updateAngle(point: { x: number, y: number }, view: Physics.Arcade.Sprite) {
+  updateAngle(point: Coords, view: Physics.Arcade.Sprite) {
     view.angle = this.getAngle(point, view);
   }
 

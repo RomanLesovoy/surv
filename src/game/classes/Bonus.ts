@@ -2,6 +2,8 @@ import { Physics } from 'phaser';
 import { EImage } from '../scenes/LoadScene';
 import Hero from './Hero';
 import config from '../config';
+import { generateRandomCoordinatesCenter } from '../../utils/randomCoordinates';
+import { Coords } from '../../utils/types';
 
 export enum BonusTypes {
   Health = 'health',
@@ -28,15 +30,8 @@ const textures = {
   [BonusTypes.MachineGun]: EImage.MachineGun,
 }
 
-const generateRandomCoordinatesCenter = (mapSize: { width: number, height: number }): { x: number, y: number } => {
-  return {
-    x: 200 + (Math.random() * (mapSize.width - 400)),
-    y: 200 + (Math.random() * (mapSize.height - 400)),
-  }
-}
-
 export default class Bonus extends Physics.Arcade.Sprite {
-  coordinates: { x: number, y: number };
+  coordinates: Coords;
   bonusType: BonusTypes;
 
   constructor(scene: Phaser.Scene, highLevelBonus: boolean) {

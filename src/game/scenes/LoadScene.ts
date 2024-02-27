@@ -44,6 +44,8 @@ export enum EImage {
   ImproveHeroBg = 'improve-hero-bg',
   BulletAmmo = 'bullet-ammo',
   Arrow = 'arrow',
+  PortalPreview = 'portal-preview',
+  PortalAnim = 'portal-anim',
 }
 
 export enum EAudio {
@@ -125,6 +127,10 @@ export default class LoadingScene extends Scene {
     // Map
     this.load.image('tilesheet', 'map/tile_sheet/metal_100_2.png');
     this.load.tilemapTiledJSON('map', 'map-big-test.json');
+
+    // Portal
+    this.load.image(EImage.PortalPreview, 'other/portal0.png');
+    this.load.spritesheet(EImage.PortalAnim, 'other/portal.png', { frameWidth: 300, frameHeight: 300 });
   }
 
   create(): void {
@@ -313,6 +319,15 @@ export default class LoadingScene extends Scene {
         start: 0,
       }),
       frameRate: 5,
+    });
+
+    this.anims.create({
+      key: EImage.PortalAnim,
+      frames: this.anims.generateFrameNames(EImage.PortalAnim, {
+        end: 4,
+        start: 0,
+      }),
+      frameRate: 12,
     });
   }
 }

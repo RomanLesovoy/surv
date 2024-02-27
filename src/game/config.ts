@@ -59,11 +59,14 @@ export default {
     defaultVolume: 0.1,
     highLevelBonus: 5,
     waveEnemyAdd: 5,
+    portalActiveFromWave: 4,
   },
   timeConfigs: {
     bonusDelay: 15000,
     waveDelay: 30000,
-    enemyDelay: 3000,
+    zombieDelay: 2000,
+    portalDelay: 4000,
+    portalCallback: 3000,
   }
 }
 

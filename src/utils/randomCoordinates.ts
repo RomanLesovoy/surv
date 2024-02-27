@@ -1,17 +1,13 @@
-export const getRandomCoordinates = (): { x: number, y: number } => {
-  const borderLength = 200;
-  const xFrom = [-borderLength, window.innerWidth + borderLength];
-  const yFrom = [-borderLength, window.innerHeight + borderLength];
-  const xBorder = Math.random() > 0.5;
-  const index = Math.abs(Math.round((Math.random() * 2) - 1));
-  const value = Math.round(Math.random() * (xBorder ? window.innerWidth : window.innerHeight));
+import { Coords } from './types';
 
-  const result = { x: xBorder ? xFrom[index] : value, y: xBorder ? value : yFrom[index] };
-
-  return result;
+export const generateRandomCoordinatesCenter = (mapSize: { width: number, height: number }): Coords => {
+  return {
+    x: 200 + (Math.random() * (mapSize.width - 400)),
+    y: 200 + (Math.random() * (mapSize.height - 400)),
+  }
 }
 
-export const getRandomDoorMap = (mapSize: { width: number, height: number }):  { x: number, y: number } => {
+export const getRandomDoorMap = (mapSize: { width: number, height: number }):  Coords => {
   const places = [
     { x: mapSize.width / 2, y: 50 },
     { y: mapSize.height / 2, x: 50 },

@@ -34,7 +34,7 @@ export class Enemy extends Actor {
     if (!this.stats) throw 'Enemy not found';
 
     this.speed = this.stats.speed + (wave * this.stats.speedWaveIncrease);
-    this.timer = this.stats.timerAttack / 2;
+    this.timer = this.stats.timerAttack - 300;
     this.hp = this.maxHp = this.stats.hp + (wave * this.stats.hpWaveIncrease);
     this.damage = this.stats.damage + (wave * this.stats.damageWaveIncrease);
 
@@ -51,6 +51,8 @@ export class Enemy extends Actor {
       this.anims.play({ key: `${texture}-death` }, true);
       this.scene.game.events.emit(GameEvents.CreateRuby, this.body.x, this.body.y);
       this.scene.game.events.emit(GameEvents.AddScore, 10 + wave + (level * 10));
+      this.depth = this.depth - 1;
+      type === EnemyType.Zombie && (this.alpha = 0.6);
 
       setTimeout(() => {
         this.destroy();
