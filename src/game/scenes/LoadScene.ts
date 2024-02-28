@@ -130,7 +130,7 @@ export default class LoadingScene extends Scene {
 
     // Portal
     this.load.image(EImage.PortalPreview, 'other/portal0.png');
-    this.load.spritesheet(EImage.PortalAnim, 'other/portal.png', { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet(EImage.PortalAnim, 'other/portal-2.png', { frameWidth: 200, frameHeight: 200 });
   }
 
   create(): void {
@@ -324,10 +324,10 @@ export default class LoadingScene extends Scene {
     this.anims.create({
       key: EImage.PortalAnim,
       frames: this.anims.generateFrameNames(EImage.PortalAnim, {
-        end: 4,
+        end: 11,
         start: 0,
       }),
-      frameRate: 12,
+      frameRate: 15,
     });
   }
 }
