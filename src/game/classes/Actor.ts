@@ -53,6 +53,7 @@ export class Actor extends Physics.Arcade.Sprite {
     if (!this.isDead) {
       return this.updateTexts();
     } else {
+      this.anims.stop();
       this.texts.forEach((t) => t?.destroy());
       this.scene.physics.world.disable(this);
       this.collider && this.scene.physics.world.removeCollider(this.collider);

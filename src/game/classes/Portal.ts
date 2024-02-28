@@ -15,7 +15,7 @@ export default class Portal extends Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
-    this.body.setSize(300, 300);
+    this.body.setSize(200, 200);
     this.coordinates = coordinates;
     this.portalCallback = portalCallback;
     this.setDepth(config.general.defaultBodyDepth - 1);
