@@ -87,9 +87,11 @@ export default class EnemyScene extends Scene {
   }
 
   private pushEnemies = (type: EnemyType, coords?: Coords): void => {
-    const amount = Math.ceil(this.mainScene.wave / config.general.waveEnemyAdd);
-    for (let i = 0; i < amount; i++) {
-      this.pushEnemy(this.createEnemy(type, coords));
-    }
+    // TOO MUCH enemies
+    // const amount = Math.ceil(this.mainScene.wave / config.general.waveEnemyAdd);
+    // for (let i = 0; i < amount; i++) {
+    //   this.pushEnemy(this.createEnemy(type, coords));
+    // }
+    this.pushEnemy(this.createEnemy(type, coords));
   }
 }

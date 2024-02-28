@@ -44,10 +44,11 @@ export default class WaveScene extends Scene {
     const newWave = this.mainScene.wave + 1;
     this.mainScene.setGameStatus(GameStatus.Active);
     this.mainScene.wave = newWave;
-    this.mainScene.waveDelay += config.timeConfigs.waveDelayOffset;
+    this.mainScene.waveDelay < config.timeConfigs.maxWaveDelay && (this.mainScene.waveDelay += config.timeConfigs.waveDelayOffset);
     this.runScore();
     this.scene.sendToBack(Scenes.ImprovementScene);
     this.runLightScene();
+    this.restartWaveEvent();
   }
 
   improvementScene = () => {
@@ -62,10 +63,14 @@ export default class WaveScene extends Scene {
       }
     });
 
+    this.restartWaveEvent();
+  }
+
+  restartWaveEvent = () => {
     this.timerWave = this.time.addEvent({ delay: this.mainScene.waveDelay, callback: () => {
       this.mainScene.enemiesGroup.clear(true, true);
       this.mainScene.setGameStatus(GameStatus.Improvement);
       this.improvementScene();
-    }, loop: true });
+    }});
   }
 }
