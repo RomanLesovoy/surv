@@ -1,12 +1,16 @@
-import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
 import { Text } from '../classes/Text';
 import { IMainScene, mainDataKey } from './MainScene';
+import { Scene } from 'phaser';
+import config from '../config';
 
 export default class ScoreScene extends Scene {
   protected mainScene: IMainScene;
   protected score: Text;
   protected wave: Text;
+  protected waveTimeText: Text | null;
+  protected waveTime: number;
+  protected mapScene: Scene;
 
   constructor() {
     super(Scenes.ScoreScene);
@@ -14,6 +18,7 @@ export default class ScoreScene extends Scene {
 
   init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
+    this.mapScene = this.game.scene.getScene(Scenes.MapScene);
   }
 
   get scoreText(): string {
@@ -24,9 +29,28 @@ export default class ScoreScene extends Scene {
     return `Wave: ${this.mainScene.wave}`;
   }
 
+  get waveDelaySec(): number {
+    return config.timeConfigs.waveDelay / 1000;
+  }
+
+  getWaveTimeText(): string {
+    return `Time left: ${this.waveTime}`;
+  }
+
   create() {
     this.score = new Text(this, 25, 25, this.scoreText).setFontSize(40);
     this.wave = new Text(this, 300, 20, this.waveText).setFontSize(50).setColor('red');
+    this.waveTime = this.waveDelaySec;
+    this.waveTimeText = new Text(this, this.game.scale.width - 400, 20, this.getWaveTimeText()).setFontSize(50);
+
+    const timerEvent = this.time.addEvent({ delay: 1000, callback: () => {
+      this.waveTime--;
+      this.waveTimeText.setText(this.getWaveTimeText());
+    }, loop: true });
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      timerEvent?.destroy();
+    });
   }
 
   update(): void {

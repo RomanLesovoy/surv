@@ -2,16 +2,19 @@ import { Scene, Math } from 'phaser';
 import { Actor } from './Actor';
 import Hero from './Hero';
 import { Text } from './Text';
-import { GameEvents } from '../game-events';
 import Bullet from './Bullet';
-import { defaultEnemyStats } from './config';
+import config, { EnemyType, GameEvents } from '../config';
+import { EAudio } from '../scenes/LoadScene';
+
 
 export class Enemy extends Actor {
   private target: Hero;
-  private atlasName: string;
+  private textureName: string;
   public speed: number;
   private timer: number;
   protected damage: number;
+  private deathSound: any;
+  private stats: any; // todo
 
   constructor(
     scene: Scene,
@@ -19,37 +22,52 @@ export class Enemy extends Actor {
     y: number,
     texture: string,
     target: Hero,
+    type: EnemyType,
+    wave: number = 1,
     level: number = 1,
   ) {
     super(scene, x, y, texture);
     this.target = target;
-    this.atlasName = `a-${texture}`;
-    this.speed = defaultEnemyStats.speed + (level * defaultEnemyStats.speedWaveIncrease);
-    this.timer = defaultEnemyStats.timerAttack;
-    this.hp = defaultEnemyStats.hp + (level * defaultEnemyStats.hpWaveIncrease);
-    this.damage = defaultEnemyStats.damage + (level * defaultEnemyStats.damageWaveIncrease);
+    this.textureName = type === EnemyType.Zombie ? `a-${texture}` : texture;
 
-    this.getBody().setOffset(0, 15);
+    this.stats = config.enemiesStats[`${type}Level${level}`];
+    if (!this.stats) throw 'Enemy not found';
+
+    this.speed = this.stats.speed + (wave * this.stats.speedWaveIncrease);
+    this.timer = this.stats.timerAttack - 300;
+    this.hp = this.maxHp = this.stats.hp + (wave * this.stats.hpWaveIncrease);
+    this.damage = this.stats.damage + (wave * this.stats.damageWaveIncrease);
+
     this.texts.push(new Text(scene, x, y, `Level ${level}`).setOrigin(0.6, -0.2).setFontSize(12));
     this.texts[1].setFontSize(10);
 
-    this.on('destroy', () => {
-      this.leaveSpotAfterDestroy();
+    this.getBody().setSize(this.stats.size, this.stats.size);
+    this.setOffset(0, 0);
+    this.setOrigin(0.5, 0.5);
+
+    this.on(this.onKillEvent, () => {
       this.texts.forEach((t) => t?.destroy());
-      if (this.isDead) {
-        this.scene.game.events.emit(GameEvents.CreateRuby, this.body.x, this.body.y);
-        this.scene.game.events.emit(GameEvents.AddScore, 10 + level);
-      }
+      this.deathSound.play();
+      this.anims.play({ key: `${texture}-death` }, true);
+      this.scene.game.events.emit(GameEvents.CreateRuby, this.body.x, this.body.y);
+      this.scene.game.events.emit(GameEvents.AddScore, 10 + wave + (level * 10));
+      this.depth = this.depth - 1;
+      type === EnemyType.Zombie && (this.alpha = 0.6);
+
+      setTimeout(() => {
+        this.destroy();
+      }, 3000)
     });
+
+    this.on(Phaser.Scenes.Events.DESTROY, () => {
+      this.texts.forEach((t) => t?.destroy());
+    });
+
+    this.init();
   }
 
-  protected leaveSpotAfterDestroy(): void {
-    // const graphics = this.scene.add.graphics();
-    // graphics
-    //   .fillStyle(0xe81b1b, 0.5)
-    //   .fillCircle(this.body.x + this.body.width / 2, this.body.y + this.body.height / 2, 30);
-
-    // setTimeout(() => graphics.destroy(), 3000);
+  init() {
+    this.deathSound = this.scene.sound.add(EAudio.Death);
   }
 
   public animateDamage(bullet: Bullet): void {
@@ -63,16 +81,15 @@ export class Enemy extends Actor {
   // 1 sec delay for attack
   private handleOnTimer(delta: number, callback: Function): void {
     this.timer += delta;
-    while (this.timer >= defaultEnemyStats.timerAttack) {
-      this.timer -= defaultEnemyStats.timerAttack;
+    while (this.timer >= this.stats.timerAttack) {
+      this.timer -= this.stats.timerAttack;
       callback();
     }
   }
 
   private attackHandler(): void {
-    !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-attack`, frameRate: this.speed / 3 }, true);
+    this.anims.play({ key: `${this.textureName}-attack` }, true);
     this.target.getDamage(this.damage);
-    // this.target.disableBody() // maybe does make sense
   }
 
   private run(): void {
@@ -80,18 +97,19 @@ export class Enemy extends Actor {
       this.target.x > this.x ? this.speed : -this.speed,
       this.target.y > this.y ? this.speed : -this.speed,
     );
-    !this.anims.isPlaying && this.anims.play({ key: `${this.atlasName}-move`, frameRate: this.speed / 2 }, true);
+
+    !this.anims.isPlaying && this.anims.play({ key: `${this.textureName}-move` }, true);
   }
 
   public update(_: number, delta: number): void {
+    this.getBody().setVelocity(0);
     const willAttack = Math.Distance.BetweenPoints(
       { x: this.target.x, y: this.target.y },
       { x: this.x, y: this.y },
-    ) < (this.target.width - 20);
+    ) < 80;
 
     if (willAttack) {
       this.handleOnTimer(delta, () => {
-        this.getBody().setVelocity(0);
         this.attackHandler();
       });
     } else {

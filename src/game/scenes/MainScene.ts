@@ -3,8 +3,7 @@ import { Scenes } from './scenes-enum';
 import Hero from '../classes/Hero';
 import HeroScene from './HeroScene';
 import EnemyScene from './EnemyScene';
-import ScoreScene from './ScoreScene';
-import { GameEvents } from '../game-events';
+import { GameEvents } from '../config';
 import MapScene from './MapScene';
 import BonusScene from './BonusScene';
 import WaveScene from './WaveScene';
@@ -12,6 +11,7 @@ import MenuScene from './MenuScene';
 import LightScene from './LightScene';
 import ImprovementScene from './ImprovementScene';
 import MainSceneManager from './MainSceneManager';
+import ScoreScene from './ScoreScene';
 
 export const mainDataKey = 'mainSceneData';
 
@@ -25,20 +25,20 @@ export enum GameStatus {
 
 export const emitGameStatus = 'emit-game-status';
 
-const gameScenes = [
+export const gameScenes = [
   [Scenes.MapScene, MapScene],
   [Scenes.EnemyScene, EnemyScene],
   [Scenes.HeroScene, HeroScene],
   [Scenes.BonusScene, BonusScene],
-  [Scenes.ScoreScene, ScoreScene],
   [Scenes.WaveScene, WaveScene],
+  [Scenes.ScoreScene, ScoreScene],
 ];
 
-const gameNotActiveScenes = [
+export const gameNotActiveScenes = [
   [Scenes.MenuScene, MenuScene],
 ];
 
-const otherScenes = [
+export const otherScenes = [
   [Scenes.LightScene, LightScene],
   [Scenes.ImprovementScene, ImprovementScene],
 ];
@@ -46,6 +46,7 @@ const otherScenes = [
 export default class MainScene extends Scene {
   public wave: number = 1;
   public enemiesGroup: Phaser.GameObjects.Group;
+  public bonusGroup: Phaser.GameObjects.Group;
   public score: number;
   public hero: Hero;
   public ruby: number;
@@ -60,7 +61,7 @@ export default class MainScene extends Scene {
 
   createScenes = () => {
     const sharedThis = { [mainDataKey]: this };
-    [gameNotActiveScenes, otherScenes, gameScenes].flat()
+    [[[Scenes.MapScene, MapScene]], [[Scenes.MenuScene, MenuScene]]].flat()
       .forEach((s) => this.game.scene.getIndex(s[0] as Scenes) === -1 && this.scene.add(s[0] as Scenes, s[1] as any, false, sharedThis));
   }
 
@@ -77,6 +78,10 @@ export default class MainScene extends Scene {
     this.enemiesGroup = this.physics.add.group({
       key: 'zombiesGroup',
       collideWorldBounds: true,
+    });
+
+    this.bonusGroup = this.physics.add.group({
+      key: 'bonusGroup',
     });
 
     this.createScenes();
@@ -102,6 +107,7 @@ export default class MainScene extends Scene {
 export interface IMainScene {
   wave: number;
   enemiesGroup: Phaser.GameObjects.Group;
+  bonusGroup: Phaser.GameObjects.Group;
   hero: Hero;
   score: number;
   map: Tilemaps.Tilemap;

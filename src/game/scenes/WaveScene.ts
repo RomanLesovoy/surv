@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
 import { GameStatus, IMainScene, emitGameStatus, mainDataKey } from './MainScene';
-import { timeConfigs } from '../game-events';
+import config from '../config';
 
 export default class WaveScene extends Scene {
   protected mainScene: IMainScene;
@@ -15,14 +15,25 @@ export default class WaveScene extends Scene {
 
   init(data: { [mainDataKey]: IMainScene }) {
     this.mainScene = data[mainDataKey];
+    this.sound.volume = config.general.defaultVolume;
   }
 
   create() {
     this.initEvents();
+    this.runScore();
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.timerWave?.destroy();
+    });
   }
 
-  setDarkness = (active?: boolean) => {
-    if (active) {
+  runScore() {
+    this.scene.run(Scenes.ScoreScene);
+    this.scene.bringToTop(Scenes.ScoreScene);
+  }
+
+  runLightScene = () => {
+    if (this.mainScene.wave % 3 === 0) {
       this.scene.bringToTop(Scenes.LightScene);
       return this.scene.run(Scenes.LightScene);
     }
@@ -33,7 +44,9 @@ export default class WaveScene extends Scene {
     const newWave = this.mainScene.wave + 1;
     this.mainScene.setGameStatus(GameStatus.Active);
     this.mainScene.wave = newWave;
-    this.setDarkness(newWave % 3 === 0);
+    this.runScore();
+    this.scene.sendToBack(Scenes.ImprovementScene);
+    this.runLightScene();
   }
 
   improvementScene = () => {
@@ -43,13 +56,12 @@ export default class WaveScene extends Scene {
 
   initEvents() {
     this.game.events.on(emitGameStatus, (s: GameStatus) => {
-      if ([GameStatus.Active, GameStatus.Reset].includes(s)) {
-        return this.timerWave.paused = false;
+      if (s === GameStatus.Active) {
+        this.runLightScene();
       }
-      return this.timerWave.paused = true;
     });
 
-    this.timerWave = this.time.addEvent({ delay: timeConfigs.waveDelay, callback: () => {
+    this.timerWave = this.time.addEvent({ delay: config.timeConfigs.waveDelay, callback: () => {
       this.mainScene.enemiesGroup.clear(true, true);
       this.mainScene.setGameStatus(GameStatus.Improvement);
       this.improvementScene();
