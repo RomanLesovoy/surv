@@ -3,7 +3,7 @@ import { Scenes } from './scenes-enum';
 import Hero from '../classes/Hero';
 import HeroScene from './HeroScene';
 import EnemyScene from './EnemyScene';
-import { GameEvents } from '../config';
+import config, { GameEvents } from '../config';
 import MapScene from './MapScene';
 import BonusScene from './BonusScene';
 import WaveScene from './WaveScene';
@@ -45,6 +45,7 @@ export const otherScenes = [
 
 export default class MainScene extends Scene {
   public wave: number = 1;
+  public waveDelay: number = config.timeConfigs.waveDelay;
   public enemiesGroup: Phaser.GameObjects.Group;
   public bonusGroup: Phaser.GameObjects.Group;
   public score: number;
@@ -106,6 +107,7 @@ export default class MainScene extends Scene {
 
 export interface IMainScene {
   wave: number;
+  waveDelay: number;
   enemiesGroup: Phaser.GameObjects.Group;
   bonusGroup: Phaser.GameObjects.Group;
   hero: Hero;

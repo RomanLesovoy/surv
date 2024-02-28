@@ -2,7 +2,6 @@ import { Scenes } from './scenes-enum';
 import { Text } from '../classes/Text';
 import { IMainScene, mainDataKey } from './MainScene';
 import { Scene } from 'phaser';
-import config from '../config';
 
 export default class ScoreScene extends Scene {
   protected mainScene: IMainScene;
@@ -30,7 +29,7 @@ export default class ScoreScene extends Scene {
   }
 
   get waveDelaySec(): number {
-    return config.timeConfigs.waveDelay / 1000;
+    return this.mainScene.waveDelay / 1000;
   }
 
   getWaveTimeText(): string {

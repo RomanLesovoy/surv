@@ -48,13 +48,14 @@ export default class EnemyScene extends Scene {
 
   private pushPortal = () => {
     if (this.mainScene.wave >= config.general.portalActiveFromWave) {
-      const portal = new Portal(this.mapScene, (coords: Coords) => this.pushEnemies(EnemyType.Monster, coords));
-      this.mainScene.enemiesGroup.add(portal);
+      const portal = new Portal(this.mapScene, (coords: Coords) => this.pushEnemy(this.createMonsterFn(coords)));
+      // const portal = new Portal(this.mapScene, (coords: Coords) => this.pushEnemies(EnemyType.Monster, coords));
+      this.pushEnemy(portal);
     }
   }
 
   private createZombieFn = (coordinates: Coords) => {
-    return () => new Enemy(this.mapScene, coordinates.x, coordinates.y, EImage.Zombie1, this.mainScene.hero, EnemyType.Zombie, this.mainScene.wave) // todo level
+    return new Enemy(this.mapScene, coordinates.x, coordinates.y, EImage.Zombie1, this.mainScene.hero, EnemyType.Zombie, this.mainScene.wave) // todo level
       .setName(`Zombie-#${Phaser.Math.RND.between(0, 99999)}`)
   }
 
@@ -71,20 +72,24 @@ export default class EnemyScene extends Scene {
     const wave = this.mainScene.wave;
     const enemyLevel = wave <= 5 ? 1 : Phaser.Math.RND.between(1, wave >= 10 ? 3 : 2);
     const texture = this.getRandomMonster(enemyLevel as 1 | 2 | 3);
-    return () => new Enemy(this.mapScene, coordinates.x, coordinates.y, texture, this.mainScene.hero, EnemyType.Monster, this.mainScene.wave, enemyLevel)
+    return new Enemy(this.mapScene, coordinates.x, coordinates.y, texture, this.mainScene.hero, EnemyType.Monster, this.mainScene.wave, enemyLevel)
       .setName(`Monster-#${Phaser.Math.RND.between(0, 99999)}`)
   }
 
   private createEnemy = (enemyType: EnemyType, coords?: Coords): Enemy => {
     const coordinates = coords || getRandomDoorMap({ width: this.game.scale.width, height: this.game.scale.height });
     const enemy = enemyType === EnemyType.Monster ? this.createMonsterFn(coordinates) : this.createZombieFn(coordinates);
-    return enemy();
+    return enemy;
+  }
+
+  private pushEnemy = (enemy: Enemy | Portal) => {
+    this.mainScene.enemiesGroup.add(enemy);
   }
 
   private pushEnemies = (type: EnemyType, coords?: Coords): void => {
     const amount = Math.ceil(this.mainScene.wave / config.general.waveEnemyAdd);
     for (let i = 0; i < amount; i++) {
-      this.mainScene.enemiesGroup.add(this.createEnemy(type, coords));
+      this.pushEnemy(this.createEnemy(type, coords));
     }
   }
 }
