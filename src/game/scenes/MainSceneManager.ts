@@ -4,6 +4,7 @@ import { Scenes } from './scenes-enum';
 import MenuScene from './MenuScene';
 import ImprovementScene from './ImprovementScene';
 import MapScene from './MapScene';
+import config from '../config';
 
 interface IScenes {
   gameScenes: (Scenes | typeof MapScene)[][],
@@ -24,6 +25,7 @@ export default class MainSceneManager {
 
   private resetScore = () => {
     this.mainSceneInstance.wave = 1;
+    this.mainSceneInstance.waveDelay = config.timeConfigs.waveDelay;
     this.mainSceneInstance.score = 0;
     this.mainSceneInstance.ruby = 0;
   }
