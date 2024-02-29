@@ -61,7 +61,7 @@ export default class BonusScene extends Scene {
       this.rubySound.play();
       ruby?.destroy(); // todo error when game debug is active
       graphics?.destroy();
-      this.mainScene.ruby++;
+      this.mainScene.ruby += 3;
     });
   }
 }

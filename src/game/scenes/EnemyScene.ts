@@ -23,8 +23,8 @@ export default class EnemyScene extends Scene {
 
   create() {
     this.mapScene.physics.add.collider(this.mainScene.enemiesGroup, this.mainScene.enemiesGroup, this.handleEnemyCollision, null, this.mapScene);
-    const timerZombieEvent = this.mapScene.time.addEvent({ delay: config.timeConfigs.zombieDelay, callback: () => this.pushEnemies(EnemyType.Zombie), loop: true });
-    const timerPortalEvent = this.mapScene.time.addEvent({ delay: config.timeConfigs.portalDelay, callback: this.pushPortal, loop: true });
+    const timerZombieEvent = this.mapScene.time.addEvent({ delay: config.timeConfigs.getZombieDelay(this.mainScene.wave), callback: () => this.pushEnemies(EnemyType.Zombie), loop: true });
+    const timerPortalEvent = this.mapScene.time.addEvent({ delay: config.timeConfigs.getPortalDelayWave(this.mainScene.wave), callback: this.pushPortal, loop: true });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       timerZombieEvent?.destroy();

@@ -85,7 +85,7 @@ export default class ImprovementScene extends Scene {
     this.improvementsCosts = {
       [StatsKeys.Speed]: Math.round(this.mainScene.hero.speed / config.defaultHeroStats.speedStatIncrease),
       [StatsKeys.Damage]: Math.round(this.mainScene.hero.damage / config.defaultHeroStats.damageStatIncrease),
-      [StatsKeys.Hp]: Math.round(this.mainScene.hero.hp / config.defaultHeroStats.hpStatIncrease),
+      [StatsKeys.Hp]: Math.round(this.mainScene.hero.maxHp / config.defaultHeroStats.hpStatIncrease),
     }
   }
 

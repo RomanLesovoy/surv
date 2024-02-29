@@ -3,9 +3,11 @@ export enum EnemyType {
   Monster = 'monster',
 }
 
+export const localStorageKey = 'surv-data';
+
 export default {
   defaultHeroStats: {
-    speed: 200,
+    speed: 150,
     damage: 50,
     hp: 100,
     damageStatIncrease: 5,
@@ -20,7 +22,7 @@ export default {
       damage: 20,
       damageWaveIncrease: 3,
       speedWaveIncrease: 5,
-      hpWaveIncrease: 6,
+      hpWaveIncrease: 8,
       size: 80,
     },
     [`${EnemyType.Monster}Level1`]: {
@@ -62,12 +64,12 @@ export default {
     portalActiveFromWave: 4,
   },
   timeConfigs: {
-    bonusDelay: 15000,
+    bonusDelay: 10000,
     waveDelay: 20000,
     waveDelayOffset: 3000,
-    maxWaveDelay: 60000,
-    zombieDelay: 1500,
-    portalDelay: 2000,
+    maxWaveDelay: 120000,
+    getZombieDelay: (wave: number) => 1500 - wave * 30,
+    getPortalDelayWave: (wave: number) => 2000 - wave * 30,
     portalCallback: 1500,
   }
 }

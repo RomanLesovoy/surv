@@ -45,6 +45,20 @@ export default class HeroScene extends Scene {
   }
 
   private initHero(): void {
-    this.mainScene.hero = new Hero(this.mapScene, this, this.game.scale.width / 2, this.game.scale.height / 2, this.onShot).setName('Player');
+    const loadHero = this.mainScene.hero;
+    const newHero = new Hero(this.mapScene, this, this.game.scale.width / 2, this.game.scale.height / 2, this.onShot).setName('Player');
+
+    if (loadHero) {
+      Object.keys(loadHero).forEach((k) => {
+        if (k === 'activeGun') {
+          newHero.switchGun(loadHero[k]);
+        } else if (k === 'bullets' && !loadHero[k]) {
+          newHero.bullets = Infinity;
+        } else {
+          newHero[k] = loadHero[k];
+        }
+      })
+    }
+    this.mainScene.hero = newHero;
   }
 }

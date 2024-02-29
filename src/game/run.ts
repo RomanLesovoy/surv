@@ -29,6 +29,12 @@ const config = {
   autoFocus: true,
 };
 
-const game = new Game(config);
+let game = new Game(config);
+
+// @ts-ignore
+window.restartGame = () => {
+  game.destroy(true);
+  game = new Game(config);
+}
 
 export default game;
