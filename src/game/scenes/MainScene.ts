@@ -3,7 +3,7 @@ import { Scenes } from './scenes-enum';
 import Hero from '../classes/Hero';
 import HeroScene from './HeroScene';
 import EnemyScene from './EnemyScene';
-import config, { GameEvents } from '../config';
+import config, { GameEvents, localStorageKey } from '../config';
 import MapScene from './MapScene';
 import BonusScene from './BonusScene';
 import WaveScene from './WaveScene';
@@ -44,7 +44,7 @@ export const otherScenes = [
 ];
 
 export default class MainScene extends Scene {
-  public wave: number = 20;
+  public wave: number = 1;
   public waveDelay: number = config.timeConfigs.waveDelay;
   public enemiesGroup: Phaser.GameObjects.Group;
   public bonusGroup: Phaser.GameObjects.Group;
@@ -73,6 +73,8 @@ export default class MainScene extends Scene {
   }
   
   create() {
+    this.loadProgress();
+
     // @ts-ignore todo
     this.mainSceneManager = new MainSceneManager(this, { gameScenes, gameNotActiveScenes, otherScenes });
 
@@ -103,6 +105,41 @@ export default class MainScene extends Scene {
   setGameStatus = (status: GameStatus) => {
     this.mainSceneManager.setGameStatus(status);
   }
+
+  saveProgress = () => {
+    const { hero, score, ruby, wave, waveDelay } = this;
+    const heroToSave = {
+      activeGun: hero.activeGun,
+      bullets: hero.bullets,
+      hp: hero.hp,
+      maxHp: hero.maxHp,
+      speed: hero.speed,
+      damage: hero.damage,
+      isDead: hero.isDead,
+    }
+    const general = {
+      ruby,
+      score,
+      wave,
+      waveDelay,
+    }
+    localStorage.setItem(localStorageKey, JSON.stringify({ hero: heroToSave, general }));
+    
+    // @ts-ignore
+    window.restartGame();
+  }
+
+  loadProgress = () => {
+    const gameSave = localStorage.getItem(localStorageKey);
+    const parsed = JSON.parse(gameSave || '{}');
+    if (!!parsed.hero && !parsed.hero.isDead) {
+      this.ruby = parsed.general.ruby;
+      this.score = parsed.general.score;
+      this.wave = parsed.general.wave;
+      this.waveDelay = parsed.general.waveDelay;
+      this.hero = parsed.hero;
+    }
+  }
 }
 
 export interface IMainScene {
@@ -116,4 +153,5 @@ export interface IMainScene {
   ruby: number;
   getGameStatus: () => GameStatus,
   setGameStatus: (status: GameStatus) => void,
+  saveProgress: () => void,
 }

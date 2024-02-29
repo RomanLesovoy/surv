@@ -34,7 +34,7 @@ export class Enemy extends Actor {
     if (!this.stats) throw 'Enemy not found';
 
     this.speed = this.stats.speed + (wave * this.stats.speedWaveIncrease);
-    this.timer = this.stats.timerAttack - 250;
+    this.timer = this.stats.timerAttack - 200;
     this.hp = this.maxHp = this.stats.hp + (wave * this.stats.hpWaveIncrease);
     this.damage = this.stats.damage + (wave * this.stats.damageWaveIncrease);
 

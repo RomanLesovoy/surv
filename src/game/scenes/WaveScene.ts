@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { Scenes } from './scenes-enum';
 import { GameStatus, IMainScene, emitGameStatus, mainDataKey } from './MainScene';
-import config, { localStorageKey } from '../config';
+import config from '../config';
 
 export default class WaveScene extends Scene {
   protected mainScene: IMainScene;
@@ -21,6 +21,7 @@ export default class WaveScene extends Scene {
   create() {
     this.initEvents();
     this.runScore();
+    this.runLightScene();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.timerWave?.destroy();
@@ -49,6 +50,7 @@ export default class WaveScene extends Scene {
     this.scene.sendToBack(Scenes.ImprovementScene);
     this.runLightScene();
     this.restartWaveEvent();
+    this.mainScene.saveProgress();
   }
 
   improvementScene = () => {
@@ -71,28 +73,7 @@ export default class WaveScene extends Scene {
       this.mainScene.enemiesGroup.clear(true, true);
       this.mainScene.bonusGroup.clear(true, true);
       this.mainScene.setGameStatus(GameStatus.Improvement);
-      this.saveProgress();
       this.improvementScene();
     }});
-  }
-
-  saveProgress = () => {
-    const { hero, score, ruby, wave, waveDelay } = this.mainScene;
-    const heroToSave = {
-      activeGun: hero.activeGun,
-      bullets: hero.bullets,
-      hp: hero.hp,
-      maxHp: hero.maxHp,
-      speed: hero.speed,
-      damage: hero.damage,
-      isDead: hero.isDead,
-    }
-    const general = {
-      ruby,
-      score,
-      wave,
-      waveDelay,
-    }
-    localStorage.setItem(localStorageKey, JSON.stringify({ hero: heroToSave, general }));
   }
 }
