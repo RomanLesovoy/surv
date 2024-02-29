@@ -44,7 +44,7 @@ export const otherScenes = [
 ];
 
 export default class MainScene extends Scene {
-  public wave: number = 1;
+  public wave: number = 20;
   public waveDelay: number = config.timeConfigs.waveDelay;
   public enemiesGroup: Phaser.GameObjects.Group;
   public bonusGroup: Phaser.GameObjects.Group;

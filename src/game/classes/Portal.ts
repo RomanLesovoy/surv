@@ -30,9 +30,13 @@ export default class Portal extends Physics.Arcade.Sprite {
   }
 
   init() {
-    this.scene.time.addEvent({ delay: config.timeConfigs.portalCallback, callback: () => {
+    const timer = this.scene.time.addEvent({ delay: config.timeConfigs.portalCallback, callback: () => {
       this.portalCallback(this.coordinates);
       setTimeout(() => this?.destroy(), 50);
     }, loop: false });
+
+    this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      timer?.destroy();
+    });
   }
 }
