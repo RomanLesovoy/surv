@@ -22,7 +22,7 @@ export default {
       damage: 20,
       damageWaveIncrease: 3,
       speedWaveIncrease: 5,
-      hpWaveIncrease: 6,
+      hpWaveIncrease: 8,
       size: 80,
     },
     [`${EnemyType.Monster}Level1`]: {

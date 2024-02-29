@@ -47,6 +47,7 @@ export default class MenuScene extends Scene {
     const changeVisible = (v: boolean) => {
       this.buttons[1].button.setVisible(v);
       this.buttons[1].text.setVisible(v);
+      this.buttons[0].text.setText(v ? 'Restart' : 'Start');
     }
     changeVisible(this.mainScene.getGameStatus() === GameStatus.Paused);
   }

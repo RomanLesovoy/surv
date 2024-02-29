@@ -45,6 +45,7 @@ export default class WaveScene extends Scene {
     const newWave = this.mainScene.wave + 1;
     this.mainScene.setGameStatus(GameStatus.Active);
     this.mainScene.wave = newWave;
+    this.mainScene.hero.hp = this.mainScene.hero.maxHp;
     this.mainScene.waveDelay < config.timeConfigs.maxWaveDelay && (this.mainScene.waveDelay += config.timeConfigs.waveDelayOffset);
     this.runScore();
     this.scene.sendToBack(Scenes.ImprovementScene);

@@ -23,7 +23,7 @@ export default class Portal extends Physics.Arcade.Sprite {
     this.setOrigin(0.5, 0.5);
 
     setTimeout(() => {
-      this.anims.play({ key: EImage.PortalAnim, yoyo: true, repeat: 50 }, true);
+      this.anims?.play({ key: EImage.PortalAnim, yoyo: true, repeat: 50 }, true);
     }, 500);
 
     this.init();

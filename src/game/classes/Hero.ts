@@ -5,7 +5,7 @@ import { throttle } from '../../utils/throttle';
 import { BonusTypes } from './Bonus';
 import { EAudio, EImage } from '../scenes/LoadScene';
 import { emitGameStatus, GameStatus } from '../scenes/MainScene';
-import config from '../config';
+import config, { localStorageKey } from '../config';
 import { Text } from './Text';
 
 const getOffsetGunPlayer = (pointer: Input.Pointer, hero: Hero, cameras, randomOffset: boolean = false) => {
@@ -95,6 +95,7 @@ export default class Hero extends Actor {
 
     this.on(this.onKillEvent, () => {
       game.events.emit(emitGameStatus, GameStatus.NotStarted);
+      localStorage.removeItem(localStorageKey);
     });
 
     this.runSound = this.scene.sound.add(EAudio.HeroRun, {volume: 1});

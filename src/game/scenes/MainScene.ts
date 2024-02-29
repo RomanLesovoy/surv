@@ -73,7 +73,7 @@ export default class MainScene extends Scene {
   }
   
   create() {
-    this.loadProgress();
+    const isLoad = this.loadProgress();
 
     // @ts-ignore todo
     this.mainSceneManager = new MainSceneManager(this, { gameScenes, gameNotActiveScenes, otherScenes });
@@ -97,7 +97,11 @@ export default class MainScene extends Scene {
       this.mainSceneManager.setGameStatus(GameStatus.Paused);
     });
 
-    this.scene.launch(Scenes.MenuScene);
+    if (isLoad) {
+      this.setGameStatus(GameStatus.Active)
+    } else {
+      this.scene.launch(Scenes.MenuScene);
+    }
   }
 
   getGameStatus = () => this.mainSceneManager.getGameStatus();
@@ -132,13 +136,15 @@ export default class MainScene extends Scene {
   loadProgress = () => {
     const gameSave = localStorage.getItem(localStorageKey);
     const parsed = JSON.parse(gameSave || '{}');
-    if (!!parsed.hero && !parsed.hero.isDead) {
+    if (!!parsed.hero) {
       this.ruby = parsed.general.ruby;
       this.score = parsed.general.score;
       this.wave = parsed.general.wave;
       this.waveDelay = parsed.general.waveDelay;
       this.hero = parsed.hero;
+      return true;
     }
+    return false;
   }
 }
 
