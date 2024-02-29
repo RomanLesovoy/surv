@@ -107,7 +107,15 @@ export default class MainScene extends Scene {
   getGameStatus = () => this.mainSceneManager.getGameStatus();
 
   setGameStatus = (status: GameStatus) => {
+    if (this.hero?.isDead && status === GameStatus.Reset) {
+      return this.restartGame();
+    }
     this.mainSceneManager.setGameStatus(status);
+  }
+
+  restartGame = () => {
+    // @ts-ignore
+    window.restartGame();
   }
 
   saveProgress = () => {
@@ -129,14 +137,13 @@ export default class MainScene extends Scene {
     }
     localStorage.setItem(localStorageKey, JSON.stringify({ hero: heroToSave, general }));
     
-    // @ts-ignore
-    window.restartGame();
+    this.restartGame();
   }
 
   loadProgress = () => {
     const gameSave = localStorage.getItem(localStorageKey);
     const parsed = JSON.parse(gameSave || '{}');
-    if (!!parsed.hero) {
+    if (!!parsed.hero && !parsed.hero.isDead) {
       this.ruby = parsed.general.ruby;
       this.score = parsed.general.score;
       this.wave = parsed.general.wave;

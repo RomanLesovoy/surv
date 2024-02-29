@@ -48,7 +48,7 @@ export default class HeroScene extends Scene {
     const loadHero = this.mainScene.hero;
     const newHero = new Hero(this.mapScene, this, this.game.scale.width / 2, this.game.scale.height / 2, this.onShot).setName('Player');
 
-    if (loadHero) {
+    if (loadHero && !loadHero.isDead) {
       Object.keys(loadHero).forEach((k) => {
         if (k === 'activeGun') {
           newHero.switchGun(loadHero[k]);

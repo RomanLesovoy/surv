@@ -64,6 +64,9 @@ export default class WaveScene extends Scene {
       if (s === GameStatus.Active) {
         this.runLightScene();
       }
+      if (s === GameStatus.NotStarted) {
+        this.timerWave?.destroy();
+      }
     });
 
     this.restartWaveEvent();

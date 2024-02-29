@@ -2,14 +2,13 @@ import { Scene } from "phaser";
 import { EImage } from "./LoadScene";
 import { Scenes } from "./scenes-enum";
 import { GameStatus, IMainScene, mainDataKey } from './MainScene';
-import ButtonGroup, { Buttons } from '../classes/ButtonGroup';
+import ButtonGroup from '../classes/ButtonGroup';
 import config from '../config';
 import { Text } from "../classes/Text";
 
 export default class MenuScene extends Scene {
   protected mainScene: IMainScene;
   protected cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-  private buttons: Buttons;
   private buttonGroup: ButtonGroup;
 
   constructor () {
@@ -35,21 +34,15 @@ export default class MenuScene extends Scene {
   create() {
     this.createBg();
     this.showScore();
+    const isPaused = this.mainScene.getGameStatus() === GameStatus.Paused;
 
     this.buttonGroup = new ButtonGroup(this);
-    this.buttons = this.buttonGroup.create(
+    this.buttonGroup.create(
       [
-        { text: 'Start', callback: () => this.mainScene.setGameStatus(GameStatus.Reset), name: 'start', textureKey: EImage.ButtonBg },
-        { text: 'Resume', callback: () => this.mainScene.setGameStatus(GameStatus.Active), name: 'resume', textureKey: EImage.ButtonBg }
-      ]
+        { text: isPaused ? 'Restart' : 'Start', callback: () => this.mainScene.setGameStatus(GameStatus.Reset), name: 'start', textureKey: EImage.ButtonBg },
+        isPaused ? { text: 'Resume', callback: () => this.mainScene.setGameStatus(GameStatus.Active), name: 'resume', textureKey: EImage.ButtonBg } : null,
+      ].filter((b) => !!b)
     );
-
-    const changeVisible = (v: boolean) => {
-      this.buttons[1].button.setVisible(v);
-      this.buttons[1].text.setVisible(v);
-      this.buttons[0].text.setText(v ? 'Restart' : 'Start');
-    }
-    changeVisible(this.mainScene.getGameStatus() === GameStatus.Paused);
   }
 
   update(): void {
