@@ -7,12 +7,12 @@ export const localStorageKey = 'surv-data';
 
 export default {
   defaultHeroStats: {
-    speed: 150,
+    speed: 250,
     damage: 50,
-    hp: 100,
+    hp: 150,
     damageStatIncrease: 5,
-    speedStatIncrease: 25,
-    hpStatIncrease: 20,
+    speedStatIncrease: 20,
+    hpStatIncrease: 25,
   },
   enemiesStats: {
     [`${EnemyType.Zombie}Level1`]: {
@@ -30,8 +30,8 @@ export default {
       timerAttack: 1300,
       speed: 70,
       damage: 30,
-      damageWaveIncrease: 3,
-      speedWaveIncrease: 6,
+      damageWaveIncrease: 2,
+      speedWaveIncrease: 5,
       hpWaveIncrease: 15,
       size: 150,
     },
@@ -40,8 +40,8 @@ export default {
       timerAttack: 1000,
       speed: 100,
       damage: 40,
-      damageWaveIncrease: 3,
-      speedWaveIncrease: 6,
+      damageWaveIncrease: 2,
+      speedWaveIncrease: 5,
       hpWaveIncrease: 20,
       size: 200,
     },
@@ -49,8 +49,8 @@ export default {
       hp: 500,
       timerAttack: 1300,
       speed: 70,
-      damage: 60,
-      damageWaveIncrease: 4,
+      damage: 50,
+      damageWaveIncrease: 3,
       speedWaveIncrease: 4,
       hpWaveIncrease: 30,
       size: 250,
@@ -64,12 +64,12 @@ export default {
     portalActiveFromWave: 4,
   },
   timeConfigs: {
-    bonusDelay: 10000,
+    bonusDelay: 8000,
     waveDelay: 20000,
-    waveDelayOffset: 3000,
-    maxWaveDelay: 120000,
-    getZombieDelay: (wave: number) => 1500 - wave * 30,
-    getPortalDelayWave: (wave: number) => 2000 - wave * 30,
+    waveDelayOffset: 2500,
+    maxWaveDelay: 100000,
+    getZombieDelay: (wave: number) => 1500 - wave * 40,
+    getPortalDelayWave: (wave: number) => 2250 - wave * 25,
     portalCallback: 1500,
   }
 }

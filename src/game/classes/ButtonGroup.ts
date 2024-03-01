@@ -1,69 +1,76 @@
 import { GameObjects, Scene } from 'phaser';
-import { EAudio, EImage } from '../scenes/LoadScene';
+import { EAudio } from '../scenes/LoadScene';
 import { Text } from './Text';
 
 export const selectedAction = 'selected';
 
 interface IButtonProps {
-  callback: (button: GameObjects.Image) => void,
+  callback: (button: GameObjects.Graphics) => void,
   text: string,
   textureKey: string,
   name: string
 }
 
-export type Buttons = Array<{ button: GameObjects.Image, text: GameObjects.Text }>
+export type Buttons = Array<{ button: GameObjects.Graphics[], text: GameObjects.Text }>
 
 export default class ButtonGroup {
   public buttons: Buttons;
   private scene: Scene;
   public selectedButtonIndex = 0;
-  private arrow: GameObjects.Image;
   private switchSound: any;
   private clickSound: any;
+  private sizeConfig: any;
 
   constructor (scene: Scene) {
     this.scene = scene;
     this.buttons = [];
+    this.sizeConfig = {
+      x: this.scene.scale.width * 0.5,
+      y: (this.scene.scale.height / 4) / (this.scene.scale.width / this.scene.scale.height),
+      width: 500,
+      height: 180,
+    }
+  }
+
+  drawButtonGraphics = (button: GameObjects.Graphics, color: number, i: number, offset: number = 0) => {
+    const { width, height, x, y } = this.sizeConfig;
+    button.clear();
+    button.fillStyle(color, 1);
+    button.fillRect(x  - width / 2 + offset, y + i * 300 + offset, width - offset * 2, height - offset * 2);
+    return button;
   }
 
   createButton = (buttonProp: IButtonProps, i: number) => {
-    const button = this.scene.add.image(
-      this.scene.scale.width * 0.5,
-      (this.scene.scale.height / 4) / (this.scene.scale.width / this.scene.scale.height),
-      buttonProp.textureKey,
-    ).setDisplaySize(450, 250);
-    button.setY(button.y + i * 300).setName(buttonProp.name);
-    const text = new Text(this.scene, button.x, button.y, buttonProp.text).setOrigin(0.5)
+    const { x, y, height } = this.sizeConfig;
+    const button0 = this.drawButtonGraphics(this.scene.add.graphics(), 0x111111, i);
+    const button = this.drawButtonGraphics(this.scene.add.graphics(), 0x333333, i, 15);
+    button.setName(buttonProp.name);
+    const text = new Text(this.scene, x, y + i * 300 + height / 2, buttonProp.text).setOrigin(0.5)
 
     button.on(selectedAction, (available: boolean) => {
       available && buttonProp.callback(button);
     });
 
-    this.buttons.push({ button, text });
+    this.buttons.push({ button: [button, button0], text });
     return { button, text }
   }
 
   setDisableAvailableButton = (name: string, value: boolean) => {
-    const button = this.buttons.find((b) => b.button.name === name);
+    const button = this.buttons.find((b) => b.button[0].name === name);
     if (button) {
-      !value ? button.button.setTint(0x444444) : button.button.clearTint();
+      button.button[0].setAlpha(value ? 1 : .5);
+      button.button[0].visible = value;
     }
   }
 
-  createArrow() {
-    this.arrow = this.scene.add.image(0, 0, EImage.Arrow);
-  }
-
   create(buttons: Array<IButtonProps>) {
-    this.createArrow();
-
     this.switchSound = this.scene.sound.add(EAudio.SwitchMenu);
     this.clickSound = this.scene.sound.add(EAudio.ClickButton);
 
     buttons.filter((b) => !!b).forEach(this.createButton);
 
     this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.buttons.forEach((b) => b.button.off(selectedAction));
+      this.buttons.forEach((b) => b.button[0].off(selectedAction));
     });
 
     this.selectNextButton(0);
@@ -100,18 +107,21 @@ export default class ButtonGroup {
 
   confirmSelection() {
     const { button } = this.buttons[this.selectedButtonIndex];
-    button.emit(selectedAction, !button.isTinted);
+    button[0].emit(selectedAction, !!button[1].visible);
     this.clickSound.play();
 	}
 
   selectButton() {
     const currentButton = this.buttons[this.selectedButtonIndex];
     
-    if (currentButton.button.isTinted) {
+    if (!currentButton.button[0].visible) {
       return this.selectNextButton();
     }
 
+    this.buttons.forEach((b, i) => {
+      this.drawButtonGraphics(b.button[1], 0x111111, i);
+    })
+    this.drawButtonGraphics(currentButton.button[1], 0x888888, this.selectedButtonIndex);
     this.switchSound.play();
-    this.arrow.setPosition(currentButton.button.x + 400, currentButton.button.y);
   }
 }
