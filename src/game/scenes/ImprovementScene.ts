@@ -43,25 +43,31 @@ export default class ImprovementScene extends Scene {
   }
 
   onImproveSpeed = () => {
-    this.mainScene.hero.speed += config.defaultHeroStats.speedStatIncrease;
-    this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Speed];
-    this.setCosts();
-    this.updateButtons();
+    if(this.checkEnoughRuby(this.improvementsCosts[StatsKeys.Speed])) {
+      this.mainScene.hero.speed += config.defaultHeroStats.speedStatIncrease;
+      this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Speed];
+      this.setCosts();
+      this.updateButtons();
+    }
   }
 
   onImproveDamage = () => {
-    this.mainScene.hero.damage += config.defaultHeroStats.damageStatIncrease;
-    this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Damage];
-    this.setCosts();
-    this.updateButtons();
+    if(this.checkEnoughRuby(this.improvementsCosts[StatsKeys.Damage])) {
+      this.mainScene.hero.damage += config.defaultHeroStats.damageStatIncrease;
+      this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Damage];
+      this.setCosts();
+      this.updateButtons();
+    }
   }
 
   onImproveHp = () => {
-    this.mainScene.hero.maxHp += config.defaultHeroStats.hpStatIncrease;
-    this.mainScene.hero.hp = this.mainScene.hero.maxHp;
-    this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Hp];
-    this.setCosts();
-    this.updateButtons();
+    if(this.checkEnoughRuby(this.improvementsCosts[StatsKeys.Hp])) {
+      this.mainScene.hero.maxHp += config.defaultHeroStats.hpStatIncrease;
+      this.mainScene.hero.hp = this.mainScene.hero.maxHp;
+      this.mainScene.ruby -= this.improvementsCosts[StatsKeys.Hp];
+      this.setCosts();
+      this.updateButtons();
+    }
   }
 
   createHeroStats() {
