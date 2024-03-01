@@ -108,8 +108,8 @@ export default class ImprovementScene extends Scene {
   updateButtons() {
     this.buttonGroup.buttons
       .forEach((b) => {
-        if (b.button.name !== 'ok') {
-          this.buttonGroup.setDisableAvailableButton(b.button.name, this.checkEnoughRuby(this.improvementsCosts[b.button.name]))
+        if (b.button[0].name !== 'ok') {
+          this.buttonGroup.setDisableAvailableButton(b.button[0].name, this.checkEnoughRuby(this.improvementsCosts[b.button[0].name]))
         }
       })
   }

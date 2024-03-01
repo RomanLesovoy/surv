@@ -1,23 +1,22 @@
 import { GameObjects, Scene } from 'phaser';
-import { EAudio, EImage } from '../scenes/LoadScene';
+import { EAudio } from '../scenes/LoadScene';
 import { Text } from './Text';
 
 export const selectedAction = 'selected';
 
 interface IButtonProps {
-  callback: (button: GameObjects.Image) => void,
+  callback: (button: GameObjects.Graphics) => void,
   text: string,
   textureKey: string,
   name: string
 }
 
-export type Buttons = Array<{ button: GameObjects.Image, text: GameObjects.Text }>
+export type Buttons = Array<{ button: GameObjects.Graphics[], text: GameObjects.Text }>
 
 export default class ButtonGroup {
   public buttons: Buttons;
   private scene: Scene;
   public selectedButtonIndex = 0;
-  private arrow: GameObjects.Image;
   private switchSound: any;
   private clickSound: any;
 
@@ -27,43 +26,40 @@ export default class ButtonGroup {
   }
 
   createButton = (buttonProp: IButtonProps, i: number) => {
-    const button = this.scene.add.image(
-      this.scene.scale.width * 0.5,
-      (this.scene.scale.height / 4) / (this.scene.scale.width / this.scene.scale.height),
-      buttonProp.textureKey,
-    ).setDisplaySize(450, 250);
-    button.setY(button.y + i * 300).setName(buttonProp.name);
-    const text = new Text(this.scene, button.x, button.y, buttonProp.text).setOrigin(0.5)
+    const width = 500;
+    const height = 170;
+    const x = this.scene.scale.width * 0.5;
+    const y = (this.scene.scale.height / 4) / (this.scene.scale.width / this.scene.scale.height);
+    const button0 = this.scene.add.graphics().fillStyle(0x111111, 1).setName(buttonProp.name);
+    button0.fillRect(x  - width / 2 + 15, y + i * 300 + 15, width - 30, height - 30).setDepth(2);
+    const button = this.scene.add.graphics().fillStyle(0x333333, 1).setName(buttonProp.name);
+    button.fillRect(x  - width / 2, y + i * 300, width, height);
+    const text = new Text(this.scene, x, y + i * 300 + height / 2, buttonProp.text).setOrigin(0.5)
 
     button.on(selectedAction, (available: boolean) => {
       available && buttonProp.callback(button);
     });
 
-    this.buttons.push({ button, text });
+    this.buttons.push({ button: [button, button0], text });
     return { button, text }
   }
 
   setDisableAvailableButton = (name: string, value: boolean) => {
-    const button = this.buttons.find((b) => b.button.name === name);
+    const button = this.buttons.find((b) => b.button[0].name === name);
     if (button) {
-      !value ? button.button.setTint(0x444444) : button.button.clearTint();
+      button.button[0].setInteractive(value);
+      button.button[1].visible = value;
     }
   }
 
-  createArrow() {
-    this.arrow = this.scene.add.image(0, 0, EImage.Arrow);
-  }
-
   create(buttons: Array<IButtonProps>) {
-    this.createArrow();
-
     this.switchSound = this.scene.sound.add(EAudio.SwitchMenu);
     this.clickSound = this.scene.sound.add(EAudio.ClickButton);
 
     buttons.filter((b) => !!b).forEach(this.createButton);
 
     this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.buttons.forEach((b) => b.button.off(selectedAction));
+      this.buttons.forEach((b) => b.button[0].off(selectedAction));
     });
 
     this.selectNextButton(0);
@@ -100,18 +96,17 @@ export default class ButtonGroup {
 
   confirmSelection() {
     const { button } = this.buttons[this.selectedButtonIndex];
-    button.emit(selectedAction, !button.isTinted);
+    button[0].emit(selectedAction, !!button[1].visible);
     this.clickSound.play();
 	}
 
   selectButton() {
     const currentButton = this.buttons[this.selectedButtonIndex];
     
-    if (currentButton.button.isTinted) {
+    if (!currentButton.button[1].visible) {
       return this.selectNextButton();
     }
 
     this.switchSound.play();
-    this.arrow.setPosition(currentButton.button.x + 400, currentButton.button.y);
   }
 }
