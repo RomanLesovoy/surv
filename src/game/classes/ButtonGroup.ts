@@ -19,21 +19,32 @@ export default class ButtonGroup {
   public selectedButtonIndex = 0;
   private switchSound: any;
   private clickSound: any;
+  private sizeConfig: any;
 
   constructor (scene: Scene) {
     this.scene = scene;
     this.buttons = [];
+    this.sizeConfig = {
+      x: this.scene.scale.width * 0.5,
+      y: (this.scene.scale.height / 4) / (this.scene.scale.width / this.scene.scale.height),
+      width: 500,
+      height: 180,
+    }
+  }
+
+  drawButtonGraphics = (button: GameObjects.Graphics, color: number, i: number, offset: number = 0) => {
+    const { width, height, x, y } = this.sizeConfig;
+    button.clear();
+    button.fillStyle(color, 1);
+    button.fillRect(x  - width / 2 + offset, y + i * 300 + offset, width - offset * 2, height - offset * 2);
+    return button;
   }
 
   createButton = (buttonProp: IButtonProps, i: number) => {
-    const width = 500;
-    const height = 170;
-    const x = this.scene.scale.width * 0.5;
-    const y = (this.scene.scale.height / 4) / (this.scene.scale.width / this.scene.scale.height);
-    const button0 = this.scene.add.graphics().fillStyle(0x111111, 1).setName(buttonProp.name);
-    button0.fillRect(x  - width / 2 + 15, y + i * 300 + 15, width - 30, height - 30).setDepth(2);
-    const button = this.scene.add.graphics().fillStyle(0x333333, 1).setName(buttonProp.name);
-    button.fillRect(x  - width / 2, y + i * 300, width, height);
+    const { x, y, height } = this.sizeConfig;
+    const button0 = this.drawButtonGraphics(this.scene.add.graphics(), 0x111111, i);
+    const button = this.drawButtonGraphics(this.scene.add.graphics(), 0x333333, i, 15);
+    button.setName(buttonProp.name);
     const text = new Text(this.scene, x, y + i * 300 + height / 2, buttonProp.text).setOrigin(0.5)
 
     button.on(selectedAction, (available: boolean) => {
@@ -47,8 +58,8 @@ export default class ButtonGroup {
   setDisableAvailableButton = (name: string, value: boolean) => {
     const button = this.buttons.find((b) => b.button[0].name === name);
     if (button) {
-      button.button[0].setInteractive(value);
-      button.button[1].visible = value;
+      button.button[0].setAlpha(value ? 1 : .5);
+      button.button[0].visible = value;
     }
   }
 
@@ -103,10 +114,14 @@ export default class ButtonGroup {
   selectButton() {
     const currentButton = this.buttons[this.selectedButtonIndex];
     
-    if (!currentButton.button[1].visible) {
+    if (!currentButton.button[0].visible) {
       return this.selectNextButton();
     }
 
+    this.buttons.forEach((b, i) => {
+      this.drawButtonGraphics(b.button[1], 0x111111, i);
+    })
+    this.drawButtonGraphics(currentButton.button[1], 0x888888, this.selectedButtonIndex);
     this.switchSound.play();
   }
 }

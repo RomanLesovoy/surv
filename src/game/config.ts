@@ -68,8 +68,8 @@ export default {
     waveDelay: 20000,
     waveDelayOffset: 3000,
     maxWaveDelay: 120000,
-    getZombieDelay: (wave: number) => 1500 - wave * 30,
-    getPortalDelayWave: (wave: number) => 2000 - wave * 30,
+    getZombieDelay: (wave: number) => 1500 - wave * 40,
+    getPortalDelayWave: (wave: number) => 2300 - wave * 30,
     portalCallback: 1500,
   }
 }
