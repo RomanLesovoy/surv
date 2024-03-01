@@ -31,7 +31,6 @@ export enum EImage {
   Monster31Attack = 'monster31-attack',
   Monster31Death = 'monster31-death',
   ShadowBg = 'shadow-bg',
-  ButtonBg = 'button-bg',
   Bullet = 'bullet',
   Riffle = 'riffle',
   Ammo = 'ammo',
@@ -43,7 +42,6 @@ export enum EImage {
   ImproveBg = 'improve-bg',
   ImproveHeroBg = 'improve-hero-bg',
   BulletAmmo = 'bullet-ammo',
-  Arrow = 'arrow',
   PortalPreview = 'portal-preview',
   PortalAnim = 'portal-anim',
 }
@@ -80,13 +78,11 @@ export default class LoadingScene extends Scene {
 
     // Other
     this.load.image(EImage.Bullet, 'other/m_bullet.png');
-    this.load.image(EImage.ButtonBg, 'other/button.png');
     this.load.image(EImage.MenuBg, 'other/menu-bg.jpg');
     this.load.image(EImage.BulletAmmo, 'other/bullet-ammo.png');
     this.load.image(EImage.ImproveBg, 'other/improve-bg.jpg');
     this.load.image(EImage.ImproveHeroBg, 'other/improve-hero-bg.png');
     this.load.image(EImage.Ruby, 'other/ruby_small.png');
-    this.load.image(EImage.Arrow, 'other/arrow_small.png');
 
     // Bonuses
     this.load.image(EImage.Riffle, 'ammo/riffle.png');

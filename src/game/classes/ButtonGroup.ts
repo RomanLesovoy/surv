@@ -7,7 +7,6 @@ export const selectedAction = 'selected';
 interface IButtonProps {
   callback: (button: GameObjects.Graphics) => void,
   text: string,
-  textureKey: string,
   name: string
 }
 

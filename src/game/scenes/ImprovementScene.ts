@@ -103,10 +103,10 @@ export default class ImprovementScene extends Scene {
     this.setCosts();
     this.buttonGroup = new ButtonGroup(this);
     this.buttonGroup.create([
-      { text: 'Speed ++', callback: this.onImproveSpeed, name: StatsKeys.Speed, textureKey: EImage.ButtonBg },
-      { text: 'Health ++', callback: this.onImproveHp, name: StatsKeys.Hp, textureKey: EImage.ButtonBg },
-      { text: 'Damage ++', callback: this.onImproveDamage, name: StatsKeys.Damage, textureKey: EImage.ButtonBg },
-      { text: 'ok', callback: () => { this.onNextWave(); this.scene.stop() }, name: 'ok', textureKey: EImage.ButtonBg },
+      { text: 'Speed ++', callback: this.onImproveSpeed, name: StatsKeys.Speed, },
+      { text: 'Health ++', callback: this.onImproveHp, name: StatsKeys.Hp, },
+      { text: 'Damage ++', callback: this.onImproveDamage, name: StatsKeys.Damage, },
+      { text: 'ok', callback: () => { this.onNextWave(); this.scene.stop() }, name: 'ok', },
     ]);
     this.updateButtons();
   }
